@@ -8,7 +8,7 @@ class Logout extends Component {
   render() {
     return (
       <GoogleLogout
-        clientId="1092979243632-s9pre14t6sels2k5du92781lnr78rkbb.apps.googleusercontent.com"
+        clientId="816660866473-jjfs7lqo79i1i6qbg5duffvefe08fgp8.apps.googleusercontent.com"
         buttonText="Logout"
         onLogoutSuccess={this.props.onLogout}
       ></GoogleLogout>

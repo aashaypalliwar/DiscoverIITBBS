@@ -9,7 +9,7 @@ const path = require('path');
 const middleware = require('./utils/middleware');
 const clientEndpoints = ['home', 'profile'];
 const searchRouter = require('./routes/searchRoutes');
-
+const userRouter = require('./routes/userRoutes');
 const AppError = require('./utils/appError');
 
 const globalErrorHandler = require('./controller/errorController');
@@ -50,10 +50,10 @@ app.get('/:clientEndpoint', (req, res, next) => {
 
 //Search
 app.use('/v1/search', searchRouter); // '/v1/search/tags' '/v1/search/user'
-console.log('test');
+// console.log('test');
 
 //User
-// app.use("/v1/user", userRouter); // All user related jobs - profile updates, reporting
+app.use("/v1/user", userRouter); // All user related jobs - profile updates, reporting
 
 //Admin
 // app.use("/v1/admin", adminRouter); // Admin endpoints - unpublish, republish, verify

@@ -2,7 +2,12 @@ const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
 const AppError = require('../../utils/appError');
 const config = require('../../utils/config');
+const catchAsync =  require('./../../utils/catchAsync');
+const {OAuth2Client} = require('google-auth-library');
+const { response } = require('../../app');
+const User = require('../dbModel/userModel');
 
+const client = new OAuth2Client(config.CLIENT_ID);
 const signToken = id => {
     console.log(config.JWT_EXPIRES_IN)
     return jwt.sign({ id }, config.JWT_SECRET, {
@@ -13,7 +18,7 @@ const signToken = id => {
 //TODO: Modify as per use case.
 const createSendToken = (user, statusCode, res) => {
     const token = signToken(user._id);
-    const expirationTime = Date.now() + config.JWT_EXPIRES_IN;
+    const expirationTime = Date.now() + config.JWT_COOKIE_EXPIRES_IN* 24 * 60 * 60 * 1000;
 
     const cookieOptions = {
         expires: new Date(
@@ -28,6 +33,7 @@ const createSendToken = (user, statusCode, res) => {
     res.status(statusCode).json({
         status: 'success',
         expiresAfter: expirationTime,
+        token,
         data: {
             user
         }
@@ -101,9 +107,44 @@ const restrictTo = (...roles) => {
     };
 };
 
+const googleLogin = catchAsync(async (req,res,next)=>{
+    const {tokenId} = req.body;
+    if(!tokenId){
+        return next(new AppError('There is no tokenId sent',403));
+    }
+     
+    // verifying tokeId
+    client.verifyIdToken({idToken : tokenId , audience : config.CLIENT_ID})
+    .then(response=>{
+        const {name , email , email_verified} = response.payload;
+        console.log(name , email ,email_verified);
+        // console.log(response.payload);
+        if(email_verified){
+            User.findOne({email}).exec((err,user)=>{
+                if(err){
+                    return res.status(404).json({
+                        message:'something went wrong'
+                    })
+                }
+                else{
+                    if(user)createSendToken(user,200,res);
+                    else{
+                        res.status(200).json({
+                            status:'Dont worry user will be created in DB'
+                        })
+                    }
+                }
+            })
+            
+        }
+    }).catch(err=>console.log(err));
+
+})
+
 module.exports = {
     signToken,
     createSendToken,
     protect,
-    restrictTo
+    restrictTo,
+    googleLogin
 };

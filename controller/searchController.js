@@ -5,7 +5,7 @@ const AppError = require('./../utils/appError');
 exports.searchUser = catchAsync(async (req, res, next) => {
   const user = await User.findOne({ email: req.params.email });
 
-  console.log(user);
+  // console.log(user);
 
   if (user === null) {
     console.log('here');

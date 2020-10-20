@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import GoogleLogin from 'react-google-login';
-
+import axios from 'axios';
 import Logout from './Logout';
 
 class Layout extends Component {
@@ -11,18 +11,25 @@ class Layout extends Component {
 
   successResponseGoogle = (response) => {
     console.log(response);
-    // const emailUsed = response.nt.Wt;
+    
     const emailUsed = response.profileObj.email;
     const index = emailUsed.indexOf('@');
     const domain = emailUsed.substr(index);
 
     if (domain !== '@iitbbs.ac.in') {
       alert('Use your iit bbs email id');
-    } else {
+    } 
+    else {
       this.setState({ isLoggedIn: true });
       this.setState({ user: response.profileObj.name });
-      // alert('Sucessfully logged in ');
-      // this.props.history.push('/loggedIn');
+      // console.log(response.tokenId);
+      axios({
+        method:"POST",
+        url:"http://127.0.0.1:3000/v1/user/googleLogin",
+        data:{tokenId : response.tokenId}
+      }).then((response)=>{
+        console.log(response);
+      }).catch(err=>console.log(err));
     }
   };
 
@@ -32,7 +39,8 @@ class Layout extends Component {
     console.log(this.state.isLoggedIn);
   };
 
-  failureResponseGoogle = () => {
+  failureResponseGoogle = (response) => {
+    console.log(response);
     alert('Use your IIT BBS email for login');
   };
   render() {
@@ -41,7 +49,7 @@ class Layout extends Component {
       <div className="App">
         {!this.state.isLoggedIn ? (
           <GoogleLogin
-            clientId="1092979243632-s9pre14t6sels2k5du92781lnr78rkbb.apps.googleusercontent.com"
+            clientId="816660866473-jjfs7lqo79i1i6qbg5duffvefe08fgp8.apps.googleusercontent.com"
             buttonText="Login with google"
             isSignedIn={true}
             onSuccess={this.successResponseGoogle}
