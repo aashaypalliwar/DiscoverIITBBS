@@ -7,7 +7,12 @@ const xss = require('xss-clean');
 const path = require('path');
 
 const middleware = require('./utils/middleware');
-const clientEndpoints = ["home", "profile"];
+const clientEndpoints = ['home', 'profile'];
+const searchRouter = require('./routes/searchRoutes');
+
+const AppError = require('./utils/appError');
+
+const globalErrorHandler = require('./controller/errorController');
 
 const app = express();
 
@@ -15,7 +20,6 @@ app.use(helmet());
 app.use(cors());
 
 //Implement Rate limiters
-
 
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' }));
@@ -32,32 +36,39 @@ app.use(middleware.requestLogger);
 app.use(express.static(path.join(__dirname, 'client/build')));
 
 app.get('/:clientEndpoint', (req, res, next) => {
-    if(clientEndpoints.includes(req.params.clientEndpoint)){
-        res.sendFile(path.join(__dirname, '/client/build/index.html'));
-    }else{
-        next();
-    }
-})
+  if (clientEndpoints.includes(req.params.clientEndpoint)) {
+    res.sendFile(path.join(__dirname, '/client/build/index.html'));
+  } else {
+    next();
+  }
+});
 
 //TODO: Implement various endpoints
 
 //Authenticator
-app.post('/v1/login', authController);
+// app.post('/v1/login', authController);
 
 //Search
-app.post('/v1/search', searchRouter); // '/v1/search/tags' '/v1/search/user' 
+app.use('/v1/search', searchRouter); // '/v1/search/tags' '/v1/search/user'
+console.log('test');
 
 //User
-app.use('/v1/user', userRouter); // All user related jobs - profile updates, reporting
+// app.use("/v1/user", userRouter); // All user related jobs - profile updates, reporting
 
 //Admin
-app.use('/v1/admin', adminRouter); // Admin endpoints - unpublish, republish, verify
+// app.use("/v1/admin", adminRouter); // Admin endpoints - unpublish, republish, verify
 
-app.get('*', (req, res) => {
-    res.status(301).redirect('/');
+app.all('*', (req, res, next) => {
+  console.log('CANNOT');
+  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
 
-app.use(middleware.unknownEndpoint);
-app.use(middleware.errorHandler);
+// app.use(middleware.unknownEndpoint);
+// app.use(middleware.errorHandler);
+
+console.log('check1');
+app.use(globalErrorHandler);
+
+console.log('check');
 
 module.exports = app;
