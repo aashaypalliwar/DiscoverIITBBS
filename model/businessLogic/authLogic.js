@@ -5,40 +5,45 @@ const config = require('../../utils/config');
 const catchAsync =  require('./../../utils/catchAsync');
 const {OAuth2Client} = require('google-auth-library');
 const { response } = require('../../app');
+const mongoose = require('mongoose');
 const User = require('../dbModel/userModel');
 
 const client = new OAuth2Client(config.CLIENT_ID);
-const signToken = id => {
-    console.log(config.JWT_EXPIRES_IN)
-    return jwt.sign({ id }, config.JWT_SECRET, {
-        expiresIn: config.JWT_EXPIRES_IN
+const createToken = (id) => {
+    const jwtToken = jwt.sign({ id }, config.JWT_SECRET, {
+      expiresIn: config.JWT_EXPIRES_IN,
     });
-};
-
+  
+    return jwtToken;
+  };
 //TODO: Modify as per use case.
 const createSendToken = (user, statusCode, res) => {
-    const token = signToken(user._id);
-    const expirationTime = Date.now() + config.JWT_COOKIE_EXPIRES_IN* 24 * 60 * 60 * 1000;
-
+   try{
+    const token = createToken(user._id);
+    // console.log(token);
+    // sending a cookie to the browser which stores the jwt token//
     const cookieOptions = {
-        expires: new Date(
-            expirationTime
-        ),
-        httpOnly: true
+      expires: new Date(
+        Date.now() + config.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+      ),
+      httpOnly: true,
+      secure:true
     };
-    if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
-
-    res.cookie('jwt', token, cookieOptions);
-
+  
+    if (config.NODE_ENV === 'production') {
+      cookieOptions.secure = true;
+    }
+  
+    res.cookie("jwt", token, cookieOptions);
     res.status(statusCode).json({
-        status: 'success',
-        expiresAfter: expirationTime,
-        token,
-        data: {
-            user
-        }
+      status: 'success',
+      verification: true,
+      token,
     });
-};
+  } catch(error){
+      console.log(error);
+  }
+}
 
 //TODO: Rectify the protect function to act as per auth workflow.
 const protect = async (req, res, next) => {
@@ -46,18 +51,17 @@ const protect = async (req, res, next) => {
     try{
         // 1) Getting token and check of it's there
         let token;
-        // if (
-        //     req.headers.authorization &&
-        //     req.headers.authorization.startsWith('Bearer')
-        // ) {
-        //     token = req.headers.authorization.split(' ')[1];
-        // }
-        // else 
-       
-        if(req.cookies.jwt){
+        if (
+            req.headers.authorization &&
+            req.headers.authorization.startsWith('Bearer')
+        ) {
+            token = req.headers.authorization.split(' ')[1];
+        } 
+         else if (req.cookies.jwt){
               token = req.cookies.jwt;
             }
-        console.log(token);
+        console.log(req.cookies.jwt);
+      
         if (!token) {
             console.log('reached')
             return next(
@@ -92,7 +96,7 @@ const protect = async (req, res, next) => {
         //     );
         // }
         req.user = currentUser;
-       
+        console.log(req.user);
         next();
     }
     catch(err){
@@ -116,9 +120,12 @@ const googleLogin = catchAsync(async (req,res,next)=>{
     if(!tokenId){
         return next(new AppError('There is no tokenId sent',403));
     }
-     
-    // verifying tokeId
-    client.verifyIdToken({idToken : tokenId , audience : config.CLIENT_ID})
+    
+    const user = await User.findOne({email:"pk39@iitbbs.ac.in"});
+   
+    let currentUser;
+    // // verifying tokeId
+     client.verifyIdToken({idToken : tokenId , audience : config.CLIENT_ID})
     .then(response=>{
         const {name , email , email_verified} = response.payload;
         // console.log(name , email ,email_verified);
@@ -131,7 +138,11 @@ const googleLogin = catchAsync(async (req,res,next)=>{
                     })
                 }
                 else{
-                    if(user)createSendToken(user,200,res);
+                    console.log('verified');
+                    if(user){
+                        currentUser=user;
+                        
+                    }
                     else{
                         res.status(200).json({
                             status:'Dont worry user will be created in DB'
@@ -142,13 +153,28 @@ const googleLogin = catchAsync(async (req,res,next)=>{
             
         }
     }).catch(err=>console.log(err));
-
+    createSendToken(user,200,res);
 })
 
+const logout = (req, res, next) => {
+    // // console.log(req.cookies.jwt);
+    // console.log(document.cookie);
+    // // console.log(req.cookies.jwt);
+  
+    res.clearCookie('jwt', {
+      path: '/',
+    });
+    res.status(200).json({
+      status: 'success',
+      message: 'logged out',
+    });
+  };
+  
 module.exports = {
-    signToken,
+    createToken,
     createSendToken,
     protect,
     restrictTo,
-    googleLogin
+    googleLogin,
+    logout
 };

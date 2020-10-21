@@ -4,7 +4,7 @@ import axios from 'axios';
 import Logout from './Logout';
 import Profile from './Profile.js'
 const dotenv = require('dotenv');
-dotenv.config({ path: './../config.env' });
+dotenv.config({ path: './../.env' });
 
 class Layout extends Component {
   state = {
@@ -29,10 +29,9 @@ class Layout extends Component {
     } else {
       // console.log(response.tokenId);
       this.setState({ isLoggedIn: true });
-      axios({
-        method: 'POST',
-        url: 'http://127.0.0.1:3000/v1/user/googleLogin',
-        data: { tokenId: response.tokenId },
+       
+      axios.post('/v1/user/googleLogin',{tokenId:response.tokenId},{
+        withCredentials:true
       })
         .then((response) => {
           console.log(response);
@@ -43,6 +42,14 @@ class Layout extends Component {
 
   logout = () => {
     this.setState({ isLoggedIn: false });
+    axios.get('/v1/user/logout', {
+      withCredentials: true,
+    }).then(response=>{
+      console.log(response);
+    }).catch(err=>{
+      console.log(err);
+    })
+    
   };
 
   failureResponseGoogle = (response) => {
@@ -51,13 +58,13 @@ class Layout extends Component {
   };
   render = () => {
     // console.log(`${__dirname}../../.env`);
-    // console.log(process.env);
+    console.log(process.env);
     console.log(this.state.isLoggedIn);
     return (
       <div className="App">
         {!this.state.isLoggedIn ? (
           <GoogleLogin
-            clientId="816660866473-jjfs7lqo79i1i6qbg5duffvefe08fgp8.apps.googleusercontent.com"
+            clientId={process.env.REACT_APP_CLIENT_ID}
             buttonText="Login with google"
             isSignedIn={true}
             onSuccess={this.successResponseGoogle}
