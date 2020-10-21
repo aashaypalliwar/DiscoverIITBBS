@@ -18,7 +18,24 @@ const app = express();
 
 app.use(helmet());
 app.use(cors());
+// app.options('*', cors());
+app.use(xss());
+app.use(cookieParser());
+app.use(
+  cors({
+    origin: 'http://localhost:8887',
+    credentials: true,
+  })
+);
 
+// app.use((req, res, next) => {
+//   res.header('Access-Control-Allow-Origin', '*');
+//   res.header(
+//     'Access-Control-Allow-Headers',
+//     'Origin, X-Requested-With, Content-Type, Accept'
+//   );
+//   next();
+// });
 //Implement Rate limiters
 
 // Body parser, reading data from body into req.body
@@ -28,8 +45,7 @@ app.use(express.json({ limit: '10kb' }));
 app.use(mongoSanitize());
 
 // Data sanitization against XSS
-app.use(xss());
-app.use(cookieParser());
+
 
 app.use(middleware.requestLogger);
 

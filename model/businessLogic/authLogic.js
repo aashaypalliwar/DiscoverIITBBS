@@ -12,7 +12,7 @@ const signToken = id => {
     console.log(config.JWT_EXPIRES_IN)
     return jwt.sign({ id }, config.JWT_SECRET, {
         expiresIn: config.JWT_EXPIRES_IN
-    }, { algorithm: 'HS256'});
+    });
 };
 
 //TODO: Modify as per use case.
@@ -42,6 +42,7 @@ const createSendToken = (user, statusCode, res) => {
 
 //TODO: Rectify the protect function to act as per auth workflow.
 const protect = async (req, res, next) => {
+  
     try{
         // 1) Getting token and check of it's there
         let token;
@@ -51,26 +52,28 @@ const protect = async (req, res, next) => {
         // ) {
         //     token = req.headers.authorization.split(' ')[1];
         // }
-        if(!(req.cookies.jwt))
-            return next(
-                new AppError('You are not logged in! Please log in to get access.', 401)
-            );
-        token = req.cookies.jwt;
-
-
+        // else 
+       
+        if(req.cookies.jwt){
+              token = req.cookies.jwt;
+            }
+        console.log(token);
         if (!token) {
+            console.log('reached')
             return next(
                 new AppError('You are not logged in! Please log in to get access.', 401)
             );
         }
-
+        // console.log(token);
         // 2) Verification token
         const decoded = await promisify(jwt.verify)(token, config.JWT_SECRET);
 
         //The commented code next may not work for our use case.
 
         // 3) Check if user still exists
-        /*const currentUser = await User.findById(decoded.id);
+        const currentUser = await User.findById(decoded.id);
+        // console.log(currentUser);
+        // console.log(currentUser);
         if (!currentUser) {
             return next(
                 new AppError(
@@ -80,15 +83,16 @@ const protect = async (req, res, next) => {
             );
         }
 
-        if (currentUser.blacklisted === true) {
-            return next(
-                new AppError(
-                    'Forbidden. Please contact admin for more information.',
-                    401
-                )
-            );
-        }
-        req.user = currentUser;*/
+        // if (currentUser.blacklisted === true) {
+        //     return next(
+        //         new AppError(
+        //             'Forbidden. Please contact admin for more information.',
+        //             401
+        //         )
+        //     );
+        // }
+        req.user = currentUser;
+       
         next();
     }
     catch(err){
@@ -117,7 +121,7 @@ const googleLogin = catchAsync(async (req,res,next)=>{
     client.verifyIdToken({idToken : tokenId , audience : config.CLIENT_ID})
     .then(response=>{
         const {name , email , email_verified} = response.payload;
-        console.log(name , email ,email_verified);
+        // console.log(name , email ,email_verified);
         // console.log(response.payload);
         if(email_verified){
             User.findOne({email}).exec((err,user)=>{

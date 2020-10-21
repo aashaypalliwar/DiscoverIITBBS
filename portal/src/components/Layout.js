@@ -2,11 +2,15 @@ import React, { Component } from 'react';
 import GoogleLogin from 'react-google-login';
 import axios from 'axios';
 import Logout from './Logout';
+import Profile from './Profile.js'
+const dotenv = require('dotenv');
+dotenv.config({ path: './../config.env' });
 
 class Layout extends Component {
   state = {
     isLoggedIn: false,
     user: '',
+    email:''
   };
 
   successResponseGoogle = (response) => {
@@ -16,13 +20,15 @@ class Layout extends Component {
     const index = emailUsed.indexOf('@');
     const domain = emailUsed.substr(index);
 
-    this.setState({ isLoggedIn: true });
-    this.setState({ user: response.profileObj.name });
+    
+    this.setState({ user: response.profileObj.name,email:response.profileObj.email });
 
     if (domain !== '@iitbbs.ac.in') {
       alert('Use your iit bbs email id');
+      
     } else {
       // console.log(response.tokenId);
+      this.setState({ isLoggedIn: true });
       axios({
         method: 'POST',
         url: 'http://127.0.0.1:3000/v1/user/googleLogin',
@@ -44,14 +50,14 @@ class Layout extends Component {
     alert('Use your IIT BBS email for login');
   };
   render = () => {
-    console.log(`${__dirname}../../.env`);
-    console.log(process.env);
+    // console.log(`${__dirname}../../.env`);
+    // console.log(process.env);
     console.log(this.state.isLoggedIn);
     return (
       <div className="App">
         {!this.state.isLoggedIn ? (
           <GoogleLogin
-            clientId={process.env.REACT_APP_CLIENT_ID}
+            clientId="816660866473-jjfs7lqo79i1i6qbg5duffvefe08fgp8.apps.googleusercontent.com"
             buttonText="Login with google"
             isSignedIn={true}
             onSuccess={this.successResponseGoogle}
@@ -60,8 +66,9 @@ class Layout extends Component {
           />
         ) : (
           <div>
-            <Logout onLogout={this.logout} />
-            <p>Hello {this.state.user}</p>
+            <br></br>
+           <Logout onLogout={this.logout} />
+            <Profile user={this.state.user} email={this.state.email}/>
           </div>
         )}
       </div>
