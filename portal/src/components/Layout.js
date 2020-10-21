@@ -11,45 +11,47 @@ class Layout extends Component {
 
   successResponseGoogle = (response) => {
     console.log(response);
-    
+
     const emailUsed = response.profileObj.email;
     const index = emailUsed.indexOf('@');
     const domain = emailUsed.substr(index);
 
+    this.setState({ isLoggedIn: true });
+    this.setState({ user: response.profileObj.name });
+
     if (domain !== '@iitbbs.ac.in') {
       alert('Use your iit bbs email id');
-    } 
-    else {
-      this.setState({ isLoggedIn: true });
-      this.setState({ user: response.profileObj.name });
+    } else {
       // console.log(response.tokenId);
       axios({
-        method:"POST",
-        url:"http://127.0.0.1:3000/v1/user/googleLogin",
-        data:{tokenId : response.tokenId}
-      }).then((response)=>{
-        console.log(response);
-      }).catch(err=>console.log(err));
+        method: 'POST',
+        url: 'http://127.0.0.1:3000/v1/user/googleLogin',
+        data: { tokenId: response.tokenId },
+      })
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((err) => console.log(err));
     }
   };
 
   logout = () => {
-    console.log(this.state.isLoggedIn);
     this.setState({ isLoggedIn: false });
-    console.log(this.state.isLoggedIn);
   };
 
   failureResponseGoogle = (response) => {
     console.log(response);
     alert('Use your IIT BBS email for login');
   };
-  render() {
+  render = () => {
+    console.log(`${__dirname}../../.env`);
+    console.log(process.env);
     console.log(this.state.isLoggedIn);
     return (
       <div className="App">
         {!this.state.isLoggedIn ? (
           <GoogleLogin
-            clientId="816660866473-jjfs7lqo79i1i6qbg5duffvefe08fgp8.apps.googleusercontent.com"
+            clientId={process.env.REACT_APP_CLIENT_ID}
             buttonText="Login with google"
             isSignedIn={true}
             onSuccess={this.successResponseGoogle}
@@ -64,7 +66,7 @@ class Layout extends Component {
         )}
       </div>
     );
-  }
+  };
 }
 
 export default Layout;

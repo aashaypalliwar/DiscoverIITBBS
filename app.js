@@ -33,8 +33,15 @@ app.use(cookieParser());
 
 app.use(middleware.requestLogger);
 
-app.use(express.static(path.join(__dirname, 'client/build')));
+app.use(express.static(path.join(__dirname, 'portal/build')));
 
+app.get('/', (req, res, next) => {
+  if (clientEndpoints.includes(req.params.clientEndpoint)) {
+    res.sendFile(path.join(__dirname, '/portal/public/index.html'));
+  } else {
+    next();
+  }
+});
 app.get('/:clientEndpoint', (req, res, next) => {
   if (clientEndpoints.includes(req.params.clientEndpoint)) {
     res.sendFile(path.join(__dirname, '/client/build/index.html'));
@@ -53,7 +60,7 @@ app.use('/v1/search', searchRouter); // '/v1/search/tags' '/v1/search/user'
 // console.log('test');
 
 //User
-app.use("/v1/user", userRouter); // All user related jobs - profile updates, reporting
+app.use('/v1/user', userRouter); // All user related jobs - profile updates, reporting
 
 //Admin
 // app.use("/v1/admin", adminRouter); // Admin endpoints - unpublish, republish, verify
