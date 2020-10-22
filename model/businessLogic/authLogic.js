@@ -111,13 +111,14 @@ const restrictTo = (...roles) => {
     next();
   };
 };
-const createUser = catchAsync(async(name,email,res)=>{
-//  console.log(name,email);
- const newUser = await User.create({
-   name:name,
-   email:email
- });
- createSendToken(newUser,200,res);
+const createUser = catchAsync(async (name, email, res) => {
+  //  console.log(name,email);
+  const newUser = await User.create({
+    name: name,
+    email: email,
+    image: `https://ui-avatars.com/api/?name=${name.split(' ').join('+')}`,
+  });
+  createSendToken(newUser, 200, res);
 });
 
 const googleLogin = catchAsync(async (req, res, next) => {
@@ -144,7 +145,7 @@ const googleLogin = catchAsync(async (req, res, next) => {
             if (user) {
               createSendToken(user, 200, res);
             } else {
-             createUser(name,email,res);
+              createUser(name, email, res);
             }
           }
         });

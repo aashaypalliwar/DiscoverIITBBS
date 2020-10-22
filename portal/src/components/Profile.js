@@ -6,6 +6,7 @@ class Profile extends Component {
     email: ' ',
     name: ' ',
     bio: ' ',
+    image: '',
   };
 
   componentDidMount() {
@@ -18,6 +19,9 @@ class Profile extends Component {
       })
       .then((response) => {
         console.log(response);
+        this.setState({
+          image: response.data.data.user.image,
+        });
         document.getElementById('bio').innerHTML = JSON.stringify(
           response.data.data.user
         );
@@ -29,6 +33,7 @@ class Profile extends Component {
     return (
       <div>
         <h1>Hello {this.state.name}</h1>
+        <img src={this.state.image}></img>
         <br></br>
         <Button variant="info" onClick={this.getProfile}>
           Your Bio

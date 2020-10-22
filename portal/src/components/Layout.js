@@ -81,7 +81,7 @@ class Layout extends Component {
           />
         ) : (
           <div>
-            <br></br>
+            <br />
             <Logout onLogout={this.logout} />
             <Profile user={this.state.user} email={this.state.email} />
           </div>
