@@ -19,7 +19,7 @@ const createToken = (id) => {
 //TODO: Modify as per use case.
 const createSendToken = (user, statusCode, res) => {
   try {
-    console.log(user);
+    // console.log(user);
     const token = createToken(user._id);
     // console.log(token);
     // sending a cookie to the browser which stores the jwt token//
@@ -111,6 +111,14 @@ const restrictTo = (...roles) => {
     next();
   };
 };
+const createUser = catchAsync(async(name,email,res)=>{
+//  console.log(name,email);
+ const newUser = await User.create({
+   name:name,
+   email:email
+ });
+ createSendToken(newUser,200,res);
+});
 
 const googleLogin = catchAsync(async (req, res, next) => {
   const { tokenId } = req.body;
@@ -136,9 +144,7 @@ const googleLogin = catchAsync(async (req, res, next) => {
             if (user) {
               createSendToken(user, 200, res);
             } else {
-              res.status(200).json({
-                status: 'Dont worry user will be created in DB',
-              });
+             createUser(name,email,res);
             }
           }
         });

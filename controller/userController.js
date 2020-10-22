@@ -16,4 +16,24 @@ exports.aboutMe = catchAsync(async(req,res,next)=>{
             user
         }
     })
-})
+});
+
+exports.updateBio = catchAsync(async (req, res, next) => {
+    //1 create error if password change//
+   
+    if(req.body.email|| req.body.name){
+        return next (new AppError('Sorry you are not allowed to change name and email',401))
+    }
+  
+    const updateUser = await User.findByIdAndUpdate(req.user.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+  
+    res.status(200).json({
+      status: 'success',
+      data: {
+        user: updateUser,
+      },
+    });
+  });

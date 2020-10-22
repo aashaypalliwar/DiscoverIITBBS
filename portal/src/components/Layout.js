@@ -66,7 +66,7 @@ class Layout extends Component {
   };
   render = () => {
     // console.log(`${__dirname}../../.env`);
-    console.log(process.env);
+    // console.log(process.env);
     console.log(this.state.isLoggedIn);
     return (
       <div className="App">
