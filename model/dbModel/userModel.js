@@ -4,7 +4,7 @@ const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, 'name of the user should be specified'],
+      required: [true, 'Name of the user should be specified'],
     },
     email: {
       type: String,
@@ -31,9 +31,13 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
-    Verified : {
+    publishStatus : {
         type:Boolean,
         default : true
+    },
+    verifyStatus:{
+      type:Boolean,
+      default : false
     }
   },
   {

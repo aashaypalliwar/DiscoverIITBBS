@@ -11,4 +11,6 @@ router.patch(
   authLogic.protect,
   userController.updateProfile
 );
+router.get('/allUsers',authLogic.protect,userController.getAllUsers);
+router.patch('/publish_to_false/:email',authLogic.protect,authLogic.restrictTo('admin'),userController.publishStatus_to_false);
 module.exports = router;
