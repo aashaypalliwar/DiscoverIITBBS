@@ -31,6 +31,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
+    Verified : {
+        type:Boolean,
+        default : true
+    }
   },
   {
     toJSON: { virtuals: true },

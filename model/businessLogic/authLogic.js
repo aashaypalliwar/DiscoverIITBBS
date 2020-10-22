@@ -58,7 +58,7 @@ const protect = async (req, res, next) => {
     } else if (req.cookies.jwt) {
       token = req.cookies.jwt;
     }
-    console.log(req.cookies.jwt);
+    // console.log(req.cookies.jwt);
 
     if (!token) {
       console.log('reached');
@@ -74,7 +74,7 @@ const protect = async (req, res, next) => {
 
     // 3) Check if user still exists
     const currentUser = await User.findById(decoded.id);
-    console.log(currentUser);
+    // console.log(currentUser);
     // console.log(currentUser);
     if (!currentUser) {
       return next(
@@ -94,7 +94,7 @@ const protect = async (req, res, next) => {
     //     );
     // }
     req.user = currentUser;
-    console.log(req.user);
+    // console.log(req.user);
     next();
   } catch (err) {
     next(err);
@@ -111,14 +111,14 @@ const restrictTo = (...roles) => {
     next();
   };
 };
-const createUser = catchAsync(async (name, email, res) => {
-  //  console.log(name,email);
-  const newUser = await User.create({
-    name: name,
-    email: email,
-    image: `https://ui-avatars.com/api/?name=${name.split(' ').join('+')}`,
-  });
-  createSendToken(newUser, 200, res);
+const createUser = catchAsync(async(name,email,res)=>{
+//  console.log(name,email);
+ const newUser = await User.create({
+   name:name,
+   email:email,
+   image: `https://ui-avatars.com/api/?name=${name.split(' ').join('+')}`,
+ });
+ createSendToken(newUser,200,res);
 });
 
 const googleLogin = catchAsync(async (req, res, next) => {
@@ -145,7 +145,7 @@ const googleLogin = catchAsync(async (req, res, next) => {
             if (user) {
               createSendToken(user, 200, res);
             } else {
-              createUser(name, email, res);
+             createUser(name,email,res);
             }
           }
         });
