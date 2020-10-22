@@ -2,6 +2,16 @@ const User = require('./../model/dbModel/userModel');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 const APIFeatures = require('./../utils/apiFeatures');
+
+function filterObj(obj, ...allowedFields) {
+  let newObj = {};
+  Object.keys(obj).forEach((el) => {
+    if (allowedFields.includes(el)) newObj[el] = obj[el];
+  });
+  return newObj;
+}
+
+
 exports.aboutMe = catchAsync(async (req, res, next) => {
   //  Through protect function in auth logic we get the user in req
   const user = req.user;
