@@ -31,9 +31,13 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
-    Verified : {
+    publishStatus : {
         type:Boolean,
         default : true
+    },
+    verifyStatus:{
+      type:Boolean,
+      default : false
     }
   },
   {
