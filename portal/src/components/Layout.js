@@ -3,6 +3,8 @@ import GoogleLogin from 'react-google-login';
 import axios from 'axios';
 import Logout from './Logout';
 import Profile from './Profile.js';
+
+import './Layout.css';
 const dotenv = require('dotenv');
 dotenv.config({ path: './../.env' });
 
@@ -13,9 +15,11 @@ class Layout extends Component {
     email: '',
   };
 
-  successResponseGoogle = (response) => {
-    // console.log(response);
+  constructor(props) {
+    super(props);
+  }
 
+  successResponseGoogle = (response) => {
     const emailUsed = response.profileObj.email;
     const index = emailUsed.indexOf('@');
     const domain = emailUsed.substr(index);
@@ -23,6 +27,7 @@ class Layout extends Component {
     this.setState({
       user: response.profileObj.name,
       email: response.profileObj.email,
+      image: null,
     });
 
     if (domain !== '@iitbbs.ac.in') {
@@ -30,6 +35,7 @@ class Layout extends Component {
     } else {
       // console.log(response.tokenId);
       this.setState({ isLoggedIn: true });
+      this.props.callFunc();
 
       axios
         .post(
@@ -58,36 +64,48 @@ class Layout extends Component {
       .catch((err) => {
         console.log(err);
       });
+    this.props.callFunc();
   };
 
   failureResponseGoogle = (response) => {
     console.log(response);
     alert('Use your IIT BBS email for login');
   };
+
+  setImage = (imageUrl) => {
+    this.setState({ image: imageUrl });
+  };
+
   render = () => {
     // console.log(`${__dirname}../../.env`);
     // console.log(process.env);
     console.log(this.state.isLoggedIn);
-    return (
-      <div className="App">
-        {!this.state.isLoggedIn ? (
+
+    if (!this.state.isLoggedIn) {
+      return (
+        <div className="Login">
           <GoogleLogin
             clientId={process.env.REACT_APP_CLIENT_ID}
-            buttonText="Login with google"
+            buttonText="Sign In with Google"
+            theme="dark"
             isSignedIn={true}
             onSuccess={this.successResponseGoogle}
             onFailure={this.failureResponseGoogle}
             cookiePolicy={'single_host_origin'}
           />
-        ) : (
-          <div>
-            <br />
-            <Logout onLogout={this.logout} />
-            <Profile user={this.state.user} email={this.state.email} />
-          </div>
-        )}
-      </div>
-    );
+        </div>
+      );
+    } else
+      return (
+        <div className="page">
+          <Logout img={this.state.image} onLogout={this.logout} />
+          <Profile
+            user={this.state.user}
+            email={this.state.email}
+            setPic={this.setImage}
+          />
+        </div>
+      );
   };
 }
 
