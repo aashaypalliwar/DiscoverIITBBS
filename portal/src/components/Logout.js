@@ -12,11 +12,15 @@ class Logout extends Component {
   }
   render() {
     return (
+      <div className="logout">
       <GoogleLogout
-        clientId="816660866473-jjfs7lqo79i1i6qbg5duffvefe08fgp8.apps.googleusercontent.com"
+        clientId={process.env.REACT_APP_CLIENT_ID}
         buttonText="Logout"
         onLogoutSuccess={this.props.onLogout}
       ></GoogleLogout>
+      <img src={this.props.img}></img>
+    </div>
+      
     );
   }
 }
