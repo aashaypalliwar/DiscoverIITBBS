@@ -6,8 +6,11 @@ class Profile extends Component {
     email: ' ',
     name: ' ',
     bio: ' ',
-    image: '',
   };
+
+  constructor(props) {
+    super(props);
+  }
 
   componentDidMount() {
     this.setState({ email: this.props.email, name: this.props.user });
@@ -19,12 +22,9 @@ class Profile extends Component {
       })
       .then((response) => {
         console.log(response);
-        this.setState({
-          image: response.data.data.user.image,
-        });
-        document.getElementById('bio').innerHTML = JSON.stringify(
-          response.data.data.user
-        );
+        this.props.setPic(response.data.data.user.image);
+        document.getElementById('bio').innerText =
+          'Name : ' + response.data.data.user.name;
       })
       .catch((err) => console.log(err));
   };
@@ -33,10 +33,8 @@ class Profile extends Component {
     return (
       <div>
         <h1>Hello {this.state.name}</h1>
-        <img src={this.state.image}></img>
-        <br></br>
         <Button variant="info" onClick={this.getProfile}>
-          Your Bio
+          Your Profile
         </Button>
         <div id="bio"></div>
       </div>
