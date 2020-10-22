@@ -6,7 +6,7 @@ class Profile extends Component {
     email: ' ',
     name: ' ',
     bio: ' ',
-    profileClicked : false
+    profileClicked: false,
   };
 
   constructor(props) {
@@ -17,22 +17,23 @@ class Profile extends Component {
     this.setState({ email: this.props.email, name: this.props.user });
   }
   getProfile = () => {
-    if (!this.state.profileClicked)
-    {
-    axios
-      .get('/v1/user/profile', {
-        withCredentials: true,
-      })
-      .then((response) => {
-        console.log(response);
-        this.setState({bio : response.data.data.user.bio,profileClicked :true });
-        this.props.setPic(response.data.data.user.image);
-        // document.getElementById('bio').innerText =
-        //   'Name : ' + this.state.name;
-      })
-      .catch((err) => console.log(err));
-    }
-    else this.setState({profileClicked:false});
+    if (!this.state.profileClicked) {
+      axios
+        .get('/v1/user/profile', {
+          withCredentials: true,
+        })
+        .then((response) => {
+          console.log(response);
+          this.setState({
+            bio: response.data.data.user.bio,
+            profileClicked: true,
+          });
+          this.props.setPic(response.data.data.user.image);
+          // document.getElementById('bio').innerText =
+          //   'Name : ' + this.state.name;
+        })
+        .catch((err) => console.log(err));
+    } else this.setState({ profileClicked: false });
   };
 
   render() {
@@ -45,13 +46,13 @@ class Profile extends Component {
         <div id="bio"></div>
         {this.state.profileClicked ? (
           <div>
-            Name : {this.state.name} 
+            Name : {this.state.name}
             <br></br>
             Email : {this.state.email}
             <br></br>
             Bio : {this.state.bio}
-            </div>
-        ):null}
+          </div>
+        ) : null}
       </div>
     );
   }
