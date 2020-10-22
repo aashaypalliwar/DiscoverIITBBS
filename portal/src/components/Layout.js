@@ -13,6 +13,7 @@ class Layout extends Component {
     isLoggedIn: false,
     user: '',
     email: '',
+    image: '',
   };
 
   constructor(props) {
@@ -27,7 +28,6 @@ class Layout extends Component {
     this.setState({
       user: response.profileObj.name,
       email: response.profileObj.email,
-      image: null,
     });
 
     if (domain !== '@iitbbs.ac.in') {
@@ -46,7 +46,9 @@ class Layout extends Component {
           }
         )
         .then((response) => {
+          console.log('login');
           console.log(response);
+          this.setState({ image: response.data.user.image });
         })
         .catch((err) => console.log(err));
     }
@@ -72,14 +74,9 @@ class Layout extends Component {
     alert('Use your IIT BBS email for login');
   };
 
-  setImage = (imageUrl) => {
-    this.setState({ image: imageUrl });
-  };
-
   render = () => {
     // console.log(`${__dirname}../../.env`);
     // console.log(process.env);
-    console.log(this.state.isLoggedIn);
 
     if (!this.state.isLoggedIn) {
       return (
@@ -98,11 +95,7 @@ class Layout extends Component {
       return (
         <div className="page">
           <Logout img={this.state.image} onLogout={this.logout} />
-          <Profile
-            user={this.state.user}
-            email={this.state.email}
-            setPic={this.setImage}
-          />
+          <Profile user={this.state.user} email={this.state.email} />
         </div>
       );
   };
