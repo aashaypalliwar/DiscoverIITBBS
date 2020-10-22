@@ -1,18 +1,22 @@
 import React, { Component } from 'react';
-import { Button, Form, Row, Col } from 'react-bootstrap';
+import { Button, Form, Row, Col, Spinner } from 'react-bootstrap';
 import axios from 'axios';
+
+import './Profile.css';
+
 class Profile extends Component {
   state = {
     user: null,
     profileClicked: false,
     updateClicked: false,
+    dataLoaded: false,
   };
 
   constructor(props) {
     super(props);
   }
 
-  componentDidMount() {
+  getProfileFromDB = () => {
     axios
       .get('/v1/user/profile', {
         withCredentials: true,
@@ -21,11 +25,20 @@ class Profile extends Component {
         // console.log(response);
         this.setState({
           user: response.data.data.user,
+          dataLoaded: true,
         });
-        console.log(this.state.user);
+        document.getElementById('spinner').classList.remove('loader');
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        this.getProfileFromDB();
+      });
+  };
+
+  componentDidMount() {
+    this.getProfileFromDB();
   }
+
   getProfile = () => {
     if (!this.state.profileClicked) {
       this.setState({ profileClicked: true });
@@ -38,16 +51,38 @@ class Profile extends Component {
       this.setState({ profileClicked: false });
     } else this.setState({ updateClicked: false });
   };
+  updateProfile = () => {
+    let bio = document.querySelector('.bio').value;
+    axios
+      .patch('/v1/user/update-profile', { bio }, { withCredentials: true })
+      .then((response) => {
+        alert('Sucessfully Updated');
+        this.setState({ updateClicked: false });
+        document.getElementById('spinner').classList.add('loader');
+        this.getProfileFromDB();
+      })
+      .catch((err) => {
+        alert('Failed to Update');
+      });
+  };
 
   render() {
     return (
-      <div>
+      <div className="profile">
         <h1>Hello {this.props.user}</h1>
-        <Button variant="info" onClick={this.getProfile}>
+        <Button
+          variant="info"
+          onClick={this.getProfile}
+          disabled={!this.state.dataLoaded}
+        >
           Your Profile
         </Button>
         &nbsp;
-        <Button variant="warning" onClick={this.getUpdateForm}>
+        <Button
+          variant="warning"
+          onClick={this.getUpdateForm}
+          disabled={!this.state.dataLoaded}
+        >
           Update Profile
         </Button>
         {this.state.profileClicked ? (
@@ -94,6 +129,7 @@ class Profile extends Component {
                   <Form.Control
                     as="textarea"
                     rows={3}
+                    className="bio"
                     defaultValue={this.state.user.bio}
                   />
                 </Col>
@@ -103,15 +139,24 @@ class Profile extends Component {
                   <b>Tags</b>
                 </Form.Label>
                 <Col sm="9">
-                  <Form.Control plaintext defaultValue={this.state.user.bio} />
+                  <Form.Control
+                    plaintext
+                    readOnly
+                    defaultValue="~ TO BE IMPLEMENTED ~"
+                  />
                 </Col>
               </Form.Group>
             </Form>
-            <Button variant="primary" type="submit">
+            <Button
+              variant="primary"
+              type="submit"
+              onClick={this.updateProfile}
+            >
               Update
             </Button>
           </div>
         ) : null}
+        <div className="loader" id="spinner"></div>
       </div>
     );
   }
