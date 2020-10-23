@@ -9,6 +9,7 @@ const mongoose = require('mongoose');
 const User = require('../dbModel/userModel');
 
 const client = new OAuth2Client(config.CLIENT_ID);
+
 const createToken = (id) => {
   const jwtToken = jwt.sign({ id }, config.JWT_SECRET, {
     expiresIn: config.JWT_EXPIRES_IN,
@@ -111,6 +112,7 @@ const restrictTo = (...roles) => {
     next();
   };
 };
+
 const createUser = catchAsync(async (name, email, res) => {
   //  console.log(name,email);
   const newUser = await User.create({
@@ -122,6 +124,7 @@ const createUser = catchAsync(async (name, email, res) => {
 });
 
 const googleLogin = catchAsync(async (req, res, next) => {
+
   const { tokenId } = req.body;
   if (!tokenId) {
     return next(new AppError('There is no tokenId sent', 403));
@@ -132,19 +135,28 @@ const googleLogin = catchAsync(async (req, res, next) => {
     .verifyIdToken({ idToken: tokenId, audience: config.CLIENT_ID })
     .then((response) => {
       const { name, email, email_verified } = response.payload;
-      // console.log(name , email ,email_verified);
-      // console.log(response.payload);
+      
+
+      /**Check if IIT BBS mail or not. If not, return forbidden error */
+  
       if (email_verified) {
         User.findOne({ email }).exec((err, user) => {
           if (err) {
             return res.status(404).json({
-              message: 'something went wrong',
+              message: 'Something went wrong',
             });
           } else {
             console.log('verified');
             if (user) {
               createSendToken(user, 200, res);
             } else {
+
+              /**Check if SignUpToggle is true. If it is true, signup is allowed, create a document 
+               * of the new user and save it in db and return a token of "user" scope
+               * If signups not allowed, return a token with visitor scope. No saving.
+               */
+
+
               createUser(name, email, res);
             }
           }
@@ -169,8 +181,8 @@ const logout = (req, res, next) => {
 };
 
 module.exports = {
-  createToken,
-  createSendToken,
+  //createToken,
+  //createSendToken,
   protect,
   restrictTo,
   googleLogin,
