@@ -139,7 +139,7 @@ const googleLogin = catchAsync(async (req, res, next) => {
             if (user) {
               createSendToken(user, 200, res);
             } else {
-             
+             console.log(config.SIGNUP_TOGGLE)
               if(config.SIGNUP_TOGGLE=="true")createUser(name, email, res);
               else {
                 visitor = {

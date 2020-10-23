@@ -31,12 +31,21 @@ class Profile extends Component {
       })
       .catch((err) => {
         console.log(err);
-        this.getProfileFromDB();
+        
       });
   };
 
   componentDidMount() {
-    this.getProfileFromDB();
+    console.log(this.props.role);
+    if(this.props.role)this.getProfileFromDB();
+    
+    else {
+      const user = {
+        name : this.props.user,
+        email:this.props.email,
+      }
+      this.setState({user:user,dataLoaded:true});
+    }
   }
 
   getProfile = () => {
