@@ -19,16 +19,20 @@ const sendEmail = async options => {
             from: 'discover.neuro <SomeMail@gmail.com>',
             to: options.email,
             subject: options.subject,
-            text: options.message
+            text: options.message,
+            attachments: options.attachments
         };
 
         // 3) Actually send the email
         let message = await transporter.sendMail(mailOptions);
     }
     catch(err){
-        console.log(err);
-        return new AppError("Failed to send Email.", 500)
+        throw new AppError(err, 500)
     }
 };
 
-module.exports = sendEmail;
+
+
+module.exports = {
+    sendEmail
+};
