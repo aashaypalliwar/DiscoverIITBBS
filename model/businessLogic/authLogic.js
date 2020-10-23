@@ -9,8 +9,9 @@ const mongoose = require('mongoose');
 const User = require('../dbModel/userModel');
 
 const client = new OAuth2Client(config.CLIENT_ID);
-const createToken = (id) => {
-  const jwtToken = jwt.sign({ id }, config.JWT_SECRET, {
+
+const createToken = (id , role) => {
+  const jwtToken = jwt.sign({ id,role}, config.JWT_SECRET, {
     expiresIn: config.JWT_EXPIRES_IN,
   });
 
@@ -20,7 +21,7 @@ const createToken = (id) => {
 const createSendToken = (user, statusCode, res) => {
   try {
     // console.log(user);
-    const token = createToken(user._id);
+    const token = createToken(user._id,user.role);
     // console.log(token);
     // sending a cookie to the browser which stores the jwt token//
     const cookieOptions = {
@@ -45,9 +46,10 @@ const createSendToken = (user, statusCode, res) => {
   }
 };
 
+
 //TODO: Rectify the protect function to act as per auth workflow.
-const protect = async (req, res, next) => {
-  try {
+const verifyJwtToken = catchAsync( async (req, res, next) => {
+  
     // 1) Getting token and check of it's there
     let token;
     if (
@@ -59,22 +61,25 @@ const protect = async (req, res, next) => {
       token = req.cookies.jwt;
     }
     // console.log(req.cookies.jwt);
-
     if (!token) {
       console.log('reached');
       return next(
         new AppError('You are not logged in! Please log in to get access.', 401)
       );
     }
-    // console.log(token);
-    // 2) Verification token
+    // Verifying token
     const decoded = await promisify(jwt.verify)(token, config.JWT_SECRET);
+    
+    req.jwtPayload = {
+      id : decoded.id,
+      role : decoded.role
+    }
+    next();
+});
 
-    //The commented code next may not work for our use case.
+const loggedInUser = catchAsync(async(req,res,next)=>{
 
-    // 3) Check if user still exists
-    const currentUser = await User.findById(decoded.id);
-    // console.log(currentUser);
+  const currentUser = await User.findById(req.jwtPayload.id);
     // console.log(currentUser);
     if (!currentUser) {
       return next(
@@ -84,22 +89,11 @@ const protect = async (req, res, next) => {
         )
       );
     }
-
-    // if (currentUser.blacklisted === true) {
-    //     return next(
-    //         new AppError(
-    //             'Forbidden. Please contact admin for more information.',
-    //             401
-    //         )
-    //     );
-    // }
     req.user = currentUser;
-    // console.log(req.user);
+
     next();
-  } catch (err) {
-    next(err);
-  }
-};
+  
+})
 
 const restrictTo = (...roles) => {
   return (req, res, next) => {
@@ -127,7 +121,7 @@ const googleLogin = catchAsync(async (req, res, next) => {
     return next(new AppError('There is no tokenId sent', 403));
   }
 
-  // // verifying tokeId
+  // verifying tokeId
   client
     .verifyIdToken({ idToken: tokenId, audience: config.CLIENT_ID })
     .then((response) => {
@@ -145,7 +139,17 @@ const googleLogin = catchAsync(async (req, res, next) => {
             if (user) {
               createSendToken(user, 200, res);
             } else {
-              createUser(name, email, res);
+             
+              if(config.SIGNUP_TOGGLE=="true")createUser(name, email, res);
+              else {
+                visitor = {
+                  _id : email,
+                  name:name,
+                  email:email,
+                  role:'visitor'
+                }
+                createSendToken(visitor,200,res);
+              }              
             }
           }
         });
@@ -155,10 +159,6 @@ const googleLogin = catchAsync(async (req, res, next) => {
 });
 
 const logout = (req, res, next) => {
-  // // console.log(req.cookies.jwt);
-  // console.log(document.cookie);
-  // // console.log(req.cookies.jwt);
-
   res.clearCookie('jwt', {
     path: '/',
   });
@@ -171,7 +171,8 @@ const logout = (req, res, next) => {
 module.exports = {
   createToken,
   createSendToken,
-  protect,
+  verifyJwtToken,
+  loggedInUser,
   restrictTo,
   googleLogin,
   logout,
