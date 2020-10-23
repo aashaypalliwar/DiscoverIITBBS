@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Form, Row, Col, Spinner } from 'react-bootstrap';
+import { Button, Form, Row, Col, Card } from 'react-bootstrap';
 import axios from 'axios';
 
 import './Profile.css';
@@ -27,6 +27,7 @@ class Profile extends Component {
           user: response.data.data.user,
           dataLoaded: true,
         });
+        console.log(this.state.user);
         document.getElementById('spinner').classList.remove('loader');
       })
       .catch((err) => {
@@ -86,17 +87,49 @@ class Profile extends Component {
           Update Profile
         </Button>
         {this.state.profileClicked ? (
-          <div>
-            Name : {this.state.user.name}
-            <br></br>
-            Email : {this.state.user.email}
-            <br></br>
-            Bio : {this.state.user.bio}
+          <div className="profile-card">
+            <div className="profile-pic">
+              <img src={this.state.user.image}></img>
+            </div>
+            <div className="profile-data">
+              <Card className="profCard">
+                <Card.Body>
+                  <table>
+                    <tbody>
+                      <tr>
+                        <th>Name</th>
+                        <td>{this.state.user.name}</td>
+                      </tr>
+                      <tr>
+                        <th>Email</th>
+                        <td>{this.state.user.email}</td>
+                      </tr>
+                      <tr>
+                        <th>Bio</th>
+                        <td>{this.state.user.bio}</td>
+                      </tr>
+                      <tr>
+                        <th>Tags</th>
+                        <td className="tags-chips">
+                          {this.state.user.Tags.map((tag, index) => {
+                            return (
+                              <div className="chip" key={index}>
+                                {tag.name}
+                              </div>
+                            );
+                          })}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </Card.Body>
+              </Card>
+            </div>
           </div>
         ) : null}
         {this.state.updateClicked ? (
           <div className="update-form">
-            <Form>
+            <Form className="updateForm">
               <Form.Group as={Row} controlId="formPlaintextEmail">
                 <Form.Label column sm="2">
                   <b>Email</b>

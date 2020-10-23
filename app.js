@@ -45,7 +45,6 @@ app.use(mongoSanitize());
 
 // Data sanitization against XSS
 
-
 app.use(middleware.requestLogger);
 
 app.use(express.static(path.join(__dirname, 'portal/build')));
@@ -88,9 +87,9 @@ app.all('*', (req, res, next) => {
 // app.use(middleware.unknownEndpoint);
 // app.use(middleware.errorHandler);
 
-console.log('check1');
+// console.log('check1');
 app.use(globalErrorHandler);
 
-console.log('check');
+// console.log('check');
 
 module.exports = app;

@@ -73,7 +73,11 @@ const protect = async (req, res, next) => {
     //The commented code next may not work for our use case.
 
     // 3) Check if user still exists
-    const currentUser = await User.findById(decoded.id);
+    const currentUser = await User.findById(decoded.id).populate({
+      path: 'Tags',
+      model: 'Tag',
+      select: 'name',
+    });
     // console.log(currentUser);
     // console.log(currentUser);
     if (!currentUser) {
@@ -133,12 +137,13 @@ const googleLogin = catchAsync(async (req, res, next) => {
     .then((response) => {
       const { name, email, email_verified } = response.payload;
       // console.log(name , email ,email_verified);
-      // console.log(response.payload);
+      console.log('response.payload');
+      console.log(response.payload);
       if (email_verified) {
         User.findOne({ email }).exec((err, user) => {
           if (err) {
             return res.status(404).json({
-              message: 'something went wrong',
+              message: err.message,
             });
           } else {
             console.log('verified');

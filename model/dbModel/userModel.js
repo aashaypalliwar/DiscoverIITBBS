@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+
+const Tag = require('./tagModel');
+
 const userSchema = new mongoose.Schema(
   {
     name: {
@@ -31,14 +34,14 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
-    publishStatus : {
-        type:Boolean,
-        default : true
+    publishStatus: {
+      type: Boolean,
+      default: true,
     },
-    verifyStatus:{
-      type:Boolean,
-      default : false
-    }
+    verifyStatus: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     toJSON: { virtuals: true },
