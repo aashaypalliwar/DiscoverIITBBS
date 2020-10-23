@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema(
     bio: {
       type: String,
     },
-    Tags: [
+    tags: [
       {
         type: mongoose.Schema.ObjectId,
         ref: 'Tag',
@@ -33,11 +33,19 @@ const userSchema = new mongoose.Schema(
     },
     publishStatus : {
         type:Boolean,
-        default : true
+        default: true
     },
     verifyStatus:{
       type:Boolean,
-      default : false
+      default: false
+    },
+    reportCount:{
+      type: Number,
+      default: 0
+    },
+    reporters:{
+      type: mongoose.Schema.ObjectId,
+      ref: 'User'
     }
   },
   {

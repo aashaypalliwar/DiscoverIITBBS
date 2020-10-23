@@ -24,7 +24,7 @@ cron.schedule(backupTimer, async () => {
         let date = new Date();
         let month = date.getMonth();
         let year = date.getFullYear();
-        let fileLocation = path.join(__dirname, `../backup/${months[month]+year}.csv`);
+        let fileLocation = path.join(__dirname, `../csvFiles/${months[month]+year}.csv`);
 
         await csv.toDisk(fileLocation);
 
