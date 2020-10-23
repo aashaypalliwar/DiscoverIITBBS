@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema(
     bio: {
       type: String,
     },
-    Tags: [
+    tags: [
       {
         type: mongoose.Schema.ObjectId,
         ref: 'Tag',
@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema(
     ],
     role: {
       type: String,
-      enum: ['user', 'Admin', 'superAdmin'],
+      enum: ['user', 'admin', 'superAdmin'],
       default: 'user',
     },
     image: {
@@ -41,6 +41,14 @@ const userSchema = new mongoose.Schema(
     verifyStatus: {
       type: Boolean,
       default: false,
+    },
+    reportCount: {
+      type: Number,
+      default: 0,
+    },
+    reporters: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'User',
     },
   },
   {

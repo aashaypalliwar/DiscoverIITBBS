@@ -12,6 +12,7 @@ const searchRouter = require('./routes/searchRoutes');
 const userRouter = require('./routes/userRoutes');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controller/errorController');
+require('./cronJobs/backup');
 
 const app = express();
 
