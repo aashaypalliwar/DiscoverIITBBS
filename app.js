@@ -12,6 +12,7 @@ const searchRouter = require('./routes/searchRoutes');
 const userRouter = require('./routes/userRoutes');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controller/errorController');
+require('./cronJobs/backup');
 
 const app = express();
 
@@ -44,7 +45,6 @@ app.use(express.json({ limit: '10kb' }));
 app.use(mongoSanitize());
 
 // Data sanitization against XSS
-
 
 app.use(middleware.requestLogger);
 
@@ -88,9 +88,9 @@ app.all('*', (req, res, next) => {
 // app.use(middleware.unknownEndpoint);
 // app.use(middleware.errorHandler);
 
-console.log('check1');
+// console.log('check1');
 app.use(globalErrorHandler);
 
-console.log('check');
+// console.log('check');
 
 module.exports = app;

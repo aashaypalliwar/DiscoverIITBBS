@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+
+const Tag = require('./tagModel');
+
 const userSchema = new mongoose.Schema(
   {
     name: {
@@ -16,7 +19,7 @@ const userSchema = new mongoose.Schema(
     bio: {
       type: String,
     },
-    Tags: [
+    tags: [
       {
         type: mongoose.Schema.ObjectId,
         ref: 'Tag',
@@ -24,21 +27,29 @@ const userSchema = new mongoose.Schema(
     ],
     role: {
       type: String,
-      enum: ['user', 'Admin', 'superAdmin'],
+      enum: ['user', 'admin', 'superAdmin'],
       default: 'user',
     },
     image: {
       type: String,
       default: null,
     },
-    publishStatus : {
-        type:Boolean,
-        default : true
+    publishStatus: {
+      type: Boolean,
+      default: true,
     },
-    verifyStatus:{
-      type:Boolean,
-      default : false
-    }
+    verifyStatus: {
+      type: Boolean,
+      default: false,
+    },
+    reportCount: {
+      type: Number,
+      default: 0,
+    },
+    reporters: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'User',
+    },
   },
   {
     toJSON: { virtuals: true },

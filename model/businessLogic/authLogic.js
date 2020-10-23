@@ -10,8 +10,8 @@ const User = require('../dbModel/userModel');
 
 const client = new OAuth2Client(config.CLIENT_ID);
 
-const createToken = (id , role) => {
-  const jwtToken = jwt.sign({ id,role}, config.JWT_SECRET, {
+const createToken = (id, role) => {
+  const jwtToken = jwt.sign({ id, role }, config.JWT_SECRET, {
     expiresIn: config.JWT_EXPIRES_IN,
   });
 
@@ -21,7 +21,7 @@ const createToken = (id , role) => {
 const createSendToken = (user, statusCode, res) => {
   try {
     // console.log(user);
-    const token = createToken(user._id,user.role);
+    const token = createToken(user._id, user.role);
     // console.log(token);
     // sending a cookie to the browser which stores the jwt token//
     const cookieOptions = {
@@ -46,54 +46,56 @@ const createSendToken = (user, statusCode, res) => {
   }
 };
 
-
 //TODO: Rectify the protect function to act as per auth workflow.
-const verifyJwtToken = catchAsync( async (req, res, next) => {
-  
-    // 1) Getting token and check of it's there
-    let token;
-    if (
-      req.headers.authorization &&
-      req.headers.authorization.startsWith('Bearer')
-    ) {
-      token = req.headers.authorization.split(' ')[1];
-    } else if (req.cookies.jwt) {
-      token = req.cookies.jwt;
-    }
-    // console.log(req.cookies.jwt);
-    if (!token) {
-      console.log('reached');
-      return next(
-        new AppError('You are not logged in! Please log in to get access.', 401)
-      );
-    }
-    // Verifying token
-    const decoded = await promisify(jwt.verify)(token, config.JWT_SECRET);
-    
-    req.jwtPayload = {
-      id : decoded.id,
-      role : decoded.role
-    }
-    next();
+const verifyJwtToken = catchAsync(async (req, res, next) => {
+  // 1) Getting token and check of it's there
+  let token;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith('Bearer')
+  ) {
+    token = req.headers.authorization.split(' ')[1];
+  } else if (req.cookies.jwt) {
+    token = req.cookies.jwt;
+  }
+  // console.log(req.cookies.jwt);
+  if (!token) {
+    console.log('reached');
+    return next(
+      new AppError('You are not logged in! Please log in to get access.', 401)
+    );
+  }
+  // Verifying token
+  const decoded = await promisify(jwt.verify)(token, config.JWT_SECRET);
+
+  req.jwtPayload = {
+    id: decoded.id,
+    role: decoded.role,
+  };
+  next();
 });
 
-const loggedInUser = catchAsync(async(req,res,next)=>{
+const loggedInUser = catchAsync(async (req, res, next) => {
+  // 3) Check if user still exists
+  // console.log(currentUser);
+  const currentUser = await User.findById(req.jwtPayload.id).populate({
+    path: 'Tags',
+    model: 'Tag',
+    select: 'name',
+  });
+  // console.log(currentUser);
+  if (!currentUser) {
+    return next(
+      new AppError(
+        'The user belonging to this token does no longer exist.',
+        401
+      )
+    );
+  }
+  req.user = currentUser;
 
-  const currentUser = await User.findById(req.jwtPayload.id);
-    // console.log(currentUser);
-    if (!currentUser) {
-      return next(
-        new AppError(
-          'The user belonging to this token does no longer exist.',
-          401
-        )
-      );
-    }
-    req.user = currentUser;
-
-    next();
-  
-})
+  next();
+});
 
 const restrictTo = (...roles) => {
   return (req, res, next) => {
@@ -105,6 +107,7 @@ const restrictTo = (...roles) => {
     next();
   };
 };
+
 const createUser = catchAsync(async (name, email, res) => {
   //  console.log(name,email);
   const newUser = await User.create({
@@ -128,11 +131,14 @@ const googleLogin = catchAsync(async (req, res, next) => {
       const { name, email, email_verified } = response.payload;
       // console.log(name , email ,email_verified);
       // console.log(response.payload);
+
+      /**Check if IIT BBS mail or not. If not, return forbidden error */
+
       if (email_verified) {
         User.findOne({ email }).exec((err, user) => {
           if (err) {
             return res.status(404).json({
-              message: 'something went wrong',
+              message: err.message,
             });
           } else {
             console.log('verified');
@@ -143,13 +149,13 @@ const googleLogin = catchAsync(async (req, res, next) => {
               if(config.SIGNUP_TOGGLE=="true")createUser(name, email, res);
               else {
                 visitor = {
-                  _id : email,
-                  name:name,
-                  email:email,
-                  role:'visitor'
-                }
-                createSendToken(visitor,200,res);
-              }              
+                  _id: email,
+                  name: name,
+                  email: email,
+                  role: 'visitor',
+                };
+                createSendToken(visitor, 200, res);
+              }
             }
           }
         });

@@ -50,7 +50,7 @@ class Layout extends Component {
         .then((response) => {
           console.log('login');
           console.log(response);
-          this.setState({ role:response.data.user.role ,image: response.data.user.image });
+          // this.setState({ image: response.data.user.picture });
         })
         .catch((err) => console.log(err));
     }
