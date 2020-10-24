@@ -24,3 +24,7 @@ exports.searchUser = catchAsync(async (req, res, next) => {
     users: users,
   });
 });
+
+exports.searchByTag = catchAsync(async (req, res, next) => {
+  
+});

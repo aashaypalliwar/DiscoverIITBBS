@@ -4,13 +4,19 @@ const authLogic = require('./../model/businessLogic/authLogic');
 const router = express.Router();
 
 router
-  .route('/:query')
+  .route('/user/:query')
   .get(
     authLogic.verifyJwtToken,
-    authLogic.loggedInUser,
     searchController.searchUser
   );
 
-// console.log('Check');
+router
+.route('/tag')
+.get(
+  authLogic.verifyJwtToken,
+  searchController.searchByTag
+);
+
+
 
 module.exports = router;
