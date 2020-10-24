@@ -86,7 +86,7 @@ const loggedInUser = catchAsync(async (req, res, next) => {
   // 3) Check if user still exists
   // console.log(currentUser);
   const currentUser = await User.findById(req.jwtPayload.id).populate({
-    path: 'Tags',
+    path: 'tags',
     model: 'Tag',
     select: 'name',
   });
