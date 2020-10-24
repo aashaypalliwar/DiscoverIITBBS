@@ -2,6 +2,7 @@ const User = require('../model/dbModel/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const APIFeatures = require('../utils/apiFeatures');
+const Tag = require('../model/dbModel/tagModel');
 const { sendEmail } = require('../utils/sendEmail');
 
 exports.unpublish = catchAsync(async (req, res, next) => {
@@ -225,3 +226,40 @@ exports.verify = catchAsync(async (req, res, next) => {
     return next(new AppError('Error in sending the mail', 401));
   }
 });
+
+exports.createTag = catchAsync(async(req,res,next)=>{
+
+    const {tagName,tagGroup} = req.body.tag;
+
+    if(!tagName || !tagGroup){
+        return next(new AppError('Either name or group of tag is missing',403));
+    }
+    const newTag =await  Tag.create({
+                   name : tagName,
+                   group : tagGroup
+                  });
+    if(!newTag){
+        return next(new AppError('A problem occurred while creating the tag',401));
+    }
+    res.status(200).json({
+        status:'success',
+        tag :newTag
+    });
+    
+
+});
+
+exports.deleteTag = catchAsync(async(req,res,next)=>{
+
+    const tagId = req.params.id;
+    if(!tagId){
+        return next(new AppError('There is no tag id mentioned',403));
+    }
+
+    const deletedDocument = await Tag.findByIdAndDelete(tagId);
+    if (!deletedDocument) return next(new AppError('No document found with this id', 403));
+
+    res.status(200).json({
+      status: 'success',
+    });
+})
