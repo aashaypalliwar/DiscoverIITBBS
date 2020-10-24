@@ -11,11 +11,11 @@ const tagSchema = new mongoose.Schema(
       type: String,
       required: [true, 'A tag must have a tag group'],
     },
-  },
-  {
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true },
   }
+  // {
+  //   toJSON: { virtuals: true },
+  //   toObject: { virtuals: true },
+  // }
 );
 
 const Tag = mongoose.model('Tag', tagSchema);

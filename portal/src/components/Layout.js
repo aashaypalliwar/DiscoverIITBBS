@@ -5,8 +5,6 @@ import Logout from './Logout';
 import Profile from './Profile.js';
 
 import './Layout.css';
-const dotenv = require('dotenv');
-dotenv.config({ path: './../.env' });
 
 class Layout extends Component {
   state = {
@@ -14,8 +12,8 @@ class Layout extends Component {
     user: [],
     email: '',
     image: '',
-    name:'',
-    role:''
+    name: '',
+    role: '',
   };
 
   constructor(props) {
@@ -49,8 +47,8 @@ class Layout extends Component {
         )
         .then((response) => {
           console.log('login');
-          console.log(response);
-          // this.setState({ image: response.data.user.picture });
+          console.log(response.data);
+          this.setState({ image: response.data.user.image });
         })
         .catch((err) => console.log(err));
     }
@@ -84,7 +82,7 @@ class Layout extends Component {
       return (
         <div className="Login">
           <GoogleLogin
-            clientId={REACT_APP_CLIENT_ID}
+            clientId={process.env.REACT_APP_CLIENT_ID}
             buttonText="Login with google"
             isSignedIn={true}
             onSuccess={this.successResponseGoogle}
@@ -97,7 +95,11 @@ class Layout extends Component {
       return (
         <div className="page">
           <Logout img={this.state.image} onLogout={this.logout} />
-          <Profile user={this.state.user} email={this.state.email} role={this.state.role}/>
+          <Profile
+            user={this.state.user}
+            email={this.state.email}
+            role={this.state.role}
+          />
         </div>
       );
   };
