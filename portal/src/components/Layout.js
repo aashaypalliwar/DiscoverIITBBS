@@ -84,7 +84,7 @@ class Layout extends Component {
       return (
         <div className="Login">
           <GoogleLogin
-            clientId={REACT_APP_CLIENT_ID}
+            clientId="816660866473-jjfs7lqo79i1i6qbg5duffvefe08fgp8.apps.googleusercontent.com"
             buttonText="Login with google"
             isSignedIn={true}
             onSuccess={this.successResponseGoogle}
