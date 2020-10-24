@@ -32,20 +32,18 @@ class Profile extends Component {
       })
       .catch((err) => {
         console.log(err);
-        
       });
   };
 
   componentDidMount() {
     console.log(this.props.role);
-    if(this.props.role)this.getProfileFromDB();
-    
+    if (this.props.role) this.getProfileFromDB();
     else {
       const user = {
-        name : this.props.user,
-        email:this.props.email,
-      }
-      this.setState({user:user,dataLoaded:true});
+        name: this.props.user,
+        email: this.props.email,
+      };
+      this.setState({ user: user, dataLoaded: true });
     }
   }
 
@@ -64,7 +62,7 @@ class Profile extends Component {
   updateProfile = () => {
     let bio = document.querySelector('.bio').value;
     axios
-      .patch('/v1/user/update-profile', { bio }, { withCredentials: true })
+      .patch('/v1/user/profile', { bio }, { withCredentials: true })
       .then((response) => {
         alert('Sucessfully Updated');
         this.setState({ updateClicked: false });
@@ -120,13 +118,15 @@ class Profile extends Component {
                       <tr>
                         <th>Tags</th>
                         <td className="tags-chips">
-                          {this.state.user.Tags ?this.state.user.Tags.map((tag, index) => {
-                            return (
-                              <div className="chip" key={index}>
-                                {tag.name}
-                              </div>
-                            );
-                          }):null}
+                          {this.state.user.Tags
+                            ? this.state.user.Tags.map((tag, index) => {
+                                return (
+                                  <div className="chip" key={index}>
+                                    {tag.name}
+                                  </div>
+                                );
+                              })
+                            : null}
                         </td>
                       </tr>
                     </tbody>

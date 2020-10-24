@@ -50,12 +50,26 @@ const userSchema = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: 'User',
     },
-  },
-  {
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true },
+    admissionYear: {
+      type: Number,
+      max: [new Date().getFullYear(), 'Invalid year of admission'],
+    },
+    graduationYear: {
+      type: Number,
+    },
+    branch: {
+      type: String,
+      default: 'Not Specified',
+      // enum:[]
+    },
   }
+  // {
+  //   toJSON: { virtuals: true },
+  //   toObject: { virtuals: true },
+  // }
 );
+
+userSchema.index({ name: 'text', email: 'text' });
 
 const User = mongoose.model('User', userSchema);
 module.exports = User;

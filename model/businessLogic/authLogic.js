@@ -10,6 +10,13 @@ const User = require('../dbModel/userModel');
 
 const client = new OAuth2Client(config.CLIENT_ID);
 
+const checkOrg = (email) => {
+  const index = email.indexOf('@');
+  const domain = email.substr(index);
+  if (domain !== '@iitbbs.ac.in') return false;
+  return true;
+};
+
 const createToken = (id, role) => {
   const jwtToken = jwt.sign({ id, role }, config.JWT_SECRET, {
     expiresIn: config.JWT_EXPIRES_IN,
@@ -132,9 +139,15 @@ const googleLogin = catchAsync(async (req, res, next) => {
       // console.log(name , email ,email_verified);
       // console.log(response.payload);
 
-      /**Check if IIT BBS mail or not. If not, return forbidden error */
-
       if (email_verified) {
+        /**Check if IIT BBS mail or not. If not, return forbidden error */
+        if (!checkOrg(email))
+          return next(
+            new AppError('Access Denied! Only IIT BBS users are allowed', 403)
+          );
+
+        console.log('here');
+
         User.findOne({ email }).exec((err, user) => {
           if (err) {
             return res.status(404).json({

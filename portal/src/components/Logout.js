@@ -3,9 +3,6 @@ import { GoogleLogout } from 'react-google-login';
 
 import './Logout.css';
 
-const dotenv = require('dotenv');
-dotenv.config({ path: './../config.env' });
-
 class Logout extends Component {
   constructor(props) {
     super(props);
