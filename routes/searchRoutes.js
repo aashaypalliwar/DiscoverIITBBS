@@ -4,7 +4,7 @@ const authLogic = require('./../model/businessLogic/authLogic');
 const router = express.Router();
 
 router
-  .route('/:email')
+  .route('/:query')
   .get(
     authLogic.verifyJwtToken,
     authLogic.loggedInUser,

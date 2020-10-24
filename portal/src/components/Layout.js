@@ -39,7 +39,7 @@ class Layout extends Component {
 
       axios
         .post(
-          '/v1/auth/googleLogin',
+          '/v1/auth/login',
           { tokenId: response.tokenId },
           {
             withCredentials: true,
@@ -57,7 +57,7 @@ class Layout extends Component {
   logout = () => {
     this.setState({ isLoggedIn: false });
     axios
-      .get('/v1/auth/logout', {
+      .post('/v1/auth/logout', {
         withCredentials: true,
       })
       .then((response) => {

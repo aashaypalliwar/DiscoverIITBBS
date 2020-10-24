@@ -62,7 +62,7 @@ class Profile extends Component {
   updateProfile = () => {
     let bio = document.querySelector('.bio').value;
     axios
-      .patch('/v1/user/update-profile', { bio }, { withCredentials: true })
+      .patch('/v1/user/profile', { bio }, { withCredentials: true })
       .then((response) => {
         alert('Sucessfully Updated');
         this.setState({ updateClicked: false });
