@@ -5,18 +5,10 @@ const router = express.Router();
 
 router
   .route('/user/:query')
-  .get(
-    authLogic.verifyJwtToken,
-    searchController.searchUser
-  );
+  .get(authLogic.verifyJwtToken, searchController.searchUser);
 
 router
-.route('/tag')
-.get(
-  authLogic.verifyJwtToken,
-  searchController.searchByTag
-);
-
-
+  .route('/tag/:query')
+  .get(authLogic.verifyJwtToken, searchController.searchByTag);
 
 module.exports = router;
