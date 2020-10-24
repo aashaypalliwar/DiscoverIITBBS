@@ -8,7 +8,7 @@ router
   .get(authLogic.verifyJwtToken, searchController.searchUser);
 
 router
-  .route('/tag/:query')
+  .route('/tags')
   .get(authLogic.verifyJwtToken, searchController.searchByTag);
 
 module.exports = router;

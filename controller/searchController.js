@@ -28,25 +28,17 @@ exports.searchUser = catchAsync(async (req, res, next) => {
 });
 
 exports.searchByTag = catchAsync(async (req, res, next) => {
-  console.log(req.params.query);
-  // const searchQuery = '"' + req.params.query + '"';
-  // console.log(searchQuery);
+ 
+  const queryTags = req.body.tagsSelected ;
 
-  const tags = await Tag.find(
-    { $text: { $search: req.params.query } },
-    { score: { $meta: 'textScore' } }
-  ).sort({ score: { $meta: 'textScore' } }).populate('users',{email:1,name:1}).select({users:1,name:1});
+  const users = await User.find({tags:{$all : queryTags}}).sort({verifyStatus : -1});
 
-  // console.log(tags);
-  // console.log(tags);
-  if (tags === null) {
-    console.log('here');
-
-    return next(new AppError('There is no tag with this query', 404));
+  if(users.length==0){
+    return next(new AppError('Sorry there are no users with all these tags',401));
   }
   res.status(200).json({
-    status: 'success',
-    tags: tags,
+    status:'success',
+    data : users
   });
 });
 
