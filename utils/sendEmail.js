@@ -9,18 +9,18 @@ const sendEmail = async options => {
         const transporter = nodemailer.createTransport({
             service: 'Gmail',
             auth: {
-                user: 'raj.karthikeya2002',
-                pass: 'chinnaraj123'
+                user: config.EMAIL_USERNAME,
+                pass: config.EMAIL_PASSWORD
             }
         });
 
         // 2) Define the email options
         const mailOptions = {
-            from: "raj.karthikeya2002@gmail.com",
+            from: 'discover.neuro <SomeMail@gmail.com>',
             to: options.email,
             subject: options.subject,
             text: options.message,
-            // attachments: options.attachments
+            attachments: options.attachments
         };
 
         // 3) Actually send the email
