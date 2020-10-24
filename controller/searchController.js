@@ -35,10 +35,10 @@ exports.searchByTag = catchAsync(async (req, res, next) => {
   const tags = await Tag.find(
     { $text: { $search: req.params.query } },
     { score: { $meta: 'textScore' } }
-  ).sort({ score: { $meta: 'textScore' } }).populate('users');
+  ).sort({ score: { $meta: 'textScore' } }).populate('users',{email:1,name:1}).select({users:1,name:1});
 
   // console.log(tags);
-  console.log(tags);
+  // console.log(tags);
   if (tags === null) {
     console.log('here');
 
