@@ -41,7 +41,7 @@ class Layout extends Component {
 
       axios
         .post(
-          '/v1/user/googleLogin',
+          '/v1/auth/googleLogin',
           { tokenId: response.tokenId },
           {
             withCredentials: true,
@@ -59,7 +59,7 @@ class Layout extends Component {
   logout = () => {
     this.setState({ isLoggedIn: false });
     axios
-      .get('/v1/user/logout', {
+      .get('/v1/auth/logout', {
         withCredentials: true,
       })
       .then((response) => {
@@ -84,7 +84,7 @@ class Layout extends Component {
       return (
         <div className="Login">
           <GoogleLogin
-            clientId="816660866473-jjfs7lqo79i1i6qbg5duffvefe08fgp8.apps.googleusercontent.com"
+            clientId={REACT_APP_CLIENT_ID}
             buttonText="Login with google"
             isSignedIn={true}
             onSuccess={this.successResponseGoogle}

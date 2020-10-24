@@ -120,13 +120,13 @@ class Profile extends Component {
                       <tr>
                         <th>Tags</th>
                         <td className="tags-chips">
-                          {this.state.user.Tags.map((tag, index) => {
+                          {this.state.user.Tags ?this.state.user.Tags.map((tag, index) => {
                             return (
                               <div className="chip" key={index}>
                                 {tag.name}
                               </div>
                             );
-                          })}
+                          }):null}
                         </td>
                       </tr>
                     </tbody>

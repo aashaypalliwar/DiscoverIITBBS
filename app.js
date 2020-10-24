@@ -10,6 +10,8 @@ const middleware = require('./utils/middleware');
 const clientEndpoints = ['home', 'profile'];
 const searchRouter = require('./routes/searchRoutes');
 const userRouter = require('./routes/userRoutes');
+const authRouter = require('./routes/authRoutes');
+const adminRouter = require('./routes/adminRoutes');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controller/errorController');
 require('./cronJobs/backup');
@@ -77,8 +79,10 @@ app.use('/v1/search', searchRouter); // '/v1/search/tags' '/v1/search/user'
 //User
 app.use('/v1/user', userRouter); // All user related jobs - profile updates, reporting
 
+//Auth
+app.use('/v1/auth',authRouter);
 //Admin
-// app.use("/v1/admin", adminRouter); // Admin endpoints - unpublish, republish, verify
+app.use("/v1/admin", adminRouter); // Admin endpoints - unpublish, republish, verify
 
 app.all('*', (req, res, next) => {
   console.log('CANNOT');
