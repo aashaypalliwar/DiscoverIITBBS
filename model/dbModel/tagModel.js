@@ -18,5 +18,7 @@ const tagSchema = new mongoose.Schema(
   // }
 );
 
+tagSchema.index({ name: 'text', group: 'text' });
+
 const Tag = mongoose.model('Tag', tagSchema);
 module.exports = Tag;
