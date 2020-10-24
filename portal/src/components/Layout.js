@@ -24,7 +24,7 @@ class Layout extends Component {
     const emailUsed = response.profileObj.email;
     const index = emailUsed.indexOf('@');
     const domain = emailUsed.substr(index);
-
+    console.log(response);
     this.setState({
       user: response.profileObj.name,
       email: response.profileObj.email,
@@ -82,7 +82,7 @@ class Layout extends Component {
       return (
         <div className="Login">
           <GoogleLogin
-            clientId="816660866473-jjfs7lqo79i1i6qbg5duffvefe08fgp8.apps.googleusercontent.com"
+            clientId={REACT_APP_CLIENT_ID}
             buttonText="Login with google"
             isSignedIn={true}
             onSuccess={this.successResponseGoogle}
