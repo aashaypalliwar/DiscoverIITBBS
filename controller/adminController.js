@@ -78,7 +78,6 @@ exports.publish = catchAsync(async (req, res, next) => {
   const updatedResponse = await User.updateMany(
     {
       email: { $in: emails_to_publish },
-      role: { $in: ['user', 'admin'] },
       publishStatus: { $eq: false },
     },
     { $set: { publishStatus: true } }
@@ -136,10 +135,9 @@ exports.unverify = catchAsync(async (req, res, next) => {
   const updatedResponse = await User.updateMany(
     {
       email: { $in: emails_to_unverify },
-      role: { $in: roles },
-      verifyStatus: { $eq: true },
+      role: { $in: roles }, 
     },
-    { $set: { verifyStatus: false } }
+    { $set: { verifyStatus: false , autoVerify:false} }
   ).catch((err) => console.log(err));
 
   const updatedDocument = await User.find({
@@ -190,7 +188,7 @@ exports.verify = catchAsync(async (req, res, next) => {
     {
       email: { $in: emails_to_verify },
       role: { $in: roles },
-      verifyStatus: { $eq: false },
+      verifyStatus : {$eq : false}
     },
     { $set: { verifyStatus: true } }
   ).catch((err) => console.log(err));
@@ -262,4 +260,59 @@ exports.deleteTag = catchAsync(async(req,res,next)=>{
     res.status(200).json({
       status: 'success',
     });
-})
+});
+
+exports.autoVerify = catchAsync(async (req, res, next) => {
+    const emails_to_autoVerify = req.body.emails;
+    // console.log(emails_to_verify);
+    if (!emails_to_autoVerify) {
+      return next(new AppError('There are no emails in the request', 401));
+    }
+    roles = ['user', 'admin'];
+    if (req.user.role === 'superAdmin') {
+      roles.push('superAdmin');
+    }
+    const updatedResponse = await User.updateMany(
+      {
+        email: { $in: emails_to_autoVerify },
+        role: { $in: roles },
+        autoVerifyStatus : {$eq : false}
+      },
+      { $set: { autoVerifyStatus: true } }
+    ).catch((err) => console.log(err));
+  
+    const updatedDocument = await User.find({ email: { $in: emails_to_autoVerify } });
+    // console.log(updatedUsers);
+    autoVerify_failed_user_emails = [];
+    autoVerify_success_user_emails = [];
+  
+    for (let user of updatedDocument) {
+      if (user.autoVerifyStatus) autoVerify_success_user_emails.push(user.email);
+      else autoVerify_failed_user_emails.push(user.email);
+    }
+  
+    try {
+      // await sendEmail({
+      //     email : autoVerify_success_user_emails,
+      //     subject : "From Discovery Portal",
+      //     message : "You are published by the superAdmin",
+  
+      //   });
+  
+      if (autoVerify_failed_user_emails.length === 0) {
+        res.status(200).json({
+          status: 'success',
+        });
+      } else {
+        res.status(200).json({
+          autoVerify_failed: autoVerify_failed_user_emails,
+        });
+      }
+    } catch (err) {
+      return next(new AppError('Error in sending the mail', 401));
+    }
+  });
+  
+
+
+  

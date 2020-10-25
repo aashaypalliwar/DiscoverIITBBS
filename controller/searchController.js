@@ -16,7 +16,7 @@ exports.searchUser = catchAsync(async (req, res, next) => {
 
   // console.log(user);
 
-  if (users === null) {
+  if (users.length==0) {
     console.log('here');
 
     return next(new AppError('There is no user with this email', 404));
@@ -31,7 +31,11 @@ exports.searchByTag = catchAsync(async (req, res, next) => {
  
   const queryTags = req.body.tagsSelected ;
 
-  const users = await User.find({tags:{$all : queryTags}}).sort({verifyStatus : -1});
+  const users = await User.find({tags:{$all : queryTags}}).sort({verifyStatus : -1}).populate({
+    path: 'tags',
+    model: 'Tag',
+    select: 'name',
+  });
 
   if(users.length==0){
     return next(new AppError('Sorry there are no users with all these tags',401));

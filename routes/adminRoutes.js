@@ -30,6 +30,12 @@ router.patch(
   authLogic.loggedInUser,
   adminController.unverify
 );
+router.patch(
+    '/autoVerify',
+    authLogic.restrictTo('superAdmin'),
+    authLogic.loggedInUser,
+    adminController.autoVerify
+  );
 router.post(
     '/tag',
     authLogic.restrictTo( 'superAdmin'),
@@ -43,4 +49,6 @@ router.delete(
     authLogic.loggedInUser,
     adminController.deleteTag
 )
+
+
 module.exports = router;

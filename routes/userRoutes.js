@@ -23,5 +23,11 @@ router.get(
   authLogic.loggedInUser,
   userController.getAllUsers
 );
-
+router.get(
+  '/tag',
+  authLogic.verifyJwtToken,
+  authLogic.restrictTo('user', 'admin', 'superAdmin'),
+  authLogic.loggedInUser,
+  userController.getAllTags
+);
 module.exports = router;
