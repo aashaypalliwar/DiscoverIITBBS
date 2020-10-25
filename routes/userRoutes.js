@@ -18,9 +18,8 @@ router.patch(
   userController.updateProfile
 );
 router.get(
-  '/allUsers',
+  '/',
   authLogic.verifyJwtToken,
-  authLogic.restrictTo('user', 'admin', 'superAdmin'),
   authLogic.loggedInUser,
   userController.getAllUsers
 );
