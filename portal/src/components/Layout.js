@@ -82,7 +82,7 @@ class Layout extends Component {
       return (
         <div className="Login">
           <GoogleLogin
-            clientId={REACT_APP_CLIENT_ID}
+            clientId={process.env.REACT_APP_CLIENT_ID}
             buttonText="Login with google"
             isSignedIn={true}
             onSuccess={this.successResponseGoogle}

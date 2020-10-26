@@ -5,18 +5,19 @@ const AppError = require('./../utils/appError');
 
 exports.searchUser = catchAsync(async (req, res, next) => {
   console.log(req.params.query);
-  const searchQuery = req.params.query;
+  let searchQuery = req.params.query;
+  searchQuery = new RegExp(
+    searchQuery.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&'),
+    'gi'
+  );
   // const searchQuery = '\\' + req.params.query + '\\g';
   // console.log(searchQuery);
 
-  const users = await User.find(
-    { $text: { $search: searchQuery } },
-    { score: { $meta: 'textScore' } }
-  ).sort({ score: { $meta: 'textScore' } });
+  const users = User.find({ name: searchQuery });
 
   // console.log(user);
 
-  if (users.length==0) {
+  if (users.length == 0) {
     console.log('here');
 
     return next(new AppError('There is no user with this email', 404));
@@ -28,22 +29,23 @@ exports.searchUser = catchAsync(async (req, res, next) => {
 });
 
 exports.searchByTag = catchAsync(async (req, res, next) => {
- 
-  const queryTags = req.body.tagsSelected ;
+  const queryTags = req.body.tagsSelected;
 
-  const users = await User.find({tags:{$all : queryTags}}).sort({verifyStatus : -1}).populate({
-    path: 'tags',
-    model: 'Tag',
-    select: 'name',
-  });
+  const users = await User.find({ tags: { $all: queryTags } })
+    .sort({ verifyStatus: -1 })
+    .populate({
+      path: 'tags',
+      model: 'Tag',
+      select: 'name -_id -id',
+    });
 
-  if(users.length==0){
-    return next(new AppError('Sorry there are no users with all these tags',401));
+  if (users.length == 0) {
+    return next(
+      new AppError('Sorry there are no users with all these tags', 401)
+    );
   }
   res.status(200).json({
-    status:'success',
-    data : users
+    status: 'success',
+    data: users,
   });
 });
-
-

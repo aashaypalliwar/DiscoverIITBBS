@@ -42,9 +42,9 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    autoVerify:{
-     type:Boolean,
-     default : false
+    autoVerify: {
+      type: Boolean,
+      default: false,
     },
     reportCount: {
       type: Number,
@@ -52,10 +52,10 @@ const userSchema = new mongoose.Schema(
     },
     reporters: [
       {
-      type: mongoose.Schema.ObjectId,
-      ref: 'User',
-      }
-  ],
+        type: mongoose.Schema.ObjectId,
+        ref: 'User',
+      },
+    ],
     admissionYear: {
       type: Number,
       max: [new Date().getFullYear(), 'Invalid year of admission'],
@@ -81,7 +81,6 @@ const userSchema = new mongoose.Schema(
 //   })
 // })
 userSchema.index({ name: 'text', email: 'text' });
-
 
 const User = mongoose.model('User', userSchema);
 module.exports = User;

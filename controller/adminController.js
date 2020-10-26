@@ -135,9 +135,9 @@ exports.unverify = catchAsync(async (req, res, next) => {
   const updatedResponse = await User.updateMany(
     {
       email: { $in: emails_to_unverify },
-      role: { $in: roles }, 
+      role: { $in: roles },
     },
-    { $set: { verifyStatus: false , autoVerify:false} }
+    { $set: { verifyStatus: false, autoVerify: false } }
   ).catch((err) => console.log(err));
 
   const updatedDocument = await User.find({
@@ -188,7 +188,7 @@ exports.verify = catchAsync(async (req, res, next) => {
     {
       email: { $in: emails_to_verify },
       role: { $in: roles },
-      verifyStatus : {$eq : false}
+      verifyStatus: { $eq: false },
     },
     { $set: { verifyStatus: true } }
   ).catch((err) => console.log(err));
@@ -225,143 +225,190 @@ exports.verify = catchAsync(async (req, res, next) => {
   }
 });
 
-exports.createTag = catchAsync(async(req,res,next)=>{
+exports.createTag = catchAsync(async (req, res, next) => {
+  const { tagName, tagGroup } = req.body.tag;
 
-    const {tagName,tagGroup} = req.body.tag;
-
-    if(!tagName || !tagGroup){
-        return next(new AppError('Either name or group of tag is missing',403));
-    }
-    const newTag =await  Tag.create({
-                   name : tagName,
-                   group : tagGroup
-                  });
-    if(!newTag){
-        return next(new AppError('A problem occurred while creating the tag',401));
-    }
-    res.status(200).json({
-        status:'success',
-        tag :newTag
-    });
-    
-
+  if (!tagName || !tagGroup) {
+    return next(new AppError('Either name or group of tag is missing', 403));
+  }
+  const newTag = await Tag.create({
+    name: tagName,
+    group: tagGroup,
+  });
+  if (!newTag) {
+    return next(new AppError('A problem occurred while creating the tag', 401));
+  }
+  res.status(200).json({
+    status: 'success',
+    tag: newTag,
+  });
 });
 
-exports.deleteTag = catchAsync(async(req,res,next)=>{
+exports.deleteTag = catchAsync(async (req, res, next) => {
+  const tagId = req.params.id;
+  if (!tagId) {
+    return next(new AppError('There is no tag id mentioned', 403));
+  }
 
-    const tagId = req.params.id;
-    if(!tagId){
-        return next(new AppError('There is no tag id mentioned',403));
-    }
+  const deletedDocument = await Tag.findByIdAndDelete(tagId);
+  if (!deletedDocument)
+    return next(new AppError('No document found with this id', 403));
 
-    const deletedDocument = await Tag.findByIdAndDelete(tagId);
-    if (!deletedDocument) return next(new AppError('No document found with this id', 403));
-
-    res.status(200).json({
-      status: 'success',
-    });
+  res.status(200).json({
+    status: 'success',
+  });
 });
 
 exports.autoVerify = catchAsync(async (req, res, next) => {
-    const emails_to_autoVerify = req.body.emails;
-    // console.log(emails_to_verify);
-    if (!emails_to_autoVerify) {
-      return next(new AppError('There are no emails in the request', 401));
-    }
-    roles = ['user', 'admin'];
-    if (req.user.role === 'superAdmin') {
-      roles.push('superAdmin');
-    }
-    const updatedResponse = await User.updateMany(
-      {
-        email: { $in: emails_to_autoVerify },
-        role: { $in: roles },
-        autoVerifyStatus : {$eq : false}
-      },
-      { $set: { autoVerifyStatus: true } }
-    ).catch((err) => console.log(err));
-  
-    const updatedDocument = await User.find({ email: { $in: emails_to_autoVerify } });
-    // console.log(updatedUsers);
-    autoVerify_failed_user_emails = [];
-    autoVerify_success_user_emails = [];
-  
-    for (let user of updatedDocument) {
-      if (user.autoVerifyStatus) autoVerify_success_user_emails.push(user.email);
-      else autoVerify_failed_user_emails.push(user.email);
-    }
-  
-    try {
-      // await sendEmail({
-      //     email : autoVerify_success_user_emails,
-      //     subject : "From Discovery Portal",
-      //     message : "You are published by the superAdmin",
-  
-      //   });
-  
-      if (autoVerify_failed_user_emails.length === 0) {
-        res.status(200).json({
-          status: 'success',
-        });
-      } else {
-        res.status(200).json({
-          autoVerify_failed: autoVerify_failed_user_emails,
-        });
-      }
-    } catch (err) {
-      return next(new AppError('Error in sending the mail', 401));
-    }
+  const emails_to_autoVerify = req.body.emails;
+  // console.log(emails_to_verify);
+  if (!emails_to_autoVerify) {
+    return next(new AppError('There are no emails in the request', 401));
+  }
+  roles = ['user', 'admin'];
+  if (req.user.role === 'superAdmin') {
+    roles.push('superAdmin');
+  }
+  const updatedResponse = await User.updateMany(
+    {
+      email: { $in: emails_to_autoVerify },
+      role: { $in: roles },
+      autoVerifyStatus: { $eq: false },
+    },
+    { $set: { autoVerifyStatus: true } }
+  ).catch((err) => console.log(err));
+
+  const updatedDocument = await User.find({
+    email: { $in: emails_to_autoVerify },
   });
-  
-  exports.getAllUnpublishedUsers = catchAsync(async (req, res, next) => {
-    let filter = {
-      publishStatus : false
-    };
-    
-    let docs;
-    // const users = await User.find({role:{$eq:'user'}})
-    req.query.sort = 'name';
-    const features = new APIFeatures(User.find(filter), req.query)
-      .filter()
-      .sort()
-      .limitFields()
-      .paginate();
-    docs = await features.query; // explain()
-  
-    // SEND RESPONSE
-    res.status(200).json({
-      status: 'success',
-      results: docs.length,
-      data: {
-        docs,
-      },
-    });
+  // console.log(updatedUsers);
+  autoVerify_failed_user_emails = [];
+  autoVerify_success_user_emails = [];
+
+  for (let user of updatedDocument) {
+    if (user.autoVerifyStatus) autoVerify_success_user_emails.push(user.email);
+    else autoVerify_failed_user_emails.push(user.email);
+  }
+
+  try {
+    // await sendEmail({
+    //     email : autoVerify_success_user_emails,
+    //     subject : "From Discovery Portal",
+    //     message : "You are published by the superAdmin",
+
+    //   });
+
+    if (autoVerify_failed_user_emails.length === 0) {
+      res.status(200).json({
+        status: 'success',
+      });
+    } else {
+      res.status(200).json({
+        autoVerify_failed: autoVerify_failed_user_emails,
+      });
+    }
+  } catch (err) {
+    return next(new AppError('Error in sending the mail', 401));
+  }
+});
+
+exports.getAllUnpublishedUsers = catchAsync(async (req, res, next) => {
+  let filter = {
+    publishStatus: false,
+  };
+
+  let docs;
+  // const users = await User.find({role:{$eq:'user'}})
+  req.query.sort = 'name';
+  const features = new APIFeatures(User.find(filter), req.query)
+    .filter()
+    .sort()
+    .limitFields()
+    .paginate();
+  docs = await features.query; // explain()
+
+  // SEND RESPONSE
+  res.status(200).json({
+    status: 'success',
+    results: docs.length,
+    data: {
+      docs,
+    },
+  });
+});
+
+// exports.getAllReportedUsers = catchAsync(async (req, res, next) => {
+//   let filter = {
+//     publishStatus : false
+//   };
+
+//   let docs;
+//   // const users = await User.find({role:{$eq:'user'}})
+//   req.query.sort = 'name';
+//   const features = new APIFeatures(User.find(filter), req.query)
+//     .filter()
+//     .sort()
+//     .limitFields()
+//     .paginate();
+//   docs = await features.query; // explain()
+
+//   // SEND RESPONSE
+//   res.status(200).json({
+//     status: 'success',
+//     results: docs.length,
+//     data: {
+//       docs,
+//     },
+//   });
+// });
+
+exports.getAllReportedUsers = catchAsync(async (req, res, next) => {
+  let filter = {
+    reportCount: { $gt: 0 },
+  };
+
+  req.query.sort = 'name';
+  req.query.fields = 'name email reportCount reporters';
+  const features = new APIFeatures(
+    User.find(filter).populate({
+      path: 'reporters',
+      model: 'User',
+      select: 'name',
+    }),
+    req.query
+  )
+    .filter()
+    .sort()
+    .limitFields()
+    .paginate();
+
+  let docs = await features.query; // explain()
+
+  // SEND RESPONSE
+  res.status(200).json({
+    status: 'success',
+    results: docs.length,
+    data: {
+      docs,
+    },
+  });
+});
+
+exports.updateTag = catchAsync(async (req, res, next) => {
+  const tagId = req.params.id;
+  if (!tagId) {
+    return next(new AppError('There is no tag id mentioned', 403));
+  }
+
+  const tag = await Tag.findByIdAndUpdate(tagId, req.body, {
+    new: true,
+    runValidators: true,
   });
 
-  // exports.getAllReportedUsers = catchAsync(async (req, res, next) => {
-  //   let filter = {
-  //     publishStatus : false
-  //   };
-    
-  //   let docs;
-  //   // const users = await User.find({role:{$eq:'user'}})
-  //   req.query.sort = 'name';
-  //   const features = new APIFeatures(User.find(filter), req.query)
-  //     .filter()
-  //     .sort()
-  //     .limitFields()
-  //     .paginate();
-  //   docs = await features.query; // explain()
-  
-  //   // SEND RESPONSE
-  //   res.status(200).json({
-  //     status: 'success',
-  //     results: docs.length,
-  //     data: {
-  //       docs,
-  //     },
-  //   });
-  // });
-  
-
-  
+  res.status(200).json({
+    status: 'success',
+    data: {
+      tag: tag,
+    },
+  });
+});

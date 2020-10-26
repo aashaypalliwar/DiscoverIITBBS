@@ -31,29 +31,44 @@ router.patch(
   adminController.unverify
 );
 router.patch(
-    '/autoVerify',
-    authLogic.restrictTo('superAdmin'),
-    authLogic.loggedInUser,
-    adminController.autoVerify
-  );
+  '/autoVerify',
+  authLogic.restrictTo('superAdmin'),
+  authLogic.loggedInUser,
+  adminController.autoVerify
+);
 router.post(
-    '/tag',
-    authLogic.restrictTo( 'superAdmin'),
-    authLogic.loggedInUser,
-    adminController.createTag
-)
+  '/tag',
+  authLogic.restrictTo('superAdmin'),
+  authLogic.loggedInUser,
+  adminController.createTag
+);
 
 router.delete(
-    '/tag/:id',
-    authLogic.restrictTo( 'superAdmin'),
-    authLogic.loggedInUser,
-    adminController.deleteTag
-)
+  '/tag/:id',
+  authLogic.restrictTo('superAdmin'),
+  authLogic.loggedInUser,
+  adminController.deleteTag
+);
+
+router.patch(
+  '/tag/:id',
+  authLogic.restrictTo('superAdmin'),
+  authLogic.loggedInUser,
+  adminController.updateTag
+);
+
 router.get(
   '/unpublished',
-    authLogic.restrictTo( 'superAdmin'),
-    authLogic.loggedInUser,
-    adminController.getAllUnpublishedUsers
-)
+  authLogic.restrictTo('superAdmin'),
+  authLogic.loggedInUser,
+  adminController.getAllUnpublishedUsers
+);
+
+router.get(
+  '/reported',
+  authLogic.restrictTo('superAdmin'),
+  authLogic.loggedInUser,
+  adminController.getAllReportedUsers
+);
 
 module.exports = router;

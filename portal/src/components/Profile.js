@@ -44,6 +44,7 @@ class Profile extends Component {
         email: this.props.email,
       };
       this.setState({ user: user, dataLoaded: true });
+      document.getElementById('spinner').style.display = 'none';
     }
   }
 
