@@ -20,7 +20,7 @@ const app = express();
 
 app.use(helmet());
 app.use(cors());
-app.options('*', cors());
+// app.options('*', cors());
 app.use(
   cors({
     origin: 'http://localhost:3001',

@@ -36,7 +36,7 @@ exports.searchByTag = catchAsync(async (req, res, next) => {
     .populate({
       path: 'tags',
       model: 'Tag',
-      select: 'name -_id -id',
+      select: 'name',
     });
 
   if (users.length == 0) {

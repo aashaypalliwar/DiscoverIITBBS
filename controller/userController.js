@@ -66,7 +66,11 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
   let docs;
   // const users = await User.find({role:{$eq:'user'}})
   req.query.sort = 'name';
-  const features = new APIFeatures(User.find(filter), req.query)
+  const features = new APIFeatures(User.find(filter).populate({
+    path: 'tags',
+    model: 'Tag',
+    select: 'name group' ,
+  }), req.query)
     .filter()
     .sort()
     .limitFields()
@@ -108,12 +112,14 @@ exports.getAllTags = catchAsync(async(req,res,next)=>{
 
 exports.reportUser = catchAsync(async(req,res,next)=>{
 
-  const reportedUser = await User.findById(req.params.id);
+  // console.log(req.user.id);
+  // console.log(req.params.id);
 
+  const reportedUser = await User.findById(req.params.id);
   if(!reportedUser){
     return next (new AppError('The user with this id is not present',403));
   }
-
+  
   if(reportedUser.reporters &&reportedUser.reporters.includes(req.user.id)){
     res.status(200).json({
       status : 'success',
@@ -121,18 +127,13 @@ exports.reportUser = catchAsync(async(req,res,next)=>{
     });
   }
   else{
-    // reportedUser.reporters.push(req.user.id);
-    // reportedUser.reportCount = reportedUser.reporters.length;
-    // await reportedUser.save({runValidators:false});
-    const newReportCount = reportedUser.reportCount + 1;
-    const updatedUser = await User.findByIdAndUpdate(req.params.id,{reportCount : newReportCount, $push : {reporters : req.user.id}});
-    res.status({
+    reportedUser.reporters.push(req.user.id);
+    reportedUser.reportCount = reportedUser.reporters.length;
+    await reportedUser.save({runValidators:false});
+    res.status(200).json({
       status:'Success',
       message:'The user has been successfully reported',
-      data : updatedUser
+      data : reportedUser
     })
   }
-
-
-
-})
+});

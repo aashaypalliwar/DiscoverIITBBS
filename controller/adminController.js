@@ -337,31 +337,6 @@ exports.getAllUnpublishedUsers = catchAsync(async (req, res, next) => {
   });
 });
 
-// exports.getAllReportedUsers = catchAsync(async (req, res, next) => {
-//   let filter = {
-//     publishStatus : false
-//   };
-
-//   let docs;
-//   // const users = await User.find({role:{$eq:'user'}})
-//   req.query.sort = 'name';
-//   const features = new APIFeatures(User.find(filter), req.query)
-//     .filter()
-//     .sort()
-//     .limitFields()
-//     .paginate();
-//   docs = await features.query; // explain()
-
-//   // SEND RESPONSE
-//   res.status(200).json({
-//     status: 'success',
-//     results: docs.length,
-//     data: {
-//       docs,
-//     },
-//   });
-// });
-
 exports.getAllReportedUsers = catchAsync(async (req, res, next) => {
   let filter = {
     reportCount: { $gt: 0 },
@@ -393,22 +368,22 @@ exports.getAllReportedUsers = catchAsync(async (req, res, next) => {
     },
   });
 });
-
-exports.updateTag = catchAsync(async (req, res, next) => {
-  const tagId = req.params.id;
-  if (!tagId) {
-    return next(new AppError('There is no tag id mentioned', 403));
-  }
-
-  const tag = await Tag.findByIdAndUpdate(tagId, req.body, {
-    new: true,
-    runValidators: true,
+  exports.updateTag = catchAsync(async (req, res, next) => {
+    const tagId = req.params.id;
+    if (!tagId) {
+      return next(new AppError('There is no tag id mentioned', 403));
+    }
+  
+    const tag = await Tag.findByIdAndUpdate(tagId, req.body, {
+      new: true,
+      runValidators: true,
+    });
+  
+    res.status(200).json({
+      status: 'success',
+      data: {
+        tag: tag,
+      },
+    });
   });
 
-  res.status(200).json({
-    status: 'success',
-    data: {
-      tag: tag,
-    },
-  });
-});
