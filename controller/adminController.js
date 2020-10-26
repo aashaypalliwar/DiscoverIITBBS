@@ -343,7 +343,8 @@ exports.getAllReportedUsers = catchAsync(async (req, res, next) => {
   };
 
   req.query.sort = 'name';
-  req.query.fields = 'name email reportCount reporters';
+  // req.query.fields = 'name email reportCount reporters';
+
   const features = new APIFeatures(
     User.find(filter).populate({
       path: 'reporters',
