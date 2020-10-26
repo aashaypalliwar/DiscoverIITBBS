@@ -50,10 +50,12 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    reporters: {
+    reporters: [
+      {
       type: mongoose.Schema.ObjectId,
       ref: 'User',
-    },
+      }
+  ],
     admissionYear: {
       type: Number,
       max: [new Date().getFullYear(), 'Invalid year of admission'],
@@ -66,14 +68,20 @@ const userSchema = new mongoose.Schema(
       default: 'Not Specified',
       // enum:[]
     },
+  },
+  {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
   }
-  // {
-  //   toJSON: { virtuals: true },
-  //   toObject: { virtuals: true },
-  // }
 );
-
+// userSchema.pre(/^find/,function(next){
+//   this.populate({
+//     path : 'tags',
+//     select:'name'
+//   })
+// })
 userSchema.index({ name: 'text', email: 'text' });
+
 
 const User = mongoose.model('User', userSchema);
 module.exports = User;

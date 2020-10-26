@@ -49,6 +49,11 @@ router.delete(
     authLogic.loggedInUser,
     adminController.deleteTag
 )
-
+router.get(
+  '/unpublished',
+    authLogic.restrictTo( 'superAdmin'),
+    authLogic.loggedInUser,
+    adminController.getAllUnpublishedUsers
+)
 
 module.exports = router;

@@ -313,6 +313,55 @@ exports.autoVerify = catchAsync(async (req, res, next) => {
     }
   });
   
+  exports.getAllUnpublishedUsers = catchAsync(async (req, res, next) => {
+    let filter = {
+      publishStatus : false
+    };
+    
+    let docs;
+    // const users = await User.find({role:{$eq:'user'}})
+    req.query.sort = 'name';
+    const features = new APIFeatures(User.find(filter), req.query)
+      .filter()
+      .sort()
+      .limitFields()
+      .paginate();
+    docs = await features.query; // explain()
+  
+    // SEND RESPONSE
+    res.status(200).json({
+      status: 'success',
+      results: docs.length,
+      data: {
+        docs,
+      },
+    });
+  });
 
+  // exports.getAllReportedUsers = catchAsync(async (req, res, next) => {
+  //   let filter = {
+  //     publishStatus : false
+  //   };
+    
+  //   let docs;
+  //   // const users = await User.find({role:{$eq:'user'}})
+  //   req.query.sort = 'name';
+  //   const features = new APIFeatures(User.find(filter), req.query)
+  //     .filter()
+  //     .sort()
+  //     .limitFields()
+  //     .paginate();
+  //   docs = await features.query; // explain()
+  
+  //   // SEND RESPONSE
+  //   res.status(200).json({
+  //     status: 'success',
+  //     results: docs.length,
+  //     data: {
+  //       docs,
+  //     },
+  //   });
+  // });
+  
 
   

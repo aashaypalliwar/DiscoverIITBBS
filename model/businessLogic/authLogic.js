@@ -143,14 +143,15 @@ const googleLogin = catchAsync(async (req, res, next) => {
           );
 
         console.log('here');
-
+        try{
         User.findOne({ email }).exec((err, user) => {
+          console.log('verified');
           if (err) {
             return res.status(404).json({
               message: err.message,
             });
           } else {
-            console.log('verified');
+           
             if (user) {
               createSendToken(user, 200, res);
             } else {
@@ -168,6 +169,9 @@ const googleLogin = catchAsync(async (req, res, next) => {
             }
           }
         });
+      }catch(err){
+        console.log(err);
+      }
       }
     })
     .catch((err) => console.log(err));
