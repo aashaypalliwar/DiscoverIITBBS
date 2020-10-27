@@ -56,7 +56,7 @@ class Wrapper extends Component{
             ) : (
               <GoogleLogin
                 className="google-login"
-                clientId={process.nextTick.CLIENT_ID}
+                clientId="1092979243632-ufl3842hjal4adoaio73ta2noj2avnbo.apps.googleusercontent.com"
                 buttonText="Login with google"
                 isSignedIn={true}
                 onSuccess={this.successResponseGoogle}

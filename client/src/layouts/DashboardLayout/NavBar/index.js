@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
-import { Link as RouterLink, useLocation,Redirect } from 'react-router-dom';
+import { Link as RouterLink, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import {useRoutes, useRedirect} from 'hookrouter';
+
 import {
   Avatar,
   Box,
@@ -100,13 +102,15 @@ const logOut = () => {
     })
     .then(response => {
       console.log(response);
-      <Redirect to ="/"/>
+      // window.location.reload();
+      useRedirect( '/app/dashboard','/');
+     
     })
     .catch(err => {
       console.log(err);
     });
   // this.props.callFunc();
-  // window.location.reload();
+  // 
 };
 
 const NavBar = ({ onMobileClose, openMobile }) => {
