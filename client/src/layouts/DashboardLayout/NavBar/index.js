@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Link as RouterLink, useLocation } from 'react-router-dom';
+import { Link as RouterLink, useLocation,Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
   Avatar,
@@ -100,12 +100,13 @@ const logOut = () => {
     })
     .then(response => {
       console.log(response);
+      <Redirect to ="/"/>
     })
     .catch(err => {
       console.log(err);
     });
   // this.props.callFunc();
-  window.location.reload();
+  // window.location.reload();
 };
 
 const NavBar = ({ onMobileClose, openMobile }) => {
@@ -152,7 +153,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
       <Box p={2} m={2}>
         <Box display="flex" justifyContent="center" mt={2}>
           <GoogleLogout
-            clientId={process.env.REACT_APP_CLIENT_ID}
+            clientId="1092979243632-ufl3842hjal4adoaio73ta2noj2avnbo.apps.googleusercontent.com"
             buttonText="LOG OUT"
             onLogoutSuccess={logOut}
             theme="dark"

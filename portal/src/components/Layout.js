@@ -3,7 +3,7 @@ import GoogleLogin from 'react-google-login';
 import axios from 'axios';
 import Logout from './Logout';
 import Profile from './Profile.js';
-
+import Button from '@material-ui/core/Button'
 import './Layout.css';
 
 class Layout extends Component {
@@ -82,7 +82,7 @@ class Layout extends Component {
       return (
         <div className="Login">
           <GoogleLogin
-            clientId={process.env.REACT_APP_CLIENT_ID}
+            clientId="1092979243632-ufl3842hjal4adoaio73ta2noj2avnbo.apps.googleusercontent.com"
             buttonText="Login with google"
             isSignedIn={true}
             onSuccess={this.successResponseGoogle}
@@ -94,6 +94,9 @@ class Layout extends Component {
     } else
       return (
         <div className="page">
+          <Button variant ="contained">
+            Portal
+          </Button>
           <Logout img={this.state.image} onLogout={this.logout} />
           <Profile
             user={this.state.user}

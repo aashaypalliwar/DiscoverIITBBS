@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Button, Form, Row, Col, Card } from 'react-bootstrap';
+import {  Form, Row, Col, Card } from 'react-bootstrap';
+import {Button} from "@material-ui/core"
 import axios from 'axios';
 
 import './Profile.css';
@@ -80,7 +81,7 @@ class Profile extends Component {
       <div className="profile">
         <h1>Hello {this.props.user}</h1>
         <Button
-          variant="info"
+          variant="contained"
           onClick={this.getProfile}
           disabled={!this.state.dataLoaded}
         >
