@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Link as RouterLink, useLocation } from 'react-router-dom';
+import { Link as RouterLink, useLocation, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {useRoutes, useRedirect} from 'hookrouter';
 
@@ -36,31 +36,31 @@ const user = {
 };
 
 const items = [
+  // {
+  //   href: '/app/dashboard',
+  //   icon: BarChartIcon,
+  //   title: 'Dashboard'
+  // },
   {
-    href: '/app/dashboard',
-    icon: BarChartIcon,
-    title: 'Dashboard'
-  },
-  {
-    href: '/app/customers',
-    icon: UsersIcon,
-    title: 'Customers'
-  },
-  {
-    href: '/app/products',
-    icon: ShoppingBagIcon,
-    title: 'Products'
-  },
-  {
-    href: '/app/account',
+    href: '/profile',
     icon: UserIcon,
-    title: 'Account'
+    title: 'Profile'
   },
+  {
+    href: '/discover',
+    icon: UsersIcon,
+    title: 'Discover'
+  },
+  // {
+  //   href: '/app/products',
+  //   icon: ShoppingBagIcon,
+  //   title: 'Products'
+  // },
   {
     href: '/app/settings',
     icon: SettingsIcon,
     title: 'Settings'
-  },
+  }
   // {
   //   href: '/login',
   //   icon: LockIcon,
@@ -71,11 +71,11 @@ const items = [
   //   icon: UserPlusIcon,
   //   title: 'Register'
   // },
-  {
-    href: '/404',
-    icon: AlertCircleIcon,
-    title: 'Error'
-  }
+  // {
+  //   href: '/404',
+  //   icon: AlertCircleIcon,
+  //   title: 'Error'
+  // }
 ];
 
 const useStyles = makeStyles(() => ({
@@ -102,15 +102,12 @@ const logOut = () => {
     })
     .then(response => {
       console.log(response);
-      // window.location.reload();
-      useRedirect( '/app/dashboard','/');
-     
+      window.location.reload();
     })
     .catch(err => {
       console.log(err);
     });
   // this.props.callFunc();
-  // 
 };
 
 const NavBar = ({ onMobileClose, openMobile }) => {
