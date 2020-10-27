@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
@@ -16,95 +16,116 @@ import FacebookIcon from 'src/icons/Facebook';
 import GoogleIcon from 'src/icons/Google';
 import Page from 'src/components/Page';
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    backgroundColor: theme.palette.background.dark,
-    height: '100%',
-    paddingBottom: theme.spacing(3),
-    paddingTop: theme.spacing(3)
-  }
-}));
 
-const LoginView = () => {
-  const classes = useStyles();
-  const navigate = useNavigate();
+import GoogleLogin from 'react-google-login';
+import axios from 'axios';
+import Logout from './Logout';
+// import Profile from '../../../../portal/src/components/Profile.js/index.js';
 
-  return (
-    <Page className={classes.root} title="Login">
-      <Box
-        display="flex"
-        flexDirection="column"
-        height="100%"
-        justifyContent="center"
-      >
-        <Container maxWidth="sm">
-          <Formik
-            initialValues={{
-              email: 'demo@devias.io',
-              password: 'Password123'
-            }}
-            validationSchema={Yup.object().shape({
-              email: Yup.string()
-                .email('Must be a valid email')
-                .max(255)
-                .required('Email is required'),
-              password: Yup.string()
-                .max(255)
-                .required('Password is required')
-            })}
-            onSubmit={() => {
-              navigate('/app/dashboard', { replace: true });
-            }}
-          >
-            {({
-              errors,
-              handleBlur,
-              handleChange,
-              handleSubmit,
-              isSubmitting,
-              touched,
-              values
-            }) => (
-              <form onSubmit={handleSubmit}>
-                <Box mb={3} display="flex" justifyContent="center">
-                  <Typography color="textPrimary" variant="h2">
-                    Sign in
-                  </Typography>
-                </Box>
-                <Grid
-                  container
-                  spacing={3}
-                  justify="center"
-                  alignItems="center"
-                >
-                  <Grid item xs={12} md={6}>
-                    <Button
-                      fullWidth
-                      startIcon={<GoogleIcon />}
-                      onClick={handleSubmit}
-                      size="large"
-                      variant="contained"
-                    >
-                      Login with Google
-                    </Button>
-                  </Grid>
-                </Grid>
-                <Box mt={3} mb={1}>
-                  <Typography
-                    align="center"
-                    color="textSecondary"
-                    variant="body1"
-                  >
-                    Login using your IIT BBS mail
-                  </Typography>
-                </Box>
-              </form>
-            )}
-          </Formik>
-        </Container>
-      </Box>
-    </Page>
-  );
-};
+// import './Layout.css';
+
+class LoginView extends Component {
+  state = {
+    isLoggedIn: false,
+    user: [],
+    email: '',
+    image: '',
+    name: '',
+    role: '',
+  };
+
+  // constructor(props) {
+  //   super(props);
+  // }
+
+  successResponseGoogle = (response) => {
+    const emailUsed = response.profileObj.email;
+    const index = emailUsed.indexOf('@');
+    const domain = emailUsed.substr(index);
+    console.log(response);
+    this.setState({
+      user: response.profileObj.name,
+      email: response.profileObj.email,
+    });
+
+    if (domain !== '@iitbbs.ac.in') {
+      alert('Use your iit bbs email id');
+    } else {
+      // console.log(response.tokenId);
+      this.setState({ isLoggedIn: true });
+      // this.props.callFunc();
+
+      axios
+        .post(
+          '/v1/auth/login',
+          { tokenId: response.tokenId },
+          {
+            withCredentials: true,
+          }
+        )
+        .then((response) => {
+          console.log('login');
+          console.log(response.data);
+          this.setState({ image: response.data.user.image });
+        })
+        .catch((err) => console.log(err));
+    }
+  };
+
+  logout = () => {
+    this.setState({ isLoggedIn: false });
+    axios
+      .post('/v1/auth/logout', {
+        withCredentials: true,
+      })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    // this.props.callFunc();
+  };
+
+  failureResponseGoogle = (response) => {
+    console.log(response);
+    alert('Use your IIT BBS email for login');
+  };
+
+  render = () => {
+    // console.log(`${__dirname}../../.env`);
+    // console.log(process.env);
+
+    if (!this.state.isLoggedIn) {
+      return (
+        <div className="Login">
+          <GoogleLogin
+            clientId="1092979243632-ufl3842hjal4adoaio73ta2noj2avnbo.apps.googleusercontent.com"
+            buttonText="Login with google"
+            isSignedIn={true}
+            onSuccess={this.successResponseGoogle}
+            onFailure={this.failureResponseGoogle}
+            cookiePolicy={'single_host_origin'}
+          />
+        </div>
+      );
+    } else
+      return (
+        <div className="page">
+          {/* <Button variant ="contained">
+            Portal
+          </Button>
+          <Logout img={this.state.image} onLogout={this.logout} />
+          <Profile
+            user={this.state.user}
+            email={this.state.email}
+            role={this.state.role}
+          /> */}
+          <h1>Logged in</h1>
+          <Logout img={this.state.image} onLogout={this.logout} />
+        </div>
+      );
+  };
+}
 
 export default LoginView;
