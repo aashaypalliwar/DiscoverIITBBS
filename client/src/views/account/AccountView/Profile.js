@@ -14,14 +14,7 @@ import {
   makeStyles
 } from '@material-ui/core';
 
-const user = {
-  avatar: '/static/images/avatars/avatar_6.png',
-  city: 'Los Angeles',
-  country: 'USA',
-  jobTitle: 'Senior Developer',
-  name: 'Katarina Smith',
-  timezone: 'GTM-7'
-};
+
 
 const useStyles = makeStyles(() => ({
   root: {},
@@ -31,10 +24,19 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const Profile = ({ className, ...rest }) => {
+const Profile = ({profile, className, ...rest }) => {
   const classes = useStyles();
-
+  // const user = {
+  //   avatar: '/static/images/avatars/avatar_6.png',
+  //   city: 'Los Angeles',
+  //   country: 'USA',
+  //   jobTitle: 'Senior Developer',
+  //   name: 'Katarina Smith',
+  //   timezone: 'GTM-7'
+  // };
+  
   return (
+    <div>
     <Card
       className={clsx(classes.root, className)}
       {...rest}
@@ -47,32 +49,38 @@ const Profile = ({ className, ...rest }) => {
         >
           <Avatar
             className={classes.avatar}
-            src={user.avatar}
+            src={profile.image}
           />
           <Typography
             color="textPrimary"
             gutterBottom
             variant="h3"
           >
-            {user.name}
+            {profile.name}
           </Typography>
           <Typography
             color="textSecondary"
             variant="body1"
           >
-            {`${user.city} ${user.country}`}
+            <span style={{fontWeight:'bold'}}>Email : </span>  {profile.email}
           </Typography>
           <Typography
+            color="textSecondary"
+            variant="body1"
+          >
+          <span style={{fontWeight:'bold'}}>Bio : </span> {profile.bio}
+          </Typography>
+          {/* <Typography
             className={classes.dateText}
             color="textSecondary"
             variant="body1"
           >
             {`${moment().format('hh:mm A')} ${user.timezone}`}
-          </Typography>
+          </Typography> */}
         </Box>
       </CardContent>
       <Divider />
-      <CardActions>
+      {/* <CardActions>
         <Button
           color="primary"
           fullWidth
@@ -80,8 +88,66 @@ const Profile = ({ className, ...rest }) => {
         >
           Upload picture
         </Button>
-      </CardActions>
+      </CardActions> */}
     </Card>
+    <br></br>
+    <br></br>
+    <Card
+      className={clsx(classes.root, className)}
+      {...rest}
+    >
+      <CardContent>
+        <Box
+          alignItems="center"
+          display="flex"
+          flexDirection="column"
+        >
+          <Typography
+            color="textPrimary"
+            gutterBottom
+            variant="h3"
+          >
+            Personal details
+          </Typography>
+          <Typography
+            color="textSecondary"
+            variant="body1"
+          >
+            <span style={{fontWeight:'bold'}}>Branch : </span>  {profile.branch}
+          </Typography>
+          <Typography
+            color="textSecondary"
+            variant="body1"
+          >
+          <span style={{fontWeight:'bold'}}>Admission year : </span> {profile.admissionYear||'Update'}
+          </Typography>
+          <Typography
+            color="textSecondary"
+            variant="body1"
+          >
+          <span style={{fontWeight:'bold'}}>Graduation year : </span> {profile.graduationYear||'Update'}
+          </Typography>
+          <Typography
+            color="textSecondary"
+            variant="body1"
+          >
+          <span style={{fontWeight:'bold'}}>Publish Status : </span> {profile.publishStatus? 'True' : 'False'}
+          </Typography>
+        </Box>
+      </CardContent>
+      <Divider />
+      {/* <CardActions>
+        <Button
+          color="primary"
+          fullWidth
+          variant="text"
+        >
+          Upload picture
+        </Button>
+      </CardActions> */}
+    </Card>
+    
+    </div>
   );
 };
 

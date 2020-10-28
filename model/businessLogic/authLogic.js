@@ -187,6 +187,15 @@ const logout = (req, res, next) => {
   });
 };
 
+const loginStatus = (req,res,next)=>{
+  console.log('logged in');
+  res.status(200).json({
+    status: 'success',
+    message: 'logged in',
+    user : req.user
+  });
+}
+
 module.exports = {
   createToken,
   createSendToken,
@@ -195,4 +204,5 @@ module.exports = {
   restrictTo,
   googleLogin,
   logout,
+  loginStatus
 };

@@ -11,6 +11,25 @@ import ProductListView from 'src/views/product/ProductListView';
 import RegisterView from 'src/views/auth/RegisterView';
 import SettingsView from 'src/views/settings/SettingsView';
 
+const setUserAsProps = user => {
+  // var user = el;
+  return [
+    {
+      path: '/',
+      element: <DashboardLayout user={user} />,
+      children: [
+        { path: 'profile', element: <AccountView user={user} /> },
+        { path: 'discover', element: <CustomerListView /> },
+        // { path: 'dashboard', element: <DashboardView /> },
+        // { path: 'products', element: <ProductListView /> },
+        { path: 'settings', element: <SettingsView /> },
+        { path: '/', element: <Navigate to="/discover" /> },
+        { path: '*', element: <Navigate to="/discover" /> }
+      ]
+    }
+  ];
+};
+
 const routes = [
   {
     path: '/',
@@ -38,4 +57,4 @@ const routes = [
   // }
 ];
 
-export default routes;
+export default setUserAsProps;

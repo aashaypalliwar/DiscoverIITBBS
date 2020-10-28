@@ -13,34 +13,89 @@ import {
   makeStyles
 } from '@material-ui/core';
 
-const states = [
+const admissionYears = [
   {
-    value: 'alabama',
-    label: 'Alabama'
+    value: 2016,
+    label: 2016,
   },
   {
-    value: 'new-york',
-    label: 'New York'
+    value: 2017,
+    label: 2017,
   },
   {
-    value: 'san-francisco',
-    label: 'San Francisco'
-  }
+    value: 2018,
+    label: 2018,
+  },
+  {
+    value: 2019,
+    label: 2019,
+  },
+  {
+    value: 2020,
+    label: 2020,
+  },
+  
 ];
+const graduationYears = [
+  {
+    value: 2020,
+    label: 2020,
+  },
+  {
+    value: 2021,
+    label: 2021,
+  },
+  {
+    value: 2022,
+    label: 2022,
+  },
+  {
+    value: 2023,
+    label: 2023,
+  },
+  {
+    value: 2024,
+    label: 2024,
+  },
+  
+];
+
+const branches = [
+  {
+    value : 'Computer Science',
+    label : 'Computer Science'
+  },
+  {
+    value : 'Electronics and Communication',
+    label : 'Electronics and Communication'
+  },{
+    value : 'Electrical',
+    label : 'Electrical'
+  },{
+    value : 'Mechanical',
+    label : 'Mechanical'
+  },{
+    value : 'Civil',
+    label : 'Civil'
+  },
+  {
+    value : 'Metallurgy',
+    label : 'Metallurgy'
+  }
+]
 
 const useStyles = makeStyles(() => ({
   root: {}
 }));
 
-const ProfileDetails = ({ className, ...rest }) => {
+
+const ProfileDetails = ({ profile,update,className, ...rest }) => {
   const classes = useStyles();
   const [values, setValues] = useState({
-    firstName: 'Katarina',
-    lastName: 'Smith',
-    email: 'demo@devias.io',
-    phone: '',
-    state: 'Alabama',
-    country: 'USA'
+    bio : profile.bio,
+    admissionYear : profile.admissionYear || 2016,
+    branch:profile.branch,
+    graduationYear : profile.graduationYear || 2020,
   });
 
   const handleChange = (event) => {
@@ -49,6 +104,7 @@ const ProfileDetails = ({ className, ...rest }) => {
       [event.target.name]: event.target.value
     });
   };
+
 
   return (
     <form
@@ -70,21 +126,20 @@ const ProfileDetails = ({ className, ...rest }) => {
           >
             <Grid
               item
-              md={6}
+              md={12}
               xs={12}
             >
               <TextField
                 fullWidth
-                helperText="Please specify the first name"
-                label="First name"
-                name="firstName"
+                label="Bio"
+                name="bio"
                 onChange={handleChange}
                 required
-                value={values.firstName}
+                value={values.bio}
                 variant="outlined"
               />
             </Grid>
-            <Grid
+            {/* <Grid
               item
               md={6}
               xs={12}
@@ -98,7 +153,8 @@ const ProfileDetails = ({ className, ...rest }) => {
                 value={values.lastName}
                 variant="outlined"
               />
-            </Grid>
+            </Grid> */}
+          
             <Grid
               item
               md={6}
@@ -106,61 +162,69 @@ const ProfileDetails = ({ className, ...rest }) => {
             >
               <TextField
                 fullWidth
-                label="Email Address"
-                name="email"
-                onChange={handleChange}
-                required
-                value={values.email}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Phone Number"
-                name="phone"
-                onChange={handleChange}
-                type="number"
-                value={values.phone}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Country"
-                name="country"
-                onChange={handleChange}
-                required
-                value={values.country}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Select State"
-                name="state"
+                label="Select admission year"
+                name="admissionYear"
                 onChange={handleChange}
                 required
                 select
                 SelectProps={{ native: true }}
-                value={values.state}
+                value={values.admissionYear}
                 variant="outlined"
               >
-                {states.map((option) => (
+                {admissionYears.map((option) => (
+                  <option
+                    key={option.value}
+                    value={option.value}
+                  >
+                    {option.label}
+                  </option>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid
+              item
+              md={6}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                label="Select graduation year"
+                name="graduationYear"
+                onChange={handleChange}
+                required
+                select
+                SelectProps={{ native: true }}
+                value={values.graduationYear}
+                variant="outlined"
+              >
+                {graduationYears.map((option) => (
+                  <option
+                    key={option.value}
+                    value={option.value}
+                  >
+                    {option.label}
+                  </option>
+                ))}
+              </TextField>
+            </Grid>
+            
+            <Grid
+              item
+              md={6}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                label="Select branch"
+                name="branch"
+                onChange={handleChange}
+                required
+                select
+                SelectProps={{ native: true }}
+                value={values.branch}
+                variant="outlined"
+              >
+                {branches.map((option) => (
                   <option
                     key={option.value}
                     value={option.value}
@@ -181,8 +245,9 @@ const ProfileDetails = ({ className, ...rest }) => {
           <Button
             color="primary"
             variant="contained"
+            onClick = {()=>update(values)}
           >
-            Save details
+            Update 
           </Button>
         </Box>
       </Card>

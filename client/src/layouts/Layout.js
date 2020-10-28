@@ -4,16 +4,22 @@ import { ThemeProvider } from '@material-ui/core';
 import GlobalStyles from 'src/components/GlobalStyles';
 import 'src/mixins/chartjs';
 import theme from 'src/theme';
-import routes from 'src/routes';
+import setUserAsProps from 'src/routes';
+// import routes from 'src/routes';
 
-const Layout = ()=>{
-    const routing = useRoutes(routes);
-    return(
-        <ThemeProvider theme={theme}>
-          <GlobalStyles />
-            {routing}
-        </ThemeProvider>
-    )
-}
+const Layout = props => {
+  //   const routing = useRoutes(() => {
+  //     let routes = setUserAsProps(props);
+  //     return routes;
+  //   });
+  const routes = setUserAsProps(props.user);
+  const routing = useRoutes(routes);
+  return (
+    <ThemeProvider theme={theme}>
+      <GlobalStyles />
+      {routing}
+    </ThemeProvider>
+  );
+};
 
 export default Layout;

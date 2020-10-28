@@ -5,11 +5,11 @@ import 'src/mixins/chartjs';
 import { CookiesProvider,withCookies } from 'react-cookie';
 import { BrowserRouter } from "react-router-dom";
 
-const App = () => {
+const App = (props) => {
   return (
     <CookiesProvider>
          <BrowserRouter>
-             <Wrapper />
+             <Wrapper/>
          </BrowserRouter>
     </CookiesProvider>
    );
