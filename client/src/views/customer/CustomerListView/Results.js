@@ -9,6 +9,7 @@ import {
   Card,
   Checkbox,
   CardContent,
+  Input,
   Table,
   TableBody,
   TableCell,
@@ -36,6 +37,7 @@ const Results = ({ className, customers, ...rest }) => {
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
   const [users,setUsers] = useState(customers);
+  const [search , setSearch] = useState('');
   // const handleSelectAll = (event) => {
   //   let newSelectedCustomerIds;
 
@@ -75,6 +77,18 @@ const Results = ({ className, customers, ...rest }) => {
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
   };
+
+  const searchUser = (event)=>{
+    setSearch(event.target.value);
+    filterResults();
+  }
+
+  const filterResults = ()=>{
+    let filterUsers = customers.filter((user)=>{
+      return user.name.toLowerCase().indexOf(search.toLowerCase())!==-1;
+    });
+    setUsers(filterUsers);
+  }
   // const users = {customers};
   return (
     <div>
@@ -82,7 +96,7 @@ const Results = ({ className, customers, ...rest }) => {
         <Card>
           <CardContent>
             <Box maxWidth={500}>
-              <TextField
+              <Input
                 fullWidth
                 InputProps={{
                   startAdornment: (
@@ -96,7 +110,8 @@ const Results = ({ className, customers, ...rest }) => {
                     </InputAdornment>
                   )
                 }}
-                placeholder="Search customer"
+                onChange = {searchUser}
+                placeholder="Search User"
                 variant="outlined"
               />
             </Box>
