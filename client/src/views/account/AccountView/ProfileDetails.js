@@ -85,7 +85,7 @@ const branches = [
 ]
 
 const useStyles = makeStyles(() => ({
-  root: {}
+  root: {},
 }));
 
 

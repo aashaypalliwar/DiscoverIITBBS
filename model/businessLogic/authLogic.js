@@ -143,35 +143,35 @@ const googleLogin = catchAsync(async (req, res, next) => {
           );
 
         console.log('here');
-        try{
-        User.findOne({ email }).exec((err, user) => {
-          console.log('verified');
-          if (err) {
-            return res.status(404).json({
-              message: err.message,
-            });
-          } else {
-           
-            if (user) {
-              createSendToken(user, 200, res);
+        try {
+          User.findOne({ email }).exec((err, user) => {
+            console.log('verified');
+            if (err) {
+              return res.status(404).json({
+                message: err.message,
+              });
             } else {
-             console.log(config.SIGNUP_TOGGLE)
-              if(config.SIGNUP_TOGGLE=="true")createUser(name, email, res);
-              else {
-                visitor = {
-                  _id: email,
-                  name: name,
-                  email: email,
-                  role: 'visitor',
-                };
-                createSendToken(visitor, 200, res);
+              if (user) {
+                createSendToken(user, 200, res);
+              } else {
+                console.log(config.SIGNUP_TOGGLE);
+                if (config.SIGNUP_TOGGLE == 'true')
+                  createUser(name, email, res);
+                else {
+                  visitor = {
+                    _id: email,
+                    name: name,
+                    email: email,
+                    role: 'visitor',
+                  };
+                  createSendToken(visitor, 200, res);
+                }
               }
             }
-          }
-        });
-      }catch(err){
-        console.log(err);
-      }
+          });
+        } catch (err) {
+          console.log(err);
+        }
       }
     })
     .catch((err) => console.log(err));
@@ -187,14 +187,14 @@ const logout = (req, res, next) => {
   });
 };
 
-const loginStatus = (req,res,next)=>{
+const loginStatus = (req, res, next) => {
   console.log('logged in');
   res.status(200).json({
     status: 'success',
     message: 'logged in',
-    user : req.user
+    user: req.user,
   });
-}
+};
 
 module.exports = {
   createToken,
@@ -204,5 +204,5 @@ module.exports = {
   restrictTo,
   googleLogin,
   logout,
-  loginStatus
+  loginStatus,
 };

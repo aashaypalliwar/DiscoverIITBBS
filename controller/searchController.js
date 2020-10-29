@@ -39,13 +39,14 @@ exports.searchByTag = catchAsync(async (req, res, next) => {
       select: 'name',
     });
 
-  if (users.length == 0) {
-    return next(
-      new AppError('Sorry there are no users with all these tags', 401)
-    );
-  }
+  // if (users.length == 0) {
+  //   return next(
+  //     new AppError('Sorry there are no users with all these tags', 401)
+  //   );
+  // }
   res.status(200).json({
     status: 'success',
-    data: users,
+    data: {
+      users},
   });
 });

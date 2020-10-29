@@ -9,6 +9,6 @@ router
 
 router
   .route('/tags')
-  .get(authLogic.verifyJwtToken, searchController.searchByTag);
+  .post( authLogic.verifyJwtToken,searchController.searchByTag);
 
 module.exports = router;
