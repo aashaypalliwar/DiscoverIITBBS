@@ -48,7 +48,7 @@ const Toolbar = ({ className, ...rest }) => {
           Add customer
         </Button>
       </Box>
-      <Box mt={3}>
+      {/* <Box mt={3}>
         <Card>
           <CardContent>
             <Box maxWidth={500}>
@@ -72,7 +72,7 @@ const Toolbar = ({ className, ...rest }) => {
             </Box>
           </CardContent>
         </Card>
-      </Box>
+      </Box> */}
     </div>
   );
 };

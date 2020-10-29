@@ -3,6 +3,6 @@
     "baseUrl": "."
   },
   "include": [
-    "src"
+    "src", "../portal/src/components/Profile.js"
   ]
 }
