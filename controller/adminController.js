@@ -262,8 +262,6 @@ exports.getAllReportedUsers = catchAsync(async (req, res, next) => {
     select: 'email',
   }).lean();
 
-  let docs = await features.query; // explain()
-
   // SEND RESPONSE
   res.status(200).json({
     status: 'success',

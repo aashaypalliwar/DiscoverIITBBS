@@ -110,12 +110,14 @@ const Results = ({ className, customers, tags, ...rest }) => {
   };
 
   const selectChip = tagSelected => {
-    setPresentTags(tags => tags.filter(tag => tag.id !== tagSelected.id));
-    selectedTags.push(tagSelected);
+    setPresentTags(tags => tags.filter(tag => tag.name !== tagSelected.name));
+    setSelectedTags(tags => [...tags, tagSelected]);
   };
   const deleteChip = tagSelected => {
-    setSelectedTags(tags => tags.filter(tag => tag.id !== tagSelected.id));
-    presentTags.push(tagSelected);
+    console.log(selectedTags);
+    console.log(presentTags);
+    setSelectedTags(tags => tags.filter(tag => tag.name !== tagSelected.name));
+    setPresentTags(tags => [...tags, tagSelected]);
   };
   const searchUserByTag = () => {
     const tagsFiltered = selectedTags.map(tag => {
@@ -188,12 +190,14 @@ const Results = ({ className, customers, tags, ...rest }) => {
                       <TableCell align="center" className={classes.cell}>
                         {selectedTags.map((tag, index) => {
                           return (
-                            <Chip
-                              label={tag.name}
-                              className={classes.chip}
-                              clickable
-                              onDelete={() => deleteChip(tag)}
-                            />
+                            <li key={index} style={{ display: 'inline' }}>
+                              <Chip
+                                label={tag.name}
+                                className={classes.chip}
+                                clickable
+                                onDelete={() => deleteChip(tag)}
+                              />
+                            </li>
                           );
                         })}
                       </TableCell>
@@ -219,10 +223,9 @@ const Results = ({ className, customers, tags, ...rest }) => {
                       <TableCell align="center" className={classes.cell}>
                         {presentTags.map((tag, index) => {
                           return (
-                            <li key={tag.id} style={{ display: 'inline' }}>
+                            <li key={index} style={{ display: 'inline' }}>
                               <Chip
                                 label={tag.name}
-                                value={tag.id}
                                 className={classes.chip}
                                 clickable
                                 onClick={() => selectChip(tag)}
