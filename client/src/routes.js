@@ -10,12 +10,12 @@ import SettingsView from 'src/views/settings/SettingsView';
 
 import UpdateView from 'src/views/account/AccountView/UpdateView';
 
-const setUserAsProps = user => {
+const setUserAsProps = (user, cookies) => {
   // var user = el;
   return [
     {
       path: '/',
-      element: <DashboardLayout user={user} />,
+      element: <DashboardLayout user={user} cookies={cookies} />,
       children: [
         { path: 'profile', element: <AccountView user={user} /> },
         { path: 'update', element: <UpdateView user={user} /> },

@@ -23,7 +23,7 @@ class CustomerListView extends Component {
   getAllUsers = () => {
     this.setState({ isLoadingUsers: true });
     axios
-      .get('/v1/user', {
+      .get('/api/v1/user', {
         withCredentials: true
       })
       .then(response => {
@@ -39,7 +39,7 @@ class CustomerListView extends Component {
   getAllTags = () => {
     this.setState({ isLoadingTags: true });
     axios
-      .get('/v1/user/tag', {
+      .get('/api/v1/user/tag', {
         withCredentials: true
       })
       .then(response => {

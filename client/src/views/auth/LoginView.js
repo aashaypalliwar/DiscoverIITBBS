@@ -16,7 +16,6 @@ import FacebookIcon from 'src/icons/Facebook';
 import GoogleIcon from 'src/icons/Google';
 import Page from 'src/components/Page';
 
-
 import GoogleLogin from 'react-google-login';
 import axios from 'axios';
 import Logout from './Logout';
@@ -31,21 +30,21 @@ class LoginView extends Component {
     email: '',
     image: '',
     name: '',
-    role: '',
+    role: ''
   };
 
   // constructor(props) {
   //   super(props);
   // }
 
-  successResponseGoogle = (response) => {
+  successResponseGoogle = response => {
     const emailUsed = response.profileObj.email;
     const index = emailUsed.indexOf('@');
     const domain = emailUsed.substr(index);
     console.log(response);
     this.setState({
       user: response.profileObj.name,
-      email: response.profileObj.email,
+      email: response.profileObj.email
     });
 
     if (domain !== '@iitbbs.ac.in') {
@@ -57,37 +56,37 @@ class LoginView extends Component {
 
       axios
         .post(
-          '/v1/auth/login',
+          '/api/v1/auth/login',
           { tokenId: response.tokenId },
           {
-            withCredentials: true,
+            withCredentials: true
           }
         )
-        .then((response) => {
+        .then(response => {
           console.log('login');
           console.log(response.data);
           this.setState({ image: response.data.user.image });
         })
-        .catch((err) => console.log(err));
+        .catch(err => console.log(err));
     }
   };
 
   logout = () => {
     this.setState({ isLoggedIn: false });
     axios
-      .post('/v1/auth/logout', {
-        withCredentials: true,
+      .post('/api/v1/auth/logout', {
+        withCredentials: true
       })
-      .then((response) => {
+      .then(response => {
         console.log(response);
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       });
     // this.props.callFunc();
   };
 
-  failureResponseGoogle = (response) => {
+  failureResponseGoogle = response => {
     console.log(response);
     alert('Use your IIT BBS email for login');
   };

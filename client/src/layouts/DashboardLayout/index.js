@@ -42,6 +42,7 @@ const DashboardLayout = props => {
       <TopBar onMobileNavOpen={() => setMobileNavOpen(true)} />
       <NavBar
         user={props.user}
+        cookies={props.cookies}
         onMobileClose={() => setMobileNavOpen(false)}
         openMobile={isMobileNavOpen}
       />

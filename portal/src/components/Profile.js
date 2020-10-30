@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import {  Form, Row, Col, Card } from 'react-bootstrap';
-import {Button} from "@material-ui/core"
+import { Form, Row, Col, Card } from 'react-bootstrap';
+import { Button } from '@material-ui/core';
 import axios from 'axios';
 
 import './Profile.css';
@@ -19,7 +19,7 @@ class Profile extends Component {
 
   getProfileFromDB = () => {
     axios
-      .get('/v1/user/profile', {
+      .get('/api/v1/user/profile', {
         withCredentials: true,
       })
       .then((response) => {
@@ -64,7 +64,7 @@ class Profile extends Component {
   updateProfile = () => {
     let bio = document.querySelector('.bio').value;
     axios
-      .patch('/v1/user/profile', { bio }, { withCredentials: true })
+      .patch('/api/v1/user/profile', { bio }, { withCredentials: true })
       .then((response) => {
         alert('Sucessfully Updated');
         this.setState({ updateClicked: false });

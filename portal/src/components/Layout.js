@@ -3,7 +3,7 @@ import GoogleLogin from 'react-google-login';
 import axios from 'axios';
 import Logout from './Logout';
 import Profile from './Profile.js';
-import Button from '@material-ui/core/Button'
+import Button from '@material-ui/core/Button';
 import './Layout.css';
 
 class Layout extends Component {
@@ -39,7 +39,7 @@ class Layout extends Component {
 
       axios
         .post(
-          '/v1/auth/login',
+          '/api/v1/auth/login',
           { tokenId: response.tokenId },
           {
             withCredentials: true,
@@ -57,7 +57,7 @@ class Layout extends Component {
   logout = () => {
     this.setState({ isLoggedIn: false });
     axios
-      .post('/v1/auth/logout', {
+      .post('/api/v1/auth/logout', {
         withCredentials: true,
       })
       .then((response) => {
@@ -94,9 +94,7 @@ class Layout extends Component {
     } else
       return (
         <div className="page">
-          <Button variant ="contained">
-            Portal
-          </Button>
+          <Button variant="contained">Portal</Button>
           <Logout img={this.state.image} onLogout={this.logout} />
           <Profile
             user={this.state.user}

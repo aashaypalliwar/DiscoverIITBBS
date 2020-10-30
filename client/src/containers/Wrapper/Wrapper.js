@@ -11,21 +11,11 @@ class Wrapper extends Component {
     user: null
   };
   checkIsLoggedIn = () => {
-    axios
-      .get('/v1/auth/loginStatus', {
-        withCredentials: true
-      })
-      .then(response => {
-        console.log(response.data);
-        this.setState({
-          isLoggedIn: true,
-          user: response.data.user
-        });
-      })
-      .catch(err => {
-        console.log(err);
-        this.setState({ isLoggedIn: false });
-      });
+    const cookies = this.props.cookies.cookies;
+    this.setState({
+      isLoggedIn: cookies.isLoggedIn,
+      user: cookies.userData
+    });
   };
   componentDidMount = () => {
     this.checkIsLoggedIn();
@@ -49,7 +39,7 @@ class Wrapper extends Component {
       // this.props.callFunc();
       axios
         .post(
-          '/v1/auth/login',
+          '/api/v1/auth/login',
           { tokenId: response.tokenId },
           {
             withCredentials: true
@@ -60,6 +50,22 @@ class Wrapper extends Component {
           console.log(response.data);
           this.setState({ user: response.data.user });
           this.setState({ isLoggedIn: true });
+          const userData = {
+            name: response.data.user.name,
+            email: response.data.user.email,
+            role: response.data.user.role,
+            image: response.data.user.image
+          };
+          console.log(typeof new Date(response.data.expireAt));
+          const cookies = this.props.cookies;
+          cookies.set('userData', userData, {
+            path: '/',
+            expires: new Date(response.data.expireAt)
+          });
+          cookies.set('isLoggedIn', true, {
+            path: '/',
+            expires: new Date(response.data.expireAt)
+          });
           // console.log(this.state.user);
         })
         .catch(err => console.log(err));
@@ -75,7 +81,7 @@ class Wrapper extends Component {
     return (
       <div>
         {this.state.isLoggedIn ? (
-          <Layout user={this.state.user} />
+          <Layout user={this.state.user} cookies={this.props.cookies} />
         ) : (
           <GoogleLogin
             className="google-login"

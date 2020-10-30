@@ -24,7 +24,7 @@ class Account extends Component {
     const data = { ...values };
     console.log(data);
     axios
-      .patch('/v1/user/profile', data, {
+      .patch('/api/v1/user/profile', data, {
         withCredentials: true
       })
       .then(response => {
@@ -39,7 +39,7 @@ class Account extends Component {
     this.setState({ isLoading: true });
 
     axios
-      .get('/v1/user/profile', {
+      .get('/api/v1/user/profile', {
         withCredentials: true
       })
       .then(response => {

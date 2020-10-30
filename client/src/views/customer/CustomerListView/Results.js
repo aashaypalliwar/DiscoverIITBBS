@@ -11,6 +11,7 @@ import {
   Checkbox,
   CardContent,
   Chip,
+  Divider,
   Table,
   FormControl,
   Select,
@@ -25,6 +26,7 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  TableContainer,
   Typography,
   makeStyles,
   TextField,
@@ -56,6 +58,27 @@ const useStyles = makeStyles(theme => ({
   },
   chip: {
     margin: 2
+  },
+  align: {
+    marginTop: 'auto',
+    marginBottom: 'auto'
+  },
+  table: {
+    minWidth: 100
+  },
+  cellB: {
+    fontWeight: 500,
+    border: 0,
+    fontSize: 17,
+    paddingTop: 8,
+    paddingBottom: 8,
+    minWidth: 'fit-content'
+  },
+  cell: {
+    border: 0,
+    fontSize: 17,
+    paddingTop: 8,
+    paddingBottom: 8
   }
 }));
 const ITEM_HEIGHT = 48;
@@ -103,7 +126,7 @@ const Results = ({ className, customers, tags, ...rest }) => {
       tagsSelected: tagsFiltered
     };
     axios
-      .post('http://localhost:3000/v1/search/tags', data, {
+      .post('http://localhost:3000/api/v1/search/tags', data, {
         withCredentials: true
       })
       .then(response => {
@@ -151,9 +174,76 @@ const Results = ({ className, customers, tags, ...rest }) => {
                   variant="outlined"
                 />
               </Grid> */}
-              <Grid item md={12} xs={12}>
+              <TableContainer component={Paper}>
+                <Table className={classes.table} aria-label="simple table">
+                  <TableBody>
+                    <TableRow>
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        className={classes.cellB}
+                      >
+                        Selected Tags
+                      </TableCell>
+                      <TableCell align="center" className={classes.cell}>
+                        {selectedTags.map((tag, index) => {
+                          return (
+                            <Chip
+                              label={tag.name}
+                              className={classes.chip}
+                              clickable
+                              onDelete={() => deleteChip(tag)}
+                            />
+                          );
+                        })}
+                      </TableCell>
+                      <TableCell align="right" className={classes.cell}>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={searchUserByTag}
+                          style={{ alignSelf: 'left' }}
+                        >
+                          Search
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        className={classes.cellB}
+                      >
+                        Present Tags
+                      </TableCell>
+                      <TableCell align="center" className={classes.cell}>
+                        {presentTags.map((tag, index) => {
+                          return (
+                            <li key={tag.id} style={{ display: 'inline' }}>
+                              <Chip
+                                label={tag.name}
+                                value={tag.id}
+                                className={classes.chip}
+                                clickable
+                                onClick={() => selectChip(tag)}
+                              />
+                            </li>
+                          );
+                        })}
+                      </TableCell>
+                      <TableCell
+                        align="right"
+                        className={classes.cell}
+                      ></TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              {/* <Grid item md={12} xs={12}>
                 <Paper component="ul" className={classes.root}>
-                  <p>Selected tags</p>
+                  <Typography className={classes.align}>
+                    Selected tags
+                  </Typography>
                   {selectedTags.map((tag, index) => {
                     return (
                       <Chip
@@ -164,19 +254,13 @@ const Results = ({ className, customers, tags, ...rest }) => {
                       />
                     );
                   })}
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={searchUserByTag}
-                    style={{ alignSelf: 'left' }}
-                  >
-                    Search
-                  </Button>
                 </Paper>
               </Grid>
-              <Grid item md={12} xs={12}>
-                <Paper component="ul" className={classes.root}>
-                  <p>Present tags</p>
+              <Grid item md={12} xs={12}> */}
+              {/* <Paper component="ul" className={classes.root}>
+                  <Typography className={classes.align}>
+                    Present tags
+                  </Typography>
                   {presentTags.map((tag, index) => {
                     return (
                       <li key={tag.id}>
@@ -191,7 +275,7 @@ const Results = ({ className, customers, tags, ...rest }) => {
                     );
                   })}
                 </Paper>
-              </Grid>
+              </Grid> */}
             </Grid>
           </CardContent>
         </Card>
