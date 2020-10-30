@@ -68,6 +68,17 @@ const userSchema = new mongoose.Schema(
       default: 'Not Specified',
       // enum:[]
     },
+    links: [
+      {
+        url: {
+          type: String,
+        },
+        name: {
+          type: String,
+          enum: ['LinkedIn', 'GitHub', 'Facebook', 'Instagram', 'Twitter'],
+        },
+      },
+    ],
   },
   {
     toJSON: { virtuals: true },

@@ -90,6 +90,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 const ProfileDetails = ({ profile, update, className, ...rest }) => {
+  console.log(profile);
   const classes = useStyles();
   const [values, setValues] = useState({
     bio: profile.bio,

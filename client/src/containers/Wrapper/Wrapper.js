@@ -7,27 +7,29 @@ import { withCookies } from 'react-cookie';
 class Wrapper extends Component {
   state = {
     isLoggedIn: false,
+    justLogged: false,
     user: null
   };
-  checkIsLoggedIn = ()=>{
-    axios.get('/v1/auth/loginStatus',{
-      withCredentials : true
-    })
-      .then((response) => {
+  checkIsLoggedIn = () => {
+    axios
+      .get('/v1/auth/loginStatus', {
+        withCredentials: true
+      })
+      .then(response => {
         console.log(response.data);
         this.setState({
           isLoggedIn: true,
-          user : response.data.user
+          user: response.data.user
         });
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
         this.setState({ isLoggedIn: false });
       });
-  }
-  componentDidMount = ()=>{
+  };
+  componentDidMount = () => {
     this.checkIsLoggedIn();
-  }
+  };
   successResponseGoogle = response => {
     console.log(response);
     const emailUsed = response.profileObj.email;
@@ -69,7 +71,7 @@ class Wrapper extends Component {
   };
 
   render() {
-  console.log(this.state.isLoggedIn);
+    console.log(this.state.isLoggedIn);
     return (
       <div>
         {this.state.isLoggedIn ? (
@@ -95,6 +97,4 @@ class Wrapper extends Component {
   }
 }
 
-
 export default withCookies(Wrapper);
-

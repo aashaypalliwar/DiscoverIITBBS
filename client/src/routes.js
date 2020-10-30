@@ -11,6 +11,8 @@ import ProductListView from 'src/views/product/ProductListView';
 import RegisterView from 'src/views/auth/RegisterView';
 import SettingsView from 'src/views/settings/SettingsView';
 
+import UpdateView from 'src/views/account/AccountView/UpdateView';
+
 const setUserAsProps = user => {
   // var user = el;
   return [
@@ -19,6 +21,7 @@ const setUserAsProps = user => {
       element: <DashboardLayout user={user} />,
       children: [
         { path: 'profile', element: <AccountView user={user} /> },
+        { path: 'update', element: <UpdateView user={user} /> },
         { path: 'discover', element: <CustomerListView /> },
         // { path: 'dashboard', element: <DashboardView /> },
         // { path: 'products', element: <ProductListView /> },
@@ -29,32 +32,17 @@ const setUserAsProps = user => {
     }
   ];
 };
-
-const routes = [
-  {
-    path: '/',
-    element: <DashboardLayout />,
-    children: [
-      { path: 'profile', element: <AccountView /> },
-      { path: 'discover', element: <CustomerListView /> },
-      // { path: 'dashboard', element: <DashboardView /> },
-      // { path: 'products', element: <ProductListView /> },
-      { path: 'settings', element: <SettingsView /> },
-      { path: '/', element: <Navigate to="/discover" /> },
-      { path: '*', element: <Navigate to="/discover" /> }
-    ]
-  }
-  // {
-  //   path: '/',
-  //   element: <MainLayout />,
-  //   children: [
-  //     { path: 'login', element: <LoginView /> },
-  //     { path: 'register', element: <RegisterView /> },
-  //     { path: '404', element: <NotFoundView /> },
-  //     { path: '/', element:  <Navigate to="/app/dashboard" /> },
-  //     { path: '*', element: <Navigate to="/404" /> }
-  //   ]
-  // }
-];
+// {
+//   path: '/',
+//   element: <MainLayout />,
+//   children: [
+//     { path: 'login', element: <LoginView /> },
+//     { path: 'register', element: <RegisterView /> },
+//     { path: '404', element: <NotFoundView /> },
+//     { path: '/', element:  <Navigate to="/app/dashboard" /> },
+//     { path: '*', element: <Navigate to="/404" /> }
+//   ]
+// }
+// ];
 
 export default setUserAsProps;

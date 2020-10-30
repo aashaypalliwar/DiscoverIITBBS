@@ -57,7 +57,7 @@ const items = [
   //   title: 'Products'
   // },
   {
-    href: '/app/settings',
+    href: '/settings',
     icon: SettingsIcon,
     title: 'Settings'
   }
@@ -87,6 +87,9 @@ const useStyles = makeStyles(() => ({
     top: 64,
     height: 'calc(100% - 64px)'
   },
+  name: {
+    paddingTop: 10
+  },
   avatar: {
     cursor: 'pointer',
     width: 64,
@@ -113,7 +116,7 @@ const logOut = () => {
 const NavBar = ({ user, onMobileClose, openMobile }) => {
   const classes = useStyles();
   const location = useLocation();
-  
+
   useEffect(() => {
     if (openMobile && onMobileClose) {
       onMobileClose();
