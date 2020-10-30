@@ -78,7 +78,11 @@ const verifyJwtToken = catchAsync(async (req, res, next) => {
 });
 
 const loggedInUser = catchAsync(async (req, res, next) => {
-  const currentUser = await User.findById(req.jwtPayload.id);
+  const currentUser = await User.findById(req.jwtPayload.id).populate({
+    path: 'tags',
+    model: 'Tag',
+    select: 'name group',
+  }).lean();
   if (!currentUser) {
     return next(
       new AppError(

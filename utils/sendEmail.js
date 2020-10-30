@@ -3,8 +3,6 @@ const AppError = require('./appError');
 const config = require('./config');
 
 const sendEmail = async (options) => {
-  console.log(config);
-
   try {
     // 1) Create a transporter
     const transporter = nodemailer.createTransport({

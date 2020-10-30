@@ -2,6 +2,26 @@ const User = require('./../model/dbModel/userModel');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 
+exports.searchUser = catchAsync(async (req, res, next) => {
+  let searchQuery = req.params.query;
+  searchQuery = new RegExp(
+    searchQuery.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&'),
+    'gi'
+  );
+     
+  const users = await User.find({ name: searchQuery})
+  .select('_id email name image verifyStatus')
+  .sort({ verifyStatus: -1 })
+  .lean();
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      users
+    },
+  })
+});
+
 exports.searchByTag = catchAsync(async (req, res, next) => {
 
   try{
