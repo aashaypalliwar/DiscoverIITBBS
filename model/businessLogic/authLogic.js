@@ -1,11 +1,9 @@
 const { promisify } = require('util');
+const { OAuth2Client } = require('google-auth-library');
 const jwt = require('jsonwebtoken');
 const AppError = require('../../utils/appError');
 const config = require('../../utils/config');
 const catchAsync = require('./../../utils/catchAsync');
-const { OAuth2Client } = require('google-auth-library');
-const { response } = require('../../app');
-const mongoose = require('mongoose');
 const User = require('../dbModel/userModel');
 
 const client = new OAuth2Client(config.CLIENT_ID);
@@ -21,20 +19,17 @@ const createToken = (id, role) => {
   const jwtToken = jwt.sign({ id, role }, config.JWT_SECRET, {
     expiresIn: config.JWT_EXPIRES_IN,
   });
-
   return jwtToken;
 };
-//TODO: Modify as per use case.
+
 const createSendToken = (user, statusCode, res) => {
   try {
-    // console.log(user);
     const token = createToken(user._id, user.role);
-    // console.log(token);
-    // sending a cookie to the browser which stores the jwt token//
+    const expireAt = new Date(
+      Date.now() + config.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+    );
     const cookieOptions = {
-      expires: new Date(
-        Date.now() + config.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
-      ),
+      expires: expireAt,
       httpOnly: true,
     };
 
@@ -47,13 +42,13 @@ const createSendToken = (user, statusCode, res) => {
       status: 'success',
       verification: true,
       user,
+      expireAt
     });
   } catch (error) {
-    console.log(error);
+    throw new AppError(error.message, 500);
   }
 };
 
-//TODO: Rectify the protect function to act as per auth workflow.
 const verifyJwtToken = catchAsync(async (req, res, next) => {
   // 1) Getting token and check of it's there
   let token;
@@ -82,11 +77,8 @@ const verifyJwtToken = catchAsync(async (req, res, next) => {
   next();
 });
 
-const loggedInUser = catchAsync(async (req, res, next) => {
-  // 3) Check if user still exists
-  // console.log(currentUser);
+const loggedInUser = catchAsync(async (req, res, next) => {  
   const currentUser = await User.findById(req.jwtPayload.id);
-  // console.log(currentUser);
   if (!currentUser) {
     return next(
       new AppError(
@@ -96,7 +88,6 @@ const loggedInUser = catchAsync(async (req, res, next) => {
     );
   }
   req.user = currentUser;
-
   next();
 });
 
@@ -112,7 +103,6 @@ const restrictTo = (...roles) => {
 };
 
 const createUser = catchAsync(async (name, email, picture, res) => {
-  //  console.log(name,email);
   const newUser = await User.create({
     name: name,
     email: email,
@@ -127,16 +117,12 @@ const googleLogin = catchAsync(async (req, res, next) => {
     return next(new AppError('User not logged in.', 403));
   }
 
-  // verifying tokeId
   client
     .verifyIdToken({ idToken: tokenId, audience: config.CLIENT_ID })
     .then(async (response) => {
       const { name, email, email_verified, picture } = response.payload;
-      // console.log(name , email ,email_verified);
-      console.log(response.payload);
 
       if (email_verified) {
-        /**Check if IIT BBS mail or not. If not, return forbidden error */
         if (!checkOrg(email))
           return next(
             new AppError('Please use an email provided by IIT Bhubaneswar', 403)
@@ -144,7 +130,6 @@ const googleLogin = catchAsync(async (req, res, next) => {
 
         try{
         User.findOne({ email }).exec(async (err, user) => {
-          console.log('verified');
           if (err) {
             return res.status(404).json({
               message: err.message,
@@ -155,7 +140,6 @@ const googleLogin = catchAsync(async (req, res, next) => {
               await User.updateOne({ email },{ image : picture });
               createSendToken(user, 200, res);
             } else {
-             console.log(config.SIGNUP_TOGGLE)
               if(config.SIGNUP_TOGGLE=="true") createUser(name, email, picture, res);
               else {
                 visitor = {
@@ -169,11 +153,11 @@ const googleLogin = catchAsync(async (req, res, next) => {
             }
           }});
         } catch (err) {
-          console.log(err);
+          throw new AppError(err.message, 401);
         }
       }
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {throw new AppError(err.message, 401);});
 });
 
 const logout = (req, res, next) => {

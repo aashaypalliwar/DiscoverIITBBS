@@ -1,11 +1,7 @@
-const dotenv = require('dotenv');
-dotenv.config({ path: './config.env' });
-
 const http = require('http');
 const app = require('./app');
 const config = require('./utils/config');
 const mongoose = require('mongoose');
-// console.log(config.MONGODB_URI);
 const server = http.createServer(app);
 
 console.log('Starting app..');
