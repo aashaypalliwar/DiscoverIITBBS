@@ -111,12 +111,12 @@ const restrictTo = (...roles) => {
   };
 };
 
-const createUser = catchAsync(async (name, email, res) => {
+const createUser = catchAsync(async (name, email, picture, res) => {
   //  console.log(name,email);
   const newUser = await User.create({
     name: name,
     email: email,
-    image: `https://ui-avatars.com/api/?name=${name.split(' ').join('+')}`,
+    image: picture,
   });
   createSendToken(newUser, 200, res);
 });
@@ -124,51 +124,50 @@ const createUser = catchAsync(async (name, email, res) => {
 const googleLogin = catchAsync(async (req, res, next) => {
   const { tokenId } = req.body;
   if (!tokenId) {
-    return next(new AppError('There is no tokenId sent', 403));
+    return next(new AppError('User not logged in.', 403));
   }
 
   // verifying tokeId
   client
     .verifyIdToken({ idToken: tokenId, audience: config.CLIENT_ID })
-    .then((response) => {
-      const { name, email, email_verified } = response.payload;
+    .then(async (response) => {
+      const { name, email, email_verified, picture } = response.payload;
       // console.log(name , email ,email_verified);
-      // console.log(response.payload);
+      console.log(response.payload);
 
       if (email_verified) {
         /**Check if IIT BBS mail or not. If not, return forbidden error */
         if (!checkOrg(email))
           return next(
-            new AppError('Access Denied! Only IIT BBS users are allowed', 403)
+            new AppError('Please use an email provided by IIT Bhubaneswar', 403)
           );
 
-        console.log('here');
-        try {
-          User.findOne({ email }).exec((err, user) => {
-            console.log('verified');
-            if (err) {
-              return res.status(404).json({
-                message: err.message,
-              });
+        try{
+        User.findOne({ email }).exec(async (err, user) => {
+          console.log('verified');
+          if (err) {
+            return res.status(404).json({
+              message: err.message,
+            });
+          } else {
+           
+            if (user) {
+              await User.updateOne({ email },{ image : picture });
+              createSendToken(user, 200, res);
             } else {
-              if (user) {
-                createSendToken(user, 200, res);
-              } else {
-                console.log(config.SIGNUP_TOGGLE);
-                if (config.SIGNUP_TOGGLE == 'true')
-                  createUser(name, email, res);
-                else {
-                  visitor = {
-                    _id: email,
-                    name: name,
-                    email: email,
-                    role: 'visitor',
-                  };
-                  createSendToken(visitor, 200, res);
-                }
+             console.log(config.SIGNUP_TOGGLE)
+              if(config.SIGNUP_TOGGLE=="true") createUser(name, email, picture, res);
+              else {
+                visitor = {
+                  _id: email,
+                  name: name,
+                  email: email,
+                  role: 'visitor',
+                };
+                createSendToken(visitor, 200, res);
               }
             }
-          });
+          }});
         } catch (err) {
           console.log(err);
         }
