@@ -129,7 +129,11 @@ const googleLogin = catchAsync(async (req, res, next) => {
           );
 
         try{
-        User.findOne({ email }).exec(async (err, user) => {
+        User.findOne({ email }).populate({
+          path: 'tags',
+          model: 'Tag',
+          select: 'name group',
+        }).exec(async (err, user) => {
           if (err) {
             return res.status(404).json({
               message: err.message,
