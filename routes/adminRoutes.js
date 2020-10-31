@@ -49,13 +49,13 @@ router.patch(
 
 router.get(
   '/unpublished',
-  authLogic.restrictTo('superAdmin'),
+  authLogic.restrictTo('admin', 'superAdmin'),
   adminController.getAllUnpublishedUsers
 );
 
 router.get(
   '/reported',
-  authLogic.restrictTo('superAdmin'),
+  authLogic.restrictTo('admin', 'superAdmin'),
   adminController.getAllReportedUsers
 );
 

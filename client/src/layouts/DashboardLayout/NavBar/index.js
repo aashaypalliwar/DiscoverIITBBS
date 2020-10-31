@@ -51,11 +51,11 @@ const items = [
     icon: UsersIcon,
     title: 'Discover'
   },
-  // {
-  //   href: '/app/products',
-  //   icon: ShoppingBagIcon,
-  //   title: 'Products'
-  // },
+  {
+    href: '/admin',
+    icon: UserPlusIcon,
+    title: 'Admin'
+  },
   {
     href: '/settings',
     icon: SettingsIcon,
@@ -148,14 +148,21 @@ const NavBar = ({ user, cookies, onMobileClose, openMobile }) => {
       <Divider />
       <Box p={2}>
         <List>
-          {items.map(item => (
-            <NavItem
-              href={item.href}
-              key={item.title}
-              title={item.title}
-              icon={item.icon}
-            />
-          ))}
+          {items.map(item => {
+            if (item.title === 'Admin') {
+              console.log(user.role);
+              if (user.role !== 'admin' && user.role !== 'superAdmin')
+                return null;
+            }
+            return (
+              <NavItem
+                href={item.href}
+                key={item.title}
+                title={item.title}
+                icon={item.icon}
+              />
+            );
+          })}
         </List>
       </Box>
       <Box flexGrow={1} />
