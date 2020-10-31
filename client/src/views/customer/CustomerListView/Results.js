@@ -7,6 +7,7 @@ import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import TagGroup from './TagGroup';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import { useNavigate } from 'react-router-dom';
 import {
   Avatar,
   Box,
@@ -106,7 +107,7 @@ const Results = ({ className, customers, tags, ...rest }) => {
   const [filterVisibility, setFilterVisibility] = useState(false);
   const [sortedTags, setSortedTags] = useState([]);
   const [processedTags, setProcessTags] = useState(false);
-
+  let navigate = useNavigate();
   const handleLimitChange = event => {
     setLimit(event.target.value);
   };
@@ -207,8 +208,8 @@ const Results = ({ className, customers, tags, ...rest }) => {
 
   const getOtherProfile = id => {
     console.log('clicked');
-    let url = 'http://localhost:3001/user?id=' + id;
-    window.location.replace(url);
+    let url = '/user?id=' + id;
+    navigate(url);
   };
 
   // const users = {customers};

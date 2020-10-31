@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
+import { useNavigate } from 'react-router-dom';
 import {
   Avatar,
   Box,
@@ -78,6 +79,7 @@ const Results = ({ className, ...rest }) => {
   const [search, setSearch] = useState('');
   const [currentPage, setCurrentPage] = useState('');
 
+  let navigate = useNavigate();
   const handleLimitChange = event => {
     setLimit(event.target.value);
   };
@@ -130,8 +132,8 @@ const Results = ({ className, ...rest }) => {
   };
   const getOtherProfile = id => {
     console.log('clicked');
-    let url = 'http://localhost:3001/user?id=' + id;
-    window.location.replace(url);
+    let url = '/user?id=' + id;
+    navigate(url);
   };
   // const users = {customers};
   return (
