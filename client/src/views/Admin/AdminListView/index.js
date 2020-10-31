@@ -15,40 +15,7 @@ const useStyles = theme => ({
 
 class CustomerListView extends Component {
   state = {
-    users: [],
-    tags: [],
-    isLoadingUsers: false,
-    isLoadingTags: false,
     isRestricted: true
-  };
-  getAllUsers = () => {
-    this.setState({ isLoadingUsers: true });
-    axios
-      .get('/api/v1/user', {
-        withCredentials: true
-      })
-      .then(response => {
-        this.setState({
-          users: response.data.data.docs,
-          isLoadingUsers: false
-        });
-      })
-      .catch(err => {
-        this.setState({ users: data, isLoadingUsers: false });
-      });
-  };
-  getAllTags = () => {
-    this.setState({ isLoadingTags: true });
-    axios
-      .get('/api/v1/user/tag', {
-        withCredentials: true
-      })
-      .then(response => {
-        this.setState({ tags: response.data.data.docs, isLoadingTags: false });
-      })
-      .catch(err => {
-        this.setState({ tags: data, isLoadingTags: false });
-      });
   };
 
   componentDidMount = () => {
@@ -58,10 +25,7 @@ class CustomerListView extends Component {
     }
 
     if (user.role === 'admin' || user.role === 'superAdmin') {
-      this.setState({ isRestricted: false }, () => {
-        this.getAllUnpublishedUsers();
-        this.getAllTags();
-      });
+      this.setState({ isRestricted: false });
     }
   };
   render() {
@@ -70,24 +34,20 @@ class CustomerListView extends Component {
     return (
       <div>
         {!this.state.isRestricted ? (
-          <div>
-            {!this.state.isLoadingUsers && !this.state.isLoadingTags ? (
-              <Page className={classes.root} title="Admin">
-                <Container maxWidth={false}>
-                  <Box mt={3}>
-                    <Results
-                      customers={this.state.users}
-                      tags={this.state.tags}
-                    />
-                  </Box>
-                </Container>
-              </Page>
-            ) : null}
-          </div>
+          <Page className={classes.root} title="Admin">
+            <Container maxWidth={false}>
+              <Box mt={3}>
+                <Results
+                  unpublishedUsers={this.state.unpublishedUsers}
+                  reportedUsers={this.state.reportedUsers}
+                />
+              </Box>
+            </Container>
+          </Page>
         ) : (
           <Page className={classes.root} title="Discover">
             <Container maxWidth={false}>
-              <Box mt={3}>This page is only acessed by admins</Box>
+              <Box mt={3}>This page is only accessed by admins</Box>
             </Container>
           </Page>
         )}

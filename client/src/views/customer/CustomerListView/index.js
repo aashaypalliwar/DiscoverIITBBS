@@ -33,7 +33,7 @@ class CustomerListView extends Component {
         });
       })
       .catch(err => {
-        this.setState({ users: data, isLoadingUsers: false });
+        this.setState({ isLoadingUsers: false });
       });
   };
   getAllTags = () => {
@@ -46,7 +46,7 @@ class CustomerListView extends Component {
         this.setState({ tags: response.data.data.docs, isLoadingTags: false });
       })
       .catch(err => {
-        this.setState({ tags: data, isLoadingTags: false });
+        this.setState({ isLoadingTags: false });
       });
   };
 

@@ -38,8 +38,8 @@ exports.unpublish = catchAsync(async (req, res, next) => {
     email: unpublish_success_user_emails,
     subject: `Your profile has been unpublished.`,
     message: `Greetings! Your profile on the Discovery Portal has been unpublished.\nContact admin for republishing it.`,
-    attachments: []
-  })
+    attachments: [],
+  });
 
   if (unpublish_failed_user_emails.length === 0) {
     res.status(200).json({
@@ -85,8 +85,8 @@ exports.publish = catchAsync(async (req, res, next) => {
     email: publish_success_user_emails,
     subject: `Your profile has been published again.`,
     message: `Greetings! Your profile on the Discovery Portal has been republished.\nContact admin for more details.`,
-    attachments: []
-  })
+    attachments: [],
+  });
 
   if (publish_failed_user_emails.length === 0) {
     res.status(200).json({
@@ -140,7 +140,7 @@ exports.verify = catchAsync(async (req, res, next) => {
   if (!emails_to_verify) {
     return next(new AppError('There are no emails in the request', 401));
   }
-  
+
   await User.updateMany(
     {
       email: { $in: emails_to_verify },
@@ -240,9 +240,9 @@ exports.autoVerify = catchAsync(async (req, res, next) => {
 
 exports.getAllUnpublishedUsers = catchAsync(async (req, res, next) => {
   const docs = await User.find({ publishStatus: false })
-      .select('name email image verifyStatus')
-      .sort({ verifyStatus: -1, name: 1 })
-      .lean();
+    .select('name email image verifyStatus')
+    .sort({ verifyStatus: -1, name: 1 })
+    .lean();
 
   // SEND RESPONSE
   res.status(200).json({
@@ -255,12 +255,13 @@ exports.getAllUnpublishedUsers = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllReportedUsers = catchAsync(async (req, res, next) => {
-
-  const docs = await User.find({reportCount: { $gt: 0 }}).populate({
-    path: 'reporters',
-    model: 'User',
-    select: 'email',
-  }).lean();
+  const docs = await User.find({ reportCount: { $gt: 0 } })
+    .populate({
+      path: 'reporters',
+      model: 'User',
+      select: 'name email',
+    })
+    .lean();
 
   // SEND RESPONSE
   res.status(200).json({
