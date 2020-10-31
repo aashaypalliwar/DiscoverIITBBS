@@ -49,6 +49,9 @@ const useStyles = makeStyles(() => ({
   table: {
     minWidth: 100
   },
+  row: {
+    width: 300
+  },
   cellB: {
     fontWeight: 500,
     border: 0,
@@ -60,7 +63,8 @@ const useStyles = makeStyles(() => ({
     border: 0,
     fontSize: 17,
     paddingTop: 8,
-    paddingBottom: 8
+    paddingBottom: 8,
+    display: 'flex'
   },
   icons: {
     height: 50,
@@ -73,10 +77,6 @@ const useStyles = makeStyles(() => ({
   blue: {
     color: blue[50],
     backgroundColor: blue[100]
-  },
-  chip: {
-    marginLeft: 2,
-    marginRight: 2
   },
   align: {
     marginTop: 'auto',
@@ -106,6 +106,7 @@ const Profile = ({ profile, className, ...rest }) => {
   const classes = useStyles();
 
   let prev = null;
+  let subtags = null;
 
   const rows = [
     createData('Branch', profile.branch),
@@ -210,53 +211,195 @@ const Profile = ({ profile, className, ...rest }) => {
                   <Typography color="textPrimary" gutterBottom variant="h3">
                     Skills & Tags
                   </Typography>
-                  <Grid container justify="center">
-                    {profile.tags
-                      .sort((a, b) => {
-                        if (a.group <= b.group) return -1;
-                        return 1;
-                      })
-                      .map((tag, index) => {
-                        if (tag.group === prev) {
-                          prev = tag.group;
-                          return (
-                            <Chip
-                              key={tag.group}
-                              avatar={
-                                <Avatar className={classes.blue}>
-                                  {tag.group.charAt(0)}
-                                </Avatar>
+                  <TableContainer component={Paper}>
+                    <Table className={classes.table}>
+                      <TableBody
+                        className={classes.row}
+                        style={{ fontFamily: 'Roboto' }}
+                      >
+                        {profile.tags
+                          .sort((a, b) => {
+                            if (a.group <= b.group) return -1;
+                            return 1;
+                          })
+                          .map((tag, index) => {
+                            console.log(tag.name);
+                            console.log(
+                              index,
+                              profile.tags.length,
+                              index != profile.tags.length - 1
+                            );
+                            if (index != profile.tags.length - 1) {
+                              if (prev && tag.group === prev.group) {
+                                prev = tag;
+                                subtags.push(tag);
+                                console.log(subtags);
+                              } else if (prev) {
+                                const row = [
+                                  <TableRow>
+                                    <TableCell
+                                      className={classes.cellB}
+                                      color="textPrimary"
+                                      gutterBottom
+                                      variant="h3"
+                                    >
+                                      {prev.group}
+                                    </TableCell>
+                                    <TableCell className={classes.cell}>
+                                      {subtags.map(tag => {
+                                        return (
+                                          <Chip
+                                            key={tag.group}
+                                            avatar={
+                                              <Avatar className={classes.blue}>
+                                                {tag.group.charAt(0)}
+                                              </Avatar>
+                                            }
+                                            onClick={() => {
+                                              return null;
+                                            }}
+                                            label={tag.name}
+                                          />
+                                        );
+                                      })}
+                                    </TableCell>
+                                  </TableRow>
+                                ];
+                                prev = tag;
+                                subtags = null;
+                                subtags = [tag];
+                                return row;
+                              } else if (!prev) {
+                                prev = tag;
+                                subtags = [tag];
                               }
-                              className={classes.chip}
-                              label={tag.name}
-                            />
-                          );
-                        } else {
-                          prev = tag.group;
-                          return (
-                            <div style={{ display: 'flex' }}>
-                              <Typography
-                                color="textPrimary"
-                                gutterBottom
-                                variant="h3"
-                              >
-                                {tag.group}
-                              </Typography>
-                              <Chip
-                                key={tag.group}
-                                avatar={
-                                  <Avatar className={classes.blue}>
-                                    {tag.group.charAt(0)}
-                                  </Avatar>
-                                }
-                                className={classes.chip}
-                                label={tag.name}
-                              />
-                            </div>
-                          );
-                        }
-                      })}
-                  </Grid>
+                            } else {
+                              if (!prev) {
+                                return (
+                                  <TableRow>
+                                    <TableCell
+                                      className={classes.cellB}
+                                      color="textPrimary"
+                                      gutterBottom
+                                      variant="h3"
+                                    >
+                                      {tag.group}
+                                    </TableCell>
+                                    <TableCell className={classes.cell}>
+                                      <Chip
+                                        key={tag.group}
+                                        avatar={
+                                          <Avatar className={classes.blue}>
+                                            {tag.group.charAt(0)}
+                                          </Avatar>
+                                        }
+                                        onClick={() => {
+                                          return null;
+                                        }}
+                                        label={tag.name}
+                                      />
+                                    </TableCell>
+                                    );
+                                  </TableRow>
+                                );
+                              } else if (prev.group != tag.group) {
+                                return (
+                                  <div>
+                                    <TableRow>
+                                      <TableCell
+                                        className={classes.cellB}
+                                        color="textPrimary"
+                                        gutterBottom
+                                        variant="h3"
+                                      >
+                                        {prev.group}
+                                      </TableCell>
+                                      <TableCell className={classes.cell}>
+                                        {subtags.map(tag => {
+                                          return (
+                                            <Chip
+                                              key={tag.group}
+                                              avatar={
+                                                <Avatar
+                                                  className={classes.blue}
+                                                >
+                                                  {tag.group.charAt(0)}
+                                                </Avatar>
+                                              }
+                                              onClick={() => {
+                                                return null;
+                                              }}
+                                              label={tag.name}
+                                            />
+                                          );
+                                        })}
+                                      </TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                      <TableCell
+                                        className={classes.cellB}
+                                        color="textPrimary"
+                                        gutterBottom
+                                        variant="h3"
+                                      >
+                                        {tag.group}
+                                      </TableCell>
+                                      <TableCell className={classes.cell}>
+                                        <Chip
+                                          key={tag.group}
+                                          avatar={
+                                            <Avatar className={classes.blue}>
+                                              {tag.group.charAt(0)}
+                                            </Avatar>
+                                          }
+                                          onClick={() => {
+                                            return null;
+                                          }}
+                                          label={tag.name}
+                                        />
+                                      </TableCell>
+                                      );
+                                    </TableRow>
+                                  </div>
+                                );
+                              } else {
+                                subtags.push(tag);
+                                return (
+                                  <TableRow>
+                                    <TableCell
+                                      className={classes.cellB}
+                                      color="textPrimary"
+                                      gutterBottom
+                                      variant="h3"
+                                    >
+                                      {prev.group}
+                                    </TableCell>
+                                    <TableCell className={classes.cell}>
+                                      {subtags.map(tag => {
+                                        return (
+                                          <Chip
+                                            key={tag.group}
+                                            avatar={
+                                              <Avatar className={classes.blue}>
+                                                {tag.group.charAt(0)}
+                                              </Avatar>
+                                            }
+                                            onClick={() => {
+                                              return null;
+                                            }}
+                                            label={tag.name}
+                                          />
+                                        );
+                                      })}
+                                    </TableCell>
+                                  </TableRow>
+                                );
+                              }
+                            }
+                          })}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
                 </Box>
               ) : null}
             </CardContent>
