@@ -105,6 +105,8 @@ const getLogo = name => {
 const Profile = ({ profile, className, ...rest }) => {
   const classes = useStyles();
 
+  let prev = null;
+
   const rows = [
     createData('Branch', profile.branch),
     createData('Admission Year', profile.admissionYear || 'Update'),
@@ -209,23 +211,51 @@ const Profile = ({ profile, className, ...rest }) => {
                     Skills & Tags
                   </Typography>
                   <Grid container justify="center">
-                    {profile.tags.map((tag, index) => {
-                      return (
-                        <Chip
-                          key={index}
-                          avatar={
-                            <Avatar className={classes.blue}>
-                              {tag.group.charAt(0)}
-                            </Avatar>
-                          }
-                          onClick={() => {
-                            return null;
-                          }}
-                          className={classes.chip}
-                          label={tag.name}
-                        />
-                      );
-                    })}
+                    {profile.tags
+                      .sort((a, b) => {
+                        if (a.group <= b.group) return -1;
+                        return 1;
+                      })
+                      .map((tag, index) => {
+                        if (tag.group === prev) {
+                          prev = tag.group;
+                          return (
+                            <Chip
+                              key={tag.group}
+                              avatar={
+                                <Avatar className={classes.blue}>
+                                  {tag.group.charAt(0)}
+                                </Avatar>
+                              }
+                              className={classes.chip}
+                              label={tag.name}
+                            />
+                          );
+                        } else {
+                          prev = tag.group;
+                          return (
+                            <div style={{ display: 'flex' }}>
+                              <Typography
+                                color="textPrimary"
+                                gutterBottom
+                                variant="h3"
+                              >
+                                {tag.group}
+                              </Typography>
+                              <Chip
+                                key={tag.group}
+                                avatar={
+                                  <Avatar className={classes.blue}>
+                                    {tag.group.charAt(0)}
+                                  </Avatar>
+                                }
+                                className={classes.chip}
+                                label={tag.name}
+                              />
+                            </div>
+                          );
+                        }
+                      })}
                   </Grid>
                 </Box>
               ) : null}

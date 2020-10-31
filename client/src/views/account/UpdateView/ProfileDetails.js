@@ -13,6 +13,8 @@ import {
   makeStyles
 } from '@material-ui/core';
 
+import axios from 'axios';
+
 const admissionYears = [
   {
     value: 2016,
@@ -89,8 +91,26 @@ const useStyles = makeStyles(() => ({
   root: {}
 }));
 
-const ProfileDetails = ({ profile, update, className, ...rest }) => {
-  console.log(profile);
+const updateProfile = values => {
+  // this.setState({ isLoading: true });
+  const data = { ...values };
+  console.log(data);
+  axios
+    .patch('/api/v1/user/profile', data, {
+      withCredentials: true
+    })
+    .then(response => {
+      console.log(response);
+      // this.setState({ user: response.data.data.user, isLoading: false });
+      window.location.href = '/profile';
+    })
+    .catch(err => {
+      console.log(err);
+      this.setState({ isLoading: false });
+    });
+};
+
+const ProfileDetails = ({ profile, className, ...rest }) => {
   const classes = useStyles();
   const [values, setValues] = useState({
     bio: profile.bio,
@@ -210,7 +230,7 @@ const ProfileDetails = ({ profile, update, className, ...rest }) => {
           <Button
             color="primary"
             variant="contained"
-            onClick={() => update(values)}
+            onClick={() => updateProfile(values)}
           >
             Update
           </Button>

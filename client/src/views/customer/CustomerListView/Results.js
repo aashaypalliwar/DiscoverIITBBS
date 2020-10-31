@@ -114,8 +114,6 @@ const Results = ({ className, customers, tags, ...rest }) => {
     setSelectedTags(tags => [...tags, tagSelected]);
   };
   const deleteChip = tagSelected => {
-    console.log(selectedTags);
-    console.log(presentTags);
     setSelectedTags(tags => tags.filter(tag => tag.name !== tagSelected.name));
     setPresentTags(tags => [...tags, tagSelected]);
   };
@@ -196,6 +194,7 @@ const Results = ({ className, customers, tags, ...rest }) => {
                                 className={classes.chip}
                                 clickable
                                 onDelete={() => deleteChip(tag)}
+                                color="primary"
                               />
                             </li>
                           );
@@ -229,6 +228,8 @@ const Results = ({ className, customers, tags, ...rest }) => {
                                 className={classes.chip}
                                 clickable
                                 onClick={() => selectChip(tag)}
+                                variant="outlined"
+                                color="primary"
                               />
                             </li>
                           );

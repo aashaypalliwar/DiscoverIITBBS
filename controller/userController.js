@@ -6,7 +6,7 @@ const { sendEmail } = require('../utils/sendEmail');
 const APIFeatures = require('./../utils/apiFeatures');
 
 exports.aboutMe = catchAsync(async (req, res, next) => {
-    if (!req.user) {
+  if (!req.user) {
     return next(new AppError('This user is not present', 401));
   }
 
@@ -19,11 +19,12 @@ exports.aboutMe = catchAsync(async (req, res, next) => {
 });
 
 exports.getProfile = catchAsync(async (req, res, next) => {
-
-  let user = await User.findOne({_id: req.query.id}).populate({
-    path: 'tags',
-    model: 'Tag'
-  }).lean();
+  let user = await User.findOne({ _id: req.query.id })
+    .populate({
+      path: 'tags',
+      model: 'Tag',
+    })
+    .lean();
 
   console.log(user);
 
@@ -32,9 +33,9 @@ exports.getProfile = catchAsync(async (req, res, next) => {
   }
   res.status(200).json({
     status: 'success',
-    data:{
-      user
-    }
+    data: {
+      user,
+    },
   });
 });
 
@@ -45,7 +46,7 @@ exports.updateProfile = catchAsync(async (req, res, next) => {
     );
   }
 
-  const updateUser = await User.findByIdAndUpdate(req.user.id, req.body, {
+  const updateUser = await User.findByIdAndUpdate(req.user._id, req.body, {
     new: true,
     runValidators: true,
   }).populate({
@@ -63,11 +64,10 @@ exports.updateProfile = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllUsers = catchAsync(async (req, res, next) => {
-  
   const docs = await User.find({ publishStatus: true })
-      .select('name email image verifyStatus')
-      .sort({ verifyStatus: -1, name: 1 })
-      .lean();
+    .select('name email image verifyStatus')
+    .sort({ verifyStatus: -1, name: 1 })
+    .lean();
 
   res.status(200).json({
     status: 'success',
@@ -85,9 +85,9 @@ exports.getAllTags = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
     results: docs.length,
-    data:{
-      docs
-    }
+    data: {
+      docs,
+    },
   });
 });
 
@@ -111,20 +111,20 @@ exports.reportUser = catchAsync(async (req, res, next) => {
   } else {
     const newReportCount = reportedUser.reportCount + 1;
     let publishStatus = true;
-    if(newReportCount > 4){
+    if (newReportCount > 4) {
       publishStatus = false;
       await sendEmail({
         email: reportedUser.email,
         subject: `Your profile has been unpublished.`,
         message: `Hey ${reportedUser.name}, Your profile on the Discovery Portal has been unpublished.\nContact admin for republishing it.`,
-        attachments: []
-      })
+        attachments: [],
+      });
     }
     const updatedUser = await User.findByIdAndUpdate(req.params.id, {
       reportCount: newReportCount,
       publishStatus: publishStatus,
       $push: { reporters: req.user.id },
-    });    
+    });
 
     res.status(200).json({
       status:'Success',

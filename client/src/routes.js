@@ -8,7 +8,7 @@ import LoginView from 'src/views/auth/LoginView';
 import RegisterView from 'src/views/auth/RegisterView';
 import SettingsView from 'src/views/settings/SettingsView';
 
-import UpdateView from 'src/views/account/AccountView/UpdateView';
+import UpdateView from 'src/views/account/UpdateView';
 
 const setUserAsProps = (user, cookies) => {
   // var user = el;

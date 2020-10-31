@@ -22,23 +22,7 @@ class Account extends Component {
     isLoading: true,
     isUpdated: false
   };
-  updateProfile = values => {
-    this.setState({ isLoading: true });
-    const data = { ...values };
-    console.log(data);
-    axios
-      .patch('/api/v1/user/profile', data, {
-        withCredentials: true
-      })
-      .then(response => {
-        this.setState({ user: response.data.data.user, isLoading: false });
-        window.location.href = '/profile';
-      })
-      .catch(err => {
-        console.log(err);
-        this.setState({ isLoading: false });
-      });
-  };
+
   componentDidMount = () => {
     this.setState({ isLoading: true });
     console.log('component did mount');
@@ -68,10 +52,7 @@ class Account extends Component {
             <Container maxWidth="lg">
               <Grid container justify="center">
                 <Grid item lg={8} md={6} xs={12}>
-                  <ProfileDetails
-                    profile={this.state.user}
-                    update={this.updateProfile}
-                  />
+                  <ProfileDetails profile={this.state.user} />
                 </Grid>
               </Grid>
             </Container>
