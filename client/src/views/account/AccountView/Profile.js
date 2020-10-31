@@ -7,7 +7,6 @@ import {
   Box,
   Button,
   Card,
-  CardActions,
   CardContent,
   Chip,
   Divider,
@@ -17,13 +16,10 @@ import {
   makeStyles
 } from '@material-ui/core';
 
-import { blue, deepPurple } from '@material-ui/core/colors';
-
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
@@ -47,7 +43,9 @@ const useStyles = makeStyles(() => ({
     margin: 12
   },
   table: {
-    minWidth: 100
+    minWidth: 100,
+    fontFamily: 'Roboto',
+    overflowY: 'hidden'
   },
   row: {
     width: 300
@@ -55,13 +53,25 @@ const useStyles = makeStyles(() => ({
   cellB: {
     fontWeight: 500,
     border: 0,
-    fontSize: 17,
+    fontSize: 18,
     paddingTop: 8,
     paddingBottom: 8
   },
+  cellC: {
+    border: 0,
+    fontSize: 18,
+    paddingTop: 8,
+    paddingBottom: 8,
+    textAlign: 'center'
+  },
+  cellBA: {
+    fontWeight: 500,
+    border: 0,
+    fontSize: 18
+  },
   cell: {
     border: 0,
-    fontSize: 17,
+    fontSize: 18,
     paddingTop: 8,
     paddingBottom: 8,
     display: 'flex'
@@ -74,16 +84,16 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
     alignContent: 'center'
   },
-  blue: {
-    color: blue[50],
-    backgroundColor: blue[100]
-  },
   align: {
     marginTop: 'auto',
     marginBottom: 'auto'
   },
   right: {
     textAlign: 'right'
+  },
+  chip: {
+    margin: 5,
+    cursor: 'default'
   }
 }));
 
@@ -105,15 +115,25 @@ const getLogo = name => {
 const Profile = ({ profile, className, ...rest }) => {
   const classes = useStyles();
 
-  let prev = null;
-  let subtags = null;
-
   const rows = [
     createData('Branch', profile.branch),
     createData('Admission Year', profile.admissionYear || 'Update'),
     createData('Graduation year', profile.graduationYear || 'Update'),
     createData('Publish Status', profile.publishStatus ? 'True' : 'False')
   ];
+
+  let tagMap = {};
+  for (let tag of profile.tags) {
+    tagMap[tag.group] = [];
+  }
+  for (let tag of profile.tags) {
+    tagMap[tag.group].push(tag);
+  }
+  let tagMapArray = [];
+  for (let group in tagMap) {
+    tagMapArray.push({ name: group, tags: tagMap[group] });
+  }
+  console.log(tagMapArray);
 
   return (
     <div>
@@ -166,7 +186,7 @@ const Profile = ({ profile, className, ...rest }) => {
                         >
                           {row.name}
                         </TableCell>
-                        <TableCell align="center" className={classes.cell}>
+                        <TableCell className={classes.cellC}>
                           {row.calories}
                         </TableCell>
                       </TableRow>
@@ -211,199 +231,39 @@ const Profile = ({ profile, className, ...rest }) => {
                   <Typography color="textPrimary" gutterBottom variant="h3">
                     Skills & Tags
                   </Typography>
-                  <TableContainer component={Paper}>
-                    <Table className={classes.table}>
-                      <TableBody
-                        className={classes.row}
-                        style={{ fontFamily: 'Roboto' }}
-                      >
-                        {profile.tags
-                          .sort((a, b) => {
-                            if (a.group <= b.group) return -1;
-                            return 1;
-                          })
-                          .map((tag, index) => {
-                            console.log(tag.name);
-                            console.log(
-                              index,
-                              profile.tags.length,
-                              index != profile.tags.length - 1
-                            );
-                            if (index != profile.tags.length - 1) {
-                              if (prev && tag.group === prev.group) {
-                                prev = tag;
-                                subtags.push(tag);
-                                console.log(subtags);
-                              } else if (prev) {
-                                const row = [
-                                  <TableRow>
-                                    <TableCell
-                                      className={classes.cellB}
-                                      color="textPrimary"
-                                      gutterBottom
-                                      variant="h3"
-                                    >
-                                      {prev.group}
-                                    </TableCell>
-                                    <TableCell className={classes.cell}>
-                                      {subtags.map(tag => {
-                                        return (
-                                          <Chip
-                                            key={tag.group}
-                                            avatar={
-                                              <Avatar className={classes.blue}>
-                                                {tag.group.charAt(0)}
-                                              </Avatar>
-                                            }
-                                            onClick={() => {
-                                              return null;
-                                            }}
-                                            label={tag.name}
-                                          />
-                                        );
-                                      })}
-                                    </TableCell>
-                                  </TableRow>
-                                ];
-                                prev = tag;
-                                subtags = null;
-                                subtags = [tag];
-                                return row;
-                              } else if (!prev) {
-                                prev = tag;
-                                subtags = [tag];
-                              }
-                            } else {
-                              if (!prev) {
-                                return (
-                                  <TableRow>
-                                    <TableCell
-                                      className={classes.cellB}
-                                      color="textPrimary"
-                                      gutterBottom
-                                      variant="h3"
-                                    >
-                                      {tag.group}
-                                    </TableCell>
-                                    <TableCell className={classes.cell}>
-                                      <Chip
-                                        key={tag.group}
-                                        avatar={
-                                          <Avatar className={classes.blue}>
-                                            {tag.group.charAt(0)}
-                                          </Avatar>
-                                        }
-                                        onClick={() => {
-                                          return null;
-                                        }}
-                                        label={tag.name}
-                                      />
-                                    </TableCell>
-                                    );
-                                  </TableRow>
-                                );
-                              } else if (prev.group != tag.group) {
-                                return (
-                                  <div>
-                                    <TableRow>
-                                      <TableCell
-                                        className={classes.cellB}
-                                        color="textPrimary"
-                                        gutterBottom
-                                        variant="h3"
-                                      >
-                                        {prev.group}
-                                      </TableCell>
-                                      <TableCell className={classes.cell}>
-                                        {subtags.map(tag => {
-                                          return (
-                                            <Chip
-                                              key={tag.group}
-                                              avatar={
-                                                <Avatar
-                                                  className={classes.blue}
-                                                >
-                                                  {tag.group.charAt(0)}
-                                                </Avatar>
-                                              }
-                                              onClick={() => {
-                                                return null;
-                                              }}
-                                              label={tag.name}
-                                            />
-                                          );
-                                        })}
-                                      </TableCell>
-                                    </TableRow>
-                                    <TableRow>
-                                      <TableCell
-                                        className={classes.cellB}
-                                        color="textPrimary"
-                                        gutterBottom
-                                        variant="h3"
-                                      >
-                                        {tag.group}
-                                      </TableCell>
-                                      <TableCell className={classes.cell}>
-                                        <Chip
-                                          key={tag.group}
-                                          avatar={
-                                            <Avatar className={classes.blue}>
-                                              {tag.group.charAt(0)}
-                                            </Avatar>
-                                          }
-                                          onClick={() => {
-                                            return null;
-                                          }}
-                                          label={tag.name}
-                                        />
-                                      </TableCell>
-                                      );
-                                    </TableRow>
-                                  </div>
-                                );
-                              } else {
-                                subtags.push(tag);
-                                return (
-                                  <TableRow>
-                                    <TableCell
-                                      className={classes.cellB}
-                                      color="textPrimary"
-                                      gutterBottom
-                                      variant="h3"
-                                    >
-                                      {prev.group}
-                                    </TableCell>
-                                    <TableCell className={classes.cell}>
-                                      {subtags.map(tag => {
-                                        return (
-                                          <Chip
-                                            key={tag.group}
-                                            avatar={
-                                              <Avatar className={classes.blue}>
-                                                {tag.group.charAt(0)}
-                                              </Avatar>
-                                            }
-                                            onClick={() => {
-                                              return null;
-                                            }}
-                                            label={tag.name}
-                                          />
-                                        );
-                                      })}
-                                    </TableCell>
-                                  </TableRow>
-                                );
-                              }
-                            }
-                          })}
+                  <TableContainer>
+                    <Table className={classes.table} aria-label="simple table">
+                      <TableBody>
+                        {tagMapArray.map((group, index) => {
+                          return [
+                            <TableRow className={classes.cellBA}>
+                              &nbsp;&nbsp;&nbsp;&nbsp;{group.name}
+                            </TableRow>,
+                            <TableRow className={classes.cell}>
+                              <TableCell style={{ borderBottom: 0 }}>
+                                {group.tags.map((tag, index) => {
+                                  return (
+                                    <Chip
+                                      key={tag.group}
+                                      className={classes.chip}
+                                      variant="outlined"
+                                      onClick={() => {
+                                        return null;
+                                      }}
+                                      label={tag.name}
+                                    />
+                                  );
+                                })}
+                              </TableCell>
+                            </TableRow>
+                          ];
+                        })}
                       </TableBody>
                     </Table>
                   </TableContainer>
                 </Box>
               ) : null}
             </CardContent>
-            <Divider />
           </Card>
         </Grid>
       </Grid>

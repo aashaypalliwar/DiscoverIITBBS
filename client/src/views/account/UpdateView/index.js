@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Container, Grid, withStyles } from '@material-ui/core';
 import Page from 'src/components/Page';
-import Profile from './Profile';
 import ProfileDetails from './ProfileDetails';
 import axios from 'axios';
 

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Container, Grid, withStyles } from '@material-ui/core';
 import Page from 'src/components/Page';
 import Profile from './Profile';
-import ProfileDetails from './ProfileDetails';
 import axios from 'axios';
 
 const useStyles = theme => ({
@@ -65,12 +64,6 @@ class Account extends Component {
                 <Grid item lg={12} md={10} xs={12}>
                   <Profile profile={this.state.user} />
                 </Grid>
-                {/* <Grid item lg={7} md={6} xs={12}>
-                  <ProfileDetails
-                    profile={this.state.user}
-                    update={this.updateProfile}
-                  />
-                </Grid> */}
               </Grid>
             </Container>
           </Page>

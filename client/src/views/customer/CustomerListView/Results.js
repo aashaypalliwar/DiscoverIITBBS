@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import { clone } from "ramda"
+import { clone } from 'ramda';
 import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import TagGroup from './TagGroup';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import {
   Avatar,
   Box,
@@ -126,9 +127,9 @@ const Results = ({ className, customers, tags, ...rest }) => {
   const resetSearch = () => {
     setSelectedTags([]);
     setUsers(customers);
-  }
+  };
 
-  const searchUserByTag = () => {    
+  const searchUserByTag = () => {
     const data = {
       tagsSelected: selectedTags
     };
@@ -145,8 +146,12 @@ const Results = ({ className, customers, tags, ...rest }) => {
       .catch(err => console.log(err));
   };
   const searchUser = async event => {
-    await setSearch(event.target.value);
-    filterResults();
+    if (event.target.value === '') {
+      resetSearch();
+    } else {
+      await setSearch(event.target.value);
+      filterResults();
+    }
   };
 
   const filterResults = () => {
@@ -162,53 +167,53 @@ const Results = ({ className, customers, tags, ...rest }) => {
   const displayFilterPane = () => {
     setUsers(customers);
     setSelectedTags([]);
-    if(!processedTags){
+    if (!processedTags) {
       let tagMap = {};
-      for(let tag of tags){
+      for (let tag of tags) {
         tagMap[tag.group] = [];
       }
-      for(let tag of tags){
+      for (let tag of tags) {
         tagMap[tag.group].push(tag);
       }
       let tagMapArray = [];
-      for(let group in tagMap){
-        tagMapArray.push({name: group, tags: tagMap[group]});
+      for (let group in tagMap) {
+        tagMapArray.push({ name: group, tags: tagMap[group] });
       }
       setSortedTags(tagMapArray);
       setProcessTags(true);
     }
     setFilterVisibility(true);
-  }
+  };
 
   const hideFilterPane = () => {
     setSelectedTags([]);
     setFilterVisibility(false);
-  }
+  };
 
-  const addToSelected = (tagID) => {
-      let newSelection = clone(selectedTags);
-      newSelection.push(tagID);
-      setSelectedTags(newSelection);
-  }
+  const addToSelected = tagID => {
+    let newSelection = clone(selectedTags);
+    newSelection.push(tagID);
+    setSelectedTags(newSelection);
+  };
 
-  const removeFromSelected = (tagID) => {
+  const removeFromSelected = tagID => {
     let newSelection = clone(selectedTags);
     let index = newSelection.indexOf(tagID);
     if (index > -1) {
       newSelection.splice(index, 1);
       setSelectedTags(newSelection);
     }
-  }
- 
+  };
+
   // const users = {customers};
   return (
     <div>
-      {
-        !filterVisibility ? <Box mt={3}>
+      {!filterVisibility ? (
+        <Box mt={3}>
           <Card>
-            <CardContent>
+            <CardContent style={{ padding: 20 }}>
               <Grid container spacing={3}>
-                <TableContainer component={Paper}>
+                <TableContainer>
                   <Table className={classes.table} aria-label="simple table">
                     <TableBody>
                       <TableRow>
@@ -219,7 +224,7 @@ const Results = ({ className, customers, tags, ...rest }) => {
                         >
                           Filter students by skills, PoR or other tags
                         </TableCell>
-                        
+
                         <TableCell align="right" className={classes.cell}>
                           <Button
                             variant="contained"
@@ -248,107 +253,141 @@ const Results = ({ className, customers, tags, ...rest }) => {
               </Grid>
             </CardContent>
           </Card>
-        </Box> : null
-      }
-      {
-        filterVisibility ? <Box mt={3}>
-        <Card>
-          <CardContent>
-            <Grid container spacing={3}>
-              <TableContainer component={Paper}>
-                <Table className={classes.table} aria-label="simple table">
-                  <TableBody>
-                   {sortedTags.map((group, index) => {
-                          return (
-                            <TagGroup
+        </Box>
+      ) : null}
+      {filterVisibility ? (
+        <Box mt={3}>
+          <Card>
+            <CardContent style={{ padding: 20 }}>
+              <Grid container spacing={3}>
+                <TableContainer>
+                  <Table className={classes.table} aria-label="simple table">
+                    <TableBody>
+                      {sortedTags.map((group, index) => {
+                        return (
+                          <TagGroup
                             key={index}
                             classes={classes}
                             tagGroup={group.name}
                             tags={group.tags}
                             addToSelected={addToSelected}
                             removeFromSelected={removeFromSelected}
-                            />
-                          );
-                        })}
+                          />
+                        );
+                      })}
+                      <TableRow>
+                        <TableCell align="left" className={classes.cell}>
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={searchUserByTag}
+                            style={{ alignSelf: 'left' }}
+                          >
+                            Search
+                          </Button>
+                        </TableCell>
+                        <TableCell align="left" className={classes.cell}>
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={hideFilterPane}
+                            style={{ alignSelf: 'left' }}
+                          >
+                            Cancel
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Grid>
+            </CardContent>
+          </Card>
+        </Box>
+      ) : null}
+      {!filterVisibility ? (
+        <>
+          <br></br>
+          <Card className={clsx(classes.root, className)} {...rest}>
+            <PerfectScrollbar>
+              <Box minWidth={1050}>
+                <Table>
+                  <TableHead>
                     <TableRow>
-                      
-                      <TableCell align="left" className={classes.cell}>
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={searchUserByTag}
-                          style={{ alignSelf: 'left' }}
-                        >
-                          Search
-                        </Button>
-                      </TableCell>
-                      <TableCell align="left" className={classes.cell}>
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={hideFilterPane}
-                          style={{ alignSelf: 'left' }}
-                        >
-                          Cancel
-                        </Button>
+                      <TableCell>
+                        <Grid item md={5} xs={12}>
+                          <Input
+                            fullWidth
+                            InputProps={{
+                              startAdornment: (
+                                <InputAdornment position="start">
+                                  <SvgIcon fontSize="small" color="action">
+                                    <SearchIcon />
+                                  </SvgIcon>
+                                </InputAdornment>
+                              )
+                            }}
+                            onChange={searchUser}
+                            placeholder="Search student by name or email"
+                            variant="outlined"
+                          />
+                        </Grid>
                       </TableCell>
                     </TableRow>
+                    <TableRow>
+                      <TableCell>Name</TableCell>
+                      <TableCell>Verified</TableCell>
+                      <TableCell>Email</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {users
+                      .slice(page * limit, (page + 1) * limit)
+                      .map(customer => (
+                        <TableRow
+                          hover
+                          key={customer.id}
+                          selected={
+                            selectedCustomerIds.indexOf(customer.id) !== -1
+                          }
+                        >
+                          <TableCell>
+                            <Box alignItems="center" display="flex">
+                              <Avatar
+                                className={classes.avatar}
+                                src={customer.image}
+                              >
+                                {getInitials(customer.name)}
+                              </Avatar>
+                              <Typography color="textPrimary" variant="body1">
+                                {customer.name}
+                              </Typography>
+                            </Box>
+                          </TableCell>
+                          <TableCell>
+                            {customer.verifyStatus ? (
+                              <CheckCircleIcon color="primary" />
+                            ) : null}
+                          </TableCell>
+                          <TableCell>{customer.email}</TableCell>
+                        </TableRow>
+                      ))}
                   </TableBody>
                 </Table>
-              </TableContainer>
-            </Grid>
-          </CardContent>
-        </Card>
-      </Box> : null
-      }
-      {
-        !filterVisibility ? <><br></br>
-        <Card className={clsx(classes.root, className)} {...rest}>
-          <PerfectScrollbar>
-            <Box minWidth={1050}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Name</TableCell>
-                    <TableCell>Email</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {users.slice(page * limit, (page + 1) * limit).map(customer => (
-                    <TableRow
-                      hover
-                      key={customer.id}
-                      selected={selectedCustomerIds.indexOf(customer.id) !== -1}
-                    >
-                      <TableCell>
-                        <Box alignItems="center" display="flex">
-                          <Avatar className={classes.avatar} src={customer.image}>
-                            {getInitials(customer.name)}
-                          </Avatar>
-                          <Typography color="textPrimary" variant="body1">
-                            {customer.name}
-                          </Typography>
-                        </Box>
-                      </TableCell>
-                      <TableCell>{customer.email}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </Box>
-          </PerfectScrollbar>
-          <TablePagination
-            component="div"
-            count={customers.length}
-            onChangePage={handlePageChange}
-            onChangeRowsPerPage={handleLimitChange}
-            page={page}
-            rowsPerPage={limit}
-            rowsPerPageOptions={[5, 10, 25]}
-          />
-        </Card></> : null
-      }
-      
+              </Box>
+            </PerfectScrollbar>
+            <TablePagination
+              component="div"
+              count={customers.length}
+              onChangePage={handlePageChange}
+              onChangeRowsPerPage={handleLimitChange}
+              page={page}
+              rowsPerPage={limit}
+              rowsPerPageOptions={[5, 10, 25]}
+            />
+          </Card>
+        </>
+      ) : null}
     </div>
   );
 };

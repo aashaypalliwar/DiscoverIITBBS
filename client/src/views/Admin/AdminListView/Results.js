@@ -36,18 +36,18 @@ import {
 import getInitials from 'src/utils/getInitials';
 import { Search as SearchIcon } from 'react-feather';
 import { filter } from 'lodash';
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   root: {
     display: 'flex',
     justifyContent: 'center',
     flexWrap: 'wrap',
     listStyle: 'none',
-    padding: theme.spacing(0.5),
+    padding: 5,
     margin: 0
   },
 
   avatar: {
-    marginRight: theme.spacing(2)
+    marginRight: 10
   },
 
   chip: {
@@ -59,6 +59,12 @@ const useStyles = makeStyles(theme => ({
   },
   table: {
     minWidth: 100
+  },
+  cell: {
+    border: 0,
+    fontSize: 17,
+    paddingTop: 8,
+    paddingBottom: 8
   }
 }));
 
@@ -127,7 +133,7 @@ const Results = ({ className, ...rest }) => {
     <div>
       <Box mt={3}>
         <Card>
-          <CardContent>
+          <CardContent style={{ padding: 20 }}>
             <Grid container spacing={3}>
               <TableContainer>
                 <Table className={classes.table} aria-label="simple table">
@@ -144,8 +150,8 @@ const Results = ({ className, ...rest }) => {
                       </TableCell>
                       <TableCell className={classes.cell}>
                         <Button
-                          color="secondary"
                           variant="contained"
+                          color="secondary"
                           onClick={() => getAllReportedUsers()}
                         >
                           Reported Users
