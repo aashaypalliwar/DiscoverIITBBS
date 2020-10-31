@@ -2,6 +2,11 @@ import React, { useState } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {
+  Avatar,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Typography,
   Box,
   Button,
   Card,
@@ -9,9 +14,17 @@ import {
   CardHeader,
   Divider,
   Grid,
+  IconButton,
+  Link,
+  Paper,
   TextField,
   makeStyles
 } from '@material-ui/core';
+
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import AddIcon from '@material-ui/icons/Add';
+
+import CreateTwoToneIcon from '@material-ui/icons/CreateTwoTone';
 
 import axios from 'axios';
 
@@ -87,8 +100,38 @@ const branches = [
   }
 ];
 
+const getLogo = name => {
+  switch (name) {
+    case 'LinkedIn':
+      return 'https://img.icons8.com/fluent/48/000000/linkedin.png';
+    case 'GitHub':
+      return 'https://img.icons8.com/fluent/48/000000/github.png';
+    case 'Instagram':
+      return 'https://img.icons8.com/fluent/48/000000/instagram-new.png';
+    case 'Facebook':
+      return 'https://img.icons8.com/fluent/48/000000/facebook-new.png';
+    case 'Twitter':
+      return 'https://img.icons8.com/fluent/48/000000/twitter.png';
+  }
+};
+
 const useStyles = makeStyles(() => ({
-  root: {}
+  root: {},
+  link: {
+    padding: 10,
+    marginBottom: 5,
+    // display: 'flex',
+    alignItems: 'center',
+    fontFamily: 'Roboto',
+    color: 'blue'
+  },
+  heading: {
+    marginTop: 'auto',
+    marginBottom: 'auto'
+  },
+  text: {
+    width: '100%'
+  }
 }));
 
 const updateProfile = values => {
@@ -116,14 +159,44 @@ const ProfileDetails = ({ profile, className, ...rest }) => {
     bio: profile.bio,
     admissionYear: profile.admissionYear || 2016,
     branch: profile.branch,
-    graduationYear: profile.graduationYear || 2020
+    graduationYear: profile.graduationYear || 2020,
+    links: profile.links || null
   });
 
+  const [linkEdit, setLinkEdit] = useState({
+    LinkedIn: false,
+    GitHub: false,
+    Facebook: false,
+    Instagram: false,
+    Twitter: false
+  });
+
+  const toggleLinkEdit = name => {
+    console.log(name);
+    setLinkEdit({ ...linkEdit, [name]: true });
+    console.log(linkEdit.LinkedIn);
+  };
+
   const handleChange = event => {
-    setValues({
-      ...values,
-      [event.target.name]: event.target.value
-    });
+    if (event.target.id.startsWith('link')) {
+      let newLinks = values.links;
+      newLinks[parseInt(event.target.id.charAt(4))] = {
+        _id: values.links[parseInt(event.target.id.charAt(4))]._id,
+        name: event.target.name,
+        url: event.target.value
+      };
+      console.log(newLinks);
+      setValues({
+        ...values,
+        links: newLinks
+      });
+      console.log(values.links);
+    } else {
+      setValues({
+        ...values,
+        [event.target.name]: event.target.value
+      });
+    }
   };
 
   return (
@@ -224,6 +297,57 @@ const ProfileDetails = ({ profile, className, ...rest }) => {
               </TextField>
             </Grid>
           </Grid>
+          <br />
+          {values.links
+            ? values.links.map((link, index) => {
+                console.log(linkEdit[link.name]);
+                return (
+                  <Accordion>
+                    <AccordionSummary
+                      expandIcon={<ExpandMoreIcon />}
+                      aria-controls="panel1a-content"
+                    >
+                      <Avatar src={getLogo(link.name)} />
+                      <Typography className={classes.heading}>
+                        &nbsp;&nbsp;&nbsp;&nbsp;{link.name}
+                      </Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      {linkEdit[link.name] ? (
+                        <TextField
+                          id={`link${index}`}
+                          name={link.name}
+                          data-key={index}
+                          label={link.name}
+                          variant="outlined"
+                          className={classes.text}
+                          value={link.url}
+                          onChange={handleChange}
+                        />
+                      ) : (
+                        <Typography className={classes.link} align="justify">
+                          <Link href={link.url} target="_blank">
+                            {link.url}
+                          </Link>
+                          <IconButton
+                            onClick={() => {
+                              toggleLinkEdit(link.name);
+                            }}
+                          >
+                            <CreateTwoToneIcon />
+                          </IconButton>
+                        </Typography>
+                      )}
+                    </AccordionDetails>
+                  </Accordion>
+                );
+              })
+            : null}
+          <br />
+          <Button>
+            <AddIcon />
+            Add new link
+          </Button>
         </CardContent>
         <Divider />
         <Box display="flex" justifyContent="flex-end" p={2}>
