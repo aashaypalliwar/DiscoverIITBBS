@@ -3,6 +3,7 @@ import { Navigate } from 'react-router-dom';
 import DashboardLayout from 'src/layouts/DashboardLayout';
 import MainLayout from 'src/layouts/MainLayout';
 import AccountView from 'src/views/account/AccountView';
+import UsersView from 'src/views/account/UsersView';
 import CustomerListView from 'src/views/customer/CustomerListView';
 import LoginView from 'src/views/auth/LoginView';
 import RegisterView from 'src/views/auth/RegisterView';
@@ -23,6 +24,7 @@ const setUserAsProps = (user, cookies) => {
         { path: 'update', element: <UpdateView user={user} /> },
         { path: 'discover', element: <CustomerListView /> },
         { path: 'admin', element: <AdminListView user={user} /> },
+        { path: 'user', element: <UsersView user={user} /> },
         // { path: 'products', element: <ProductListView /> },
         { path: 'settings', element: <SettingsView /> },
         { path: '/', element: <Navigate to="/discover" /> },

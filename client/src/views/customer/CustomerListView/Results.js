@@ -205,6 +205,12 @@ const Results = ({ className, customers, tags, ...rest }) => {
     }
   };
 
+  const getOtherProfile = id => {
+    console.log('clicked');
+    let url = 'http://localhost:3001/user?id=' + id;
+    window.location.replace(url);
+  };
+
   // const users = {customers};
   return (
     <div>
@@ -346,10 +352,11 @@ const Results = ({ className, customers, tags, ...rest }) => {
                       .map(customer => (
                         <TableRow
                           hover
-                          key={customer.id}
+                          key={customer._id}
                           selected={
                             selectedCustomerIds.indexOf(customer.id) !== -1
                           }
+                          onClick={() => getOtherProfile(customer._id)}
                         >
                           <TableCell>
                             <Box alignItems="center" display="flex">
