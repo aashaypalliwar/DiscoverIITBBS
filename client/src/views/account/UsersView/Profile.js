@@ -13,7 +13,9 @@ import {
   Grid,
   Link,
   Typography,
-  makeStyles
+  makeStyles,
+  Tooltip,
+  IconButton
 } from '@material-ui/core';
 
 import Table from '@material-ui/core/Table';
@@ -22,7 +24,9 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CustomizedMenu from './Menu';
+
 function createData(name, calories, fat, carbs, protein) {
   return { name, calories, fat, carbs, protein };
 }
@@ -134,7 +138,16 @@ const Profile = ({ profile, currentUser, className, ...rest }) => {
     tagMapArray.push({ name: group, tags: tagMap[group] });
   }
   console.log(tagMapArray);
-
+  let verifyIcon;
+  if (profile.verifyStatus) {
+    verifyIcon = (
+      <Tooltip title="Verified">
+        <IconButton aria-label="verified">
+          <CheckCircleIcon color="primary" />
+        </IconButton>
+      </Tooltip>
+    );
+  }
   return (
     <div>
       <Grid container className={classes.align} spacing={1} justify="center">
@@ -145,7 +158,7 @@ const Profile = ({ profile, currentUser, className, ...rest }) => {
               <Box alignItems="center" display="flex" flexDirection="column">
                 <Avatar className={classes.avatar} src={profile.image} />
                 <Typography color="textPrimary" gutterBottom variant="h3">
-                  {profile.name}
+                  {profile.name} {verifyIcon}
                 </Typography>
                 <Typography
                   className={classes.text}
