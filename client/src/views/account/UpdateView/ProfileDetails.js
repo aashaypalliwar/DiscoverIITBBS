@@ -17,16 +17,20 @@ import {
   IconButton,
   Link,
   Paper,
+  Table,
+  TableBody,
+  TableRow,
   TextField,
-  makeStyles
+  makeStyles,
+  TableCell
 } from '@material-ui/core';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import AddIcon from '@material-ui/icons/Add';
 
 import CreateTwoToneIcon from '@material-ui/icons/CreateTwoTone';
 
 import Dialog from './Dialog';
+import ConfirmDialog from './ConfirmDialog';
 
 import axios from 'axios';
 
@@ -171,6 +175,13 @@ const ProfileDetails = ({ profile, className, ...rest }) => {
     Instagram: false,
     Twitter: false
   });
+  const [isExpanded, setIsExpanded] = useState({
+    LinkedIn: false,
+    GitHub: false,
+    Facebook: false,
+    Instagram: false,
+    Twitter: false
+  });
 
   const toggleLinkEdit = name => {
     console.log(name);
@@ -201,24 +212,42 @@ const ProfileDetails = ({ profile, className, ...rest }) => {
   };
 
   const addLink = name => {
-    console.log(name);
-    let newLinks = values.links;
-    if (newLinks)
-      newLinks.push({
-        // _id: null,
-        name: name,
-        url: null
-      });
-    else {
-      newLinks = [{ _id: null, name: name, url: null }];
-    }
+    if (name) {
+      let newLinks = values.links;
+      if (newLinks)
+        newLinks.push({
+          // _id: null,
+          name: name,
+          url: null
+        });
+      else {
+        newLinks = [{ _id: null, name: name, url: null }];
+      }
 
-    console.log(newLinks);
-    setValues({
-      ...values,
-      links: newLinks
-    });
-    console.log(values.links);
+      console.log(newLinks);
+      setValues({
+        ...values,
+        links: newLinks
+      });
+      setIsExpanded({ ...isExpanded, [name]: true });
+      setLinkEdit({ ...linkEdit, [name]: true });
+      console.log(values.links);
+    }
+  };
+
+  const handleConfirm = (status, name) => {
+    if (status === 'delete') {
+      let newLinks = values.links;
+      newLinks = newLinks.filter(link => {
+        return link.name != name;
+      });
+      console.log(newLinks);
+      setValues({
+        ...values,
+        links: newLinks
+      });
+      console.log(values.links);
+    }
   };
 
   return (
@@ -324,7 +353,7 @@ const ProfileDetails = ({ profile, className, ...rest }) => {
             ? values.links.map((link, index) => {
                 console.log(linkEdit[link.name]);
                 return (
-                  <Accordion>
+                  <Accordion defaultExpanded={isExpanded[link.name]}>
                     <AccordionSummary
                       expandIcon={<ExpandMoreIcon />}
                       aria-controls="panel1a-content"
@@ -347,18 +376,34 @@ const ProfileDetails = ({ profile, className, ...rest }) => {
                           onChange={handleChange}
                         />
                       ) : (
-                        <Typography className={classes.link} align="justify">
-                          <Link href={link.url} target="_blank">
-                            {link.url}
-                          </Link>
-                          <IconButton
-                            onClick={() => {
-                              toggleLinkEdit(link.name);
-                            }}
-                          >
-                            <CreateTwoToneIcon />
-                          </IconButton>
-                        </Typography>
+                        <Table className={classes.link}>
+                          <TableBody>
+                            <TableRow>
+                              <TableCell style={{ border: 0 }}>
+                                <Link href={link.url} target="_blank">
+                                  {link.url}
+                                </Link>
+                              </TableCell>
+                              <TableCell
+                                style={{ display: 'flex', border: 0 }}
+                                align="right"
+                              >
+                                <ConfirmDialog
+                                  status={el => {
+                                    handleConfirm(el, link.name);
+                                  }}
+                                />
+                                <IconButton
+                                  onClick={() => {
+                                    toggleLinkEdit(link.name);
+                                  }}
+                                >
+                                  <CreateTwoToneIcon />
+                                </IconButton>
+                              </TableCell>
+                            </TableRow>
+                          </TableBody>
+                        </Table>
                       )}
                     </AccordionDetails>
                   </Accordion>
