@@ -529,7 +529,7 @@ const ProfileDetails = ({ profile, className, ...rest }) => {
             <Table>
               <TableBody>
                 <TableRow>
-                  <TableCell style={{ border: 0, fontSize: 18 }}>
+                  <TableCell style={{ border: 0, fontSize: 18 }} align="center">
                     Your Tags :
                   </TableCell>
                   <TableCell style={{ border: 0 }} align="center">

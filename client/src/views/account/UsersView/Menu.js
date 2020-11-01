@@ -235,14 +235,17 @@ const CustomizedMenu = ({ user, currentUser }) => {
 
   return (
     <div>
-      <IconButton
-        aria-label="more"
-        aria-controls="long-menu"
-        aria-haspopup="true"
-        onClick={handleClick}
-      >
-        <MoreVertIcon />
-      </IconButton>
+      <div>
+        <IconButton
+          aria-label="more"
+          aria-controls="long-menu"
+          aria-haspopup="true"
+          onClick={handleClick}
+          style={{ float: 'right', color: 'black' }}
+        >
+          <MoreVertIcon />
+        </IconButton>
+      </div>
 
       <StyledMenu
         id="customized-menu"

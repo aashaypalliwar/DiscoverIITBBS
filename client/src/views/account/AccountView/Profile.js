@@ -116,6 +116,7 @@ const getLogo = name => {
 const Profile = ({ profile, className, ...rest }) => {
   const classes = useStyles();
   let navigate = useNavigate();
+  console.log(profile.links);
   const rows = [
     createData('Branch', profile.branch),
     createData('Admission Year', profile.admissionYear || 'Update'),
@@ -205,18 +206,18 @@ const Profile = ({ profile, className, ...rest }) => {
         </Grid>
         <Grid item lg={7} md={10} xs={12} className={classes.align}>
           <Card className={clsx(classes.root, className)} {...rest}>
-            {profile.links ? (
-              <CardContent align="center">
-                <Typography
-                  // className={classes.text}
-                  color="textPrimary"
-                  gutterBottom
-                  variant="h3"
-                >
-                  Contact info
-                </Typography>
-                <Grid container justify="center">
-                  {profile.links.map((link, index) => {
+            <CardContent align="center">
+              <Typography
+                // className={classes.text}
+                color="textPrimary"
+                gutterBottom
+                variant="h3"
+              >
+                Contact info
+              </Typography>
+              <Grid container justify="center">
+                {profile.links != undefined && profile.links.length !== 0 ? (
+                  profile.links.map((link, index) => {
                     return (
                       <Link href={link.url} target="_blank">
                         <Avatar
@@ -226,20 +227,26 @@ const Profile = ({ profile, className, ...rest }) => {
                         />
                       </Link>
                     );
-                  })}
-                </Grid>
-              </CardContent>
-            ) : null}
+                  })
+                ) : (
+                  <Chip
+                    label="No contact info available, update profile to see"
+                    style={{ marginTop: 10 }}
+                  />
+                )}
+              </Grid>
+            </CardContent>
             <CardContent>
-              {profile.tags ? (
-                <Box alignItems="center" display="flex" flexDirection="column">
-                  <Typography color="textPrimary" gutterBottom variant="h3">
-                    Skills & Tags
-                  </Typography>
-                  <TableContainer>
-                    <Table className={classes.table} aria-label="simple table">
-                      <TableBody>
-                        {tagMapArray.map((group, index) => {
+              <Box alignItems="center" display="flex" flexDirection="column">
+                <Typography color="textPrimary" gutterBottom variant="h3">
+                  Skills & Tags
+                </Typography>
+                <TableContainer>
+                  <Table className={classes.table} aria-label="simple table">
+                    <TableBody>
+                      {profile.tags !== undefined &&
+                      profile.tags.length !== 0 ? (
+                        tagMapArray.map((group, index) => {
                           return [
                             <TableRow className={classes.cellBA}>
                               &nbsp;&nbsp;&nbsp;&nbsp;{group.name}
@@ -252,6 +259,7 @@ const Profile = ({ profile, className, ...rest }) => {
                                       key={tag.group}
                                       className={classes.chip}
                                       variant="outlined"
+                                      color="primary"
                                       onClick={() => {
                                         return null;
                                       }}
@@ -262,12 +270,18 @@ const Profile = ({ profile, className, ...rest }) => {
                               </TableCell>
                             </TableRow>
                           ];
-                        })}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                </Box>
-              ) : null}
+                        })
+                      ) : (
+                        <TableRow>
+                          <TableCell align="center" style={{ border: 0 }}>
+                            <Chip label="No tags available, update profile to see" />
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Box>
             </CardContent>
           </Card>
         </Grid>

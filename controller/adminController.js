@@ -34,12 +34,12 @@ exports.unpublish = catchAsync(async (req, res, next) => {
     else unpublish_success_user_emails.push(user.email);
   }
 
-  await sendEmail({
-    email: unpublish_success_user_emails,
-    subject: `Your profile has been unpublished.`,
-    message: `Greetings! Your profile on the Discovery Portal has been unpublished.\nContact admin for republishing it.`,
-    attachments: [],
-  });
+  // await sendEmail({
+  //   email: unpublish_success_user_emails,
+  //   subject: `Your profile has been unpublished.`,
+  //   message: `Greetings! Your profile on the Discovery Portal has been unpublished.\nContact admin for republishing it.`,
+  //   attachments: [],
+  // });
 
   if (unpublish_failed_user_emails.length === 0) {
     res.status(200).json({
