@@ -59,4 +59,9 @@ router.get(
   adminController.getAllReportedUsers
 );
 
+router.patch(
+  '/clearReports',
+  authLogic.restrictTo('admin', 'superAdmin'),
+  adminController.clearReports
+);
 module.exports = router;

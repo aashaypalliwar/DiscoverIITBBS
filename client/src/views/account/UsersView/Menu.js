@@ -9,9 +9,9 @@ import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import DraftsIcon from '@material-ui/icons/Drafts';
 import SendIcon from '@material-ui/icons/Send';
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 import IconButton from '@material-ui/core/IconButton';
-
+import { TableCell } from '@material-ui/core';
 const StyledMenu = withStyles({
   paper: {
     border: '1px solid #d3d4d5'
@@ -139,18 +139,35 @@ const CustomizedMenu = ({ user, currentUser }) => {
       .catch(err => console.log(err));
   };
   const reportUser = id => {
+    if (!profile.reporters.includes(currentUser._id)) {
+      let data = [];
+      axios
+        .patch('/api/v1/user/report/' + id, data, {
+          withCredentials: true
+        })
+        .then(response => {
+          if (response.data.message == 'This user is already reported by you')
+            alert('This user is already reported by you');
+          else {
+            alert('Sucessfully reported');
+            updatedProfile();
+          }
+          console.log(response);
+        })
+        .catch(err => console.log(err));
+    } else {
+      alert('Already reported');
+    }
+  };
+  const clearReports = id => {
     let data = [];
     axios
-      .patch('/api/v1/user/report/' + id, data, {
+      .patch('/api/v1/admin/clearReports?id=' + id, data, {
         withCredentials: true
       })
       .then(response => {
-        if (response.data.message == 'This user is already reported by you')
-          alert('This user is already reported by you');
-        else {
-          alert('Sucessfully reported');
-          updatedProfile();
-        }
+        alert('Sucessfully cleared reports');
+        updatedProfile();
         console.log(response);
       })
       .catch(err => console.log(err));
@@ -208,7 +225,10 @@ const CustomizedMenu = ({ user, currentUser }) => {
   if (profile.reportCount > 0) {
     clearReport = (
       <StyledMenuItem>
-        <ListItemText primary="Clear Report" />
+        <ListItemText
+          primary="Clear Report"
+          onClick={() => clearReports(profile._id)}
+        />
       </StyledMenuItem>
     );
   }
@@ -221,8 +241,9 @@ const CustomizedMenu = ({ user, currentUser }) => {
         aria-haspopup="true"
         onClick={handleClick}
       >
-        <MoreHorizIcon />
+        <MoreVertIcon />
       </IconButton>
+
       <StyledMenu
         id="customized-menu"
         anchorEl={anchorEl}
