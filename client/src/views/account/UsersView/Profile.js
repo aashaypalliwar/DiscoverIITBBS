@@ -238,6 +238,7 @@ const Profile = ({ profile, currentUser, className, ...rest }) => {
                                       key={tag.group}
                                       className={classes.chip}
                                       variant="outlined"
+                                      color="primary"
                                       onClick={() => {
                                         return null;
                                       }}

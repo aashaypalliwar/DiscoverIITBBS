@@ -322,7 +322,7 @@ const Results = ({ className, customers, tags, ...rest }) => {
                   <TableHead>
                     <TableRow>
                       <TableCell>
-                        <Grid item md={5} xs={12}>
+                        <Grid item md={7} xs={12}>
                           <Input
                             fullWidth
                             InputProps={{

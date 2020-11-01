@@ -158,7 +158,7 @@ const Results = ({ className, ...rest }) => {
                       <TableCell className={classes.cell}>
                         <Button
                           variant="contained"
-                          color="secondary"
+                          color="primary"
                           onClick={() => getAllReportedUsers()}
                         >
                           Reported Users

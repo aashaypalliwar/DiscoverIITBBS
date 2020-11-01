@@ -78,11 +78,13 @@ const verifyJwtToken = catchAsync(async (req, res, next) => {
 });
 
 const loggedInUser = catchAsync(async (req, res, next) => {
-  const currentUser = await User.findById(req.jwtPayload.id).populate({
-    path: 'tags',
-    model: 'Tag',
-    select: 'name group',
-  }).lean();
+  const currentUser = await User.findById(req.jwtPayload.id)
+    .populate({
+      path: 'tags',
+      model: 'Tag',
+      select: 'name group',
+    })
+    .lean();
   if (!currentUser) {
     return next(
       new AppError(
@@ -133,30 +135,43 @@ const googleLogin = catchAsync(async (req, res, next) => {
           );
 
         try {
-          User.findOne({ email }).exec(async (err, user) => {
-            if (err) {
-              return res.status(404).json({
-                message: err.message,
-              });
-            } else {
-              if (user) {
-                await User.updateOne({ email }, { image: picture });
-                createSendToken(user, 200, res);
+          User.findOne({ email })
+            .populate({
+              path: 'tags',
+              model: 'Tag',
+              select: 'name group',
+            })
+            .exec(async (err, user) => {
+              if (err) {
+                return res.status(404).json({
+                  message: err.message,
+                });
               } else {
-                if (config.SIGNUP_TOGGLE == 'true')
-                  createUser(name, email, picture, res);
-                else {
-                  visitor = {
-                    _id: email,
-                    name: name,
-                    email: email,
-                    role: 'visitor',
-                  };
-                  createSendToken(visitor, 200, res);
+                if (user) {
+                  await User.updateOne({ email }, { image: picture });
+                  createSendToken(user, 200, res);
+                } else {
+                  if (user) {
+                    await User.updateOne({ email }, { image: picture });
+                    createSendToken(user, 200, res);
+                  } else {
+                    if (config.SIGNUP_TOGGLE == 'true')
+                      createUser(name, email, picture, res);
+                    else {
+                      console.log('false');
+                      visitor = {
+                        _id: email,
+                        name: name,
+                        email: email,
+                        role: 'visitor',
+                        image: picture,
+                      };
+                      createSendToken(visitor, 200, res);
+                    }
+                  }
                 }
               }
-            }
-          }});
+            });
         } catch (err) {
           throw new AppError(err.message, 401);
         }
