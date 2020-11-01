@@ -81,12 +81,12 @@ exports.publish = catchAsync(async (req, res, next) => {
     else publish_failed_user_emails.push(user.email);
   }
 
-  await sendEmail({
-    email: publish_success_user_emails,
-    subject: `Your profile has been published again.`,
-    message: `Greetings! Your profile on the Discovery Portal has been republished.\nContact admin for more details.`,
-    attachments: [],
-  });
+  // await sendEmail({
+  //   email: publish_success_user_emails,
+  //   subject: `Your profile has been published again.`,
+  //   message: `Greetings! Your profile on the Discovery Portal has been republished.\nContact admin for more details.`,
+  //   attachments: [],
+  // });
 
   if (publish_failed_user_emails.length === 0) {
     res.status(200).json({
@@ -289,5 +289,29 @@ exports.updateTag = catchAsync(async (req, res, next) => {
     data: {
       tag: tag,
     },
+  });
+});
+
+exports.clearReports = catchAsync(async (req, res, next) => {
+  if (!req.query.id) {
+    return next(new AppError('There is no id in query', 403));
+  }
+
+  let user = await User.findByIdAndUpdate(
+    req.query.id,
+    { reportCount: 0, reporters: [] },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  if (!user) {
+    return next(new AppError('There is no user with this id', 403));
+  }
+
+  res.status(200).json({
+    status: 'success',
+    message: 'successfully cleared reports',
   });
 });
