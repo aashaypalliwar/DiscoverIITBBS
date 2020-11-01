@@ -29,12 +29,6 @@ import NavItem from './NavItem';
 import { GoogleLogout } from 'react-google-login';
 import axios from 'axios';
 
-const user = {
-  avatar: '/static/images/avatars/avatar_6.png',
-  jobTitle: 'Senior Developer',
-  name: 'Katarina Smith'
-};
-
 const items = [
   // {
   //   href: '/app/dashboard',

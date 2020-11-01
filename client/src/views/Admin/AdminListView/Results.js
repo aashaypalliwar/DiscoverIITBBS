@@ -196,6 +196,7 @@ const Results = ({ className, ...rest }) => {
                             selectedCustomerIds.indexOf(customer.id) !== -1
                           }
                           onClick={() => getOtherProfile(customer._id)}
+                          style={{ cursor: 'pointer' }}
                         >
                           <TableCell>
                             <Box alignItems="center" display="flex">
@@ -236,6 +237,7 @@ const Results = ({ className, ...rest }) => {
                             selectedCustomerIds.indexOf(customer.id) !== -1
                           }
                           onClick={() => getOtherProfile(customer._id)}
+                          style={{ cursor: 'pointer' }}
                         >
                           <TableCell>
                             <Box alignItems="center" display="flex">
