@@ -123,17 +123,19 @@ const Profile = ({ profile, className, ...rest }) => {
   ];
 
   let tagMap = {};
-  for (let tag of profile.tags) {
-    tagMap[tag.group] = [];
-  }
-  for (let tag of profile.tags) {
-    tagMap[tag.group].push(tag);
-  }
   let tagMapArray = [];
-  for (let group in tagMap) {
-    tagMapArray.push({ name: group, tags: tagMap[group] });
+  if (profile.tags) {
+    for (let tag of profile.tags) {
+      tagMap[tag.group] = [];
+    }
+    for (let tag of profile.tags) {
+      tagMap[tag.group].push(tag);
+    }
+    for (let group in tagMap) {
+      tagMapArray.push({ name: group, tags: tagMap[group] });
+    }
+    console.log(tagMapArray);
   }
-  console.log(tagMapArray);
 
   return (
     <div>

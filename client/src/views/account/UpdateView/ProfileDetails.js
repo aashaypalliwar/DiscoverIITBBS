@@ -26,6 +26,8 @@ import AddIcon from '@material-ui/icons/Add';
 
 import CreateTwoToneIcon from '@material-ui/icons/CreateTwoTone';
 
+import Dialog from './Dialog';
+
 import axios from 'axios';
 
 const admissionYears = [
@@ -149,7 +151,6 @@ const updateProfile = values => {
     })
     .catch(err => {
       console.log(err);
-      this.setState({ isLoading: false });
     });
 };
 
@@ -181,7 +182,7 @@ const ProfileDetails = ({ profile, className, ...rest }) => {
     if (event.target.id.startsWith('link')) {
       let newLinks = values.links;
       newLinks[parseInt(event.target.id.charAt(4))] = {
-        _id: values.links[parseInt(event.target.id.charAt(4))]._id,
+        // _id: values.links[parseInt(event.target.id.charAt(4))]._id,
         name: event.target.name,
         url: event.target.value
       };
@@ -197,6 +198,27 @@ const ProfileDetails = ({ profile, className, ...rest }) => {
         [event.target.name]: event.target.value
       });
     }
+  };
+
+  const addLink = name => {
+    console.log(name);
+    let newLinks = values.links;
+    if (newLinks)
+      newLinks.push({
+        // _id: null,
+        name: name,
+        url: null
+      });
+    else {
+      newLinks = [{ _id: null, name: name, url: null }];
+    }
+
+    console.log(newLinks);
+    setValues({
+      ...values,
+      links: newLinks
+    });
+    console.log(values.links);
   };
 
   return (
@@ -344,10 +366,7 @@ const ProfileDetails = ({ profile, className, ...rest }) => {
               })
             : null}
           <br />
-          <Button>
-            <AddIcon />
-            Add new link
-          </Button>
+          <Dialog addIt={addLink} currentLinks={values.links} />
         </CardContent>
         <Divider />
         <Box display="flex" justifyContent="flex-end" p={2}>

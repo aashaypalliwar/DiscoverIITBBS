@@ -49,7 +49,10 @@ class Account extends Component {
             <Container maxWidth="lg">
               <Grid align="center">
                 <Grid item lg={12} md={10} xs={12}>
-                  <Profile profile={this.state.user} />
+                  <Profile
+                    profile={this.state.user}
+                    currentUser={this.props.user}
+                  />
                 </Grid>
               </Grid>
             </Container>

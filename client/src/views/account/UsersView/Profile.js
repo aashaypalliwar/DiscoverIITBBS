@@ -22,7 +22,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-
+import CustomizedMenus from './Menu';
 function createData(name, calories, fat, carbs, protein) {
   return { name, calories, fat, carbs, protein };
 }
@@ -112,7 +112,7 @@ const getLogo = name => {
   }
 };
 
-const Profile = ({ profile, className, ...rest }) => {
+const Profile = ({ profile, currentUser, className, ...rest }) => {
   const classes = useStyles();
 
   const rows = [
@@ -140,6 +140,7 @@ const Profile = ({ profile, className, ...rest }) => {
       <Grid container className={classes.align} spacing={1} justify="center">
         <Grid item lg={5} md={10} xs={12}>
           <Card className={clsx(classes.root, className)} {...rest}>
+            <CustomizedMenus profile={profile} currentUser={currentUser} />
             <CardContent>
               <Box alignItems="center" display="flex" flexDirection="column">
                 <Avatar className={classes.avatar} src={profile.image} />
