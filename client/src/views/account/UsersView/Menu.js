@@ -41,7 +41,7 @@ const StyledMenuItem = withStyles(theme => ({
   }
 }))(MenuItem);
 
-export default function CustomizedMenus(props) {
+const CustomizedMenu = ({ profile, currentUser }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = event => {
@@ -51,8 +51,46 @@ export default function CustomizedMenus(props) {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  console.log(props.currentUser);
-  console.log(props.profile);
+  let verify;
+  let unpublish;
+  let publish;
+  if (typeof currentUser == 'string') {
+    currentUser = JSON.parse(currentUser);
+  }
+  if (currentUser.role == 'visitor' || currentUser.email === profile.email) {
+    return null;
+  }
+  //Verify
+  if (profile.verifyStatus) {
+    verify = (
+      <StyledMenuItem>
+        <ListItemText primary="Verify user" />
+      </StyledMenuItem>
+    );
+  } else {
+    verify = (
+      <StyledMenuItem>
+        <ListItemText primary="Unverify user" />
+      </StyledMenuItem>
+    );
+  }
+
+  if (profile.publishStatus) {
+    unpublish = (
+      <StyledMenuItem>
+        <ListItemText primary="Unpublish user" />
+      </StyledMenuItem>
+    );
+  } else {
+    publish = (
+      <StyledMenuItem>
+        <ListItemText primary="Publish user" />
+      </StyledMenuItem>
+    );
+  }
+
+  //Publish or Unpublish
+
   return (
     <div>
       <IconButton
@@ -71,24 +109,19 @@ export default function CustomizedMenus(props) {
         onClose={handleClose}
       >
         <StyledMenuItem>
-          <ListItemIcon>
-            <SendIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText primary="Report" />
+          <ListItemText primary="Report User" />
         </StyledMenuItem>
-        <StyledMenuItem>
-          <ListItemIcon>
-            <DraftsIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText primary="Verify" />
-        </StyledMenuItem>
-        <StyledMenuItem>
-          <ListItemIcon>
-            <InboxIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText primary="Publish" />
-        </StyledMenuItem>
+
+        {currentUser.role === 'admin' || currentUser.role === 'superAdmin' ? (
+          <>
+            {verify}
+            {unpublish}
+          </>
+        ) : null}
+        {currentUser.role === 'superAdmin' ? <> {publish} </> : null}
       </StyledMenu>
     </div>
   );
-}
+};
+
+export default CustomizedMenu;
