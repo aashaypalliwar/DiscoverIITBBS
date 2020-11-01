@@ -122,8 +122,7 @@ const Profile = ({ profile, currentUser, className, ...rest }) => {
   const rows = [
     createData('Branch', profile.branch),
     createData('Admission Year', profile.admissionYear || 'Update'),
-    createData('Graduation year', profile.graduationYear || 'Update'),
-    createData('Publish Status', profile.publishStatus ? 'True' : 'False')
+    createData('Graduation year', profile.graduationYear || 'Update')
   ];
 
   let tagMap = {};
@@ -195,6 +194,21 @@ const Profile = ({ profile, currentUser, className, ...rest }) => {
                         </TableCell>
                       </TableRow>
                     ))}
+                    <TableRow>
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        className={classes.cellB}
+                        colspan={2}
+                        align="center"
+                      >
+                        {profile.publishStatus ? (
+                          <>This profile is published</>
+                        ) : (
+                          <>This profile is unpublished</>
+                        )}
+                      </TableCell>
+                    </TableRow>
                   </TableBody>
                 </Table>
               </TableContainer>
