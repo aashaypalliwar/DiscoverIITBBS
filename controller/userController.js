@@ -123,7 +123,7 @@ exports.reportUser = catchAsync(async (req, res, next) => {
     const updatedUser = await User.findByIdAndUpdate(req.params.id, {
       reportCount: newReportCount,
       publishStatus: publishStatus,
-      $push: { reporters: req.user.id },
+      $push: { reporters: req.user._id },
     });
 
     res.status(200).json({

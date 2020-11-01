@@ -1,5 +1,6 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
+import axios from 'axios';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -10,6 +11,7 @@ import DraftsIcon from '@material-ui/icons/Drafts';
 import SendIcon from '@material-ui/icons/Send';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import IconButton from '@material-ui/core/IconButton';
+
 const StyledMenu = withStyles({
   paper: {
     border: '1px solid #d3d4d5'
@@ -41,9 +43,9 @@ const StyledMenuItem = withStyles(theme => ({
   }
 }))(MenuItem);
 
-const CustomizedMenu = ({ profile, currentUser }) => {
+const CustomizedMenu = ({ user, currentUser }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
-
+  const [profile, setProfile] = React.useState(user);
   const handleClick = event => {
     setAnchorEl(event.currentTarget);
   };
@@ -51,9 +53,112 @@ const CustomizedMenu = ({ profile, currentUser }) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const updatedProfile = () => {
+    axios
+      .get('/api/v1/user/other?id=' + profile._id, {
+        withCredentials: true
+      })
+      .then(response => {
+        // console.log(response.data.data.user);
+        setProfile(response.data.data.user);
+      })
+      .catch(err => {
+        console.log(err);
+        this.setState({ isLoading: false });
+      });
+  };
+
+  //Unpubishing a user //
+  const unpublishUser = email => {
+    let emails = [];
+    emails.push(email);
+    const data = {
+      emails: emails
+    };
+    axios
+      .patch('/api/v1/admin/unpublish', data, {
+        withCredentials: true
+      })
+      .then(response => {
+        console.log(response);
+        alert('Sucessfully unpublished');
+        updatedProfile();
+      })
+      .catch(err => console.log(err));
+  };
+  //Publish user
+  const publishUser = email => {
+    let emails = [];
+    emails.push(email);
+    const data = {
+      emails: emails
+    };
+    axios
+      .patch('/api/v1/admin/publish', data, {
+        withCredentials: true
+      })
+      .then(response => {
+        console.log(response);
+        alert('Sucessfully published');
+        updatedProfile();
+      })
+      .catch(err => console.log(err));
+  };
+  const verifyUser = email => {
+    let emails = [];
+    emails.push(email);
+    const data = {
+      emails: emails
+    };
+    axios
+      .patch('/api/v1/admin/verify', data, {
+        withCredentials: true
+      })
+      .then(response => {
+        console.log(response);
+        alert('Sucessfully verified');
+        updatedProfile();
+      })
+      .catch(err => console.log(err));
+  };
+  const unverifyUser = email => {
+    let emails = [];
+    emails.push(email);
+    const data = {
+      emails: emails
+    };
+    axios
+      .patch('/api/v1/admin/unverify', data, {
+        withCredentials: true
+      })
+      .then(response => {
+        console.log(response);
+        alert('Sucessfully unverified');
+        updatedProfile();
+      })
+      .catch(err => console.log(err));
+  };
+  const reportUser = id => {
+    let data = [];
+    axios
+      .patch('/api/v1/user/report/' + id, data, {
+        withCredentials: true
+      })
+      .then(response => {
+        if (response.data.message == 'This user is already reported by you')
+          alert('This user is already reported by you');
+        else {
+          alert('Sucessfully reported');
+          updatedProfile();
+        }
+        console.log(response);
+      })
+      .catch(err => console.log(err));
+  };
   let verify;
   let unpublish;
   let publish;
+  let clearReport;
   if (typeof currentUser == 'string') {
     currentUser = JSON.parse(currentUser);
   }
@@ -64,32 +169,49 @@ const CustomizedMenu = ({ profile, currentUser }) => {
   if (profile.verifyStatus) {
     verify = (
       <StyledMenuItem>
-        <ListItemText primary="Verify user" />
+        <ListItemText
+          primary="Unverify user"
+          onClick={() => unverifyUser(profile.email)}
+        />
       </StyledMenuItem>
     );
   } else {
     verify = (
       <StyledMenuItem>
-        <ListItemText primary="Unverify user" />
+        <ListItemText
+          primary="Verify user"
+          onClick={() => verifyUser(profile.email)}
+        />
       </StyledMenuItem>
     );
   }
-
+  //publish status
   if (profile.publishStatus) {
     unpublish = (
       <StyledMenuItem>
-        <ListItemText primary="Unpublish user" />
+        <ListItemText
+          primary="Unpublish user"
+          onClick={() => unpublishUser(profile.email)}
+        />
       </StyledMenuItem>
     );
   } else {
     publish = (
       <StyledMenuItem>
-        <ListItemText primary="Publish user" />
+        <ListItemText
+          primary="Publish user"
+          onClick={() => publishUser(profile.email)}
+        />
       </StyledMenuItem>
     );
   }
-
-  //Publish or Unpublish
+  if (profile.reportCount > 0) {
+    clearReport = (
+      <StyledMenuItem>
+        <ListItemText primary="Clear Report" />
+      </StyledMenuItem>
+    );
+  }
 
   return (
     <div>
@@ -109,11 +231,15 @@ const CustomizedMenu = ({ profile, currentUser }) => {
         onClose={handleClose}
       >
         <StyledMenuItem>
-          <ListItemText primary="Report User" />
+          <ListItemText
+            primary="Report User"
+            onClick={() => reportUser(profile._id)}
+          />
         </StyledMenuItem>
 
         {currentUser.role === 'admin' || currentUser.role === 'superAdmin' ? (
           <>
+            {clearReport}
             {verify}
             {unpublish}
           </>

@@ -140,7 +140,7 @@ const Profile = ({ profile, currentUser, className, ...rest }) => {
       <Grid container className={classes.align} spacing={1} justify="center">
         <Grid item lg={5} md={10} xs={12}>
           <Card className={clsx(classes.root, className)} {...rest}>
-            <CustomizedMenu profile={profile} currentUser={currentUser} />
+            <CustomizedMenu user={profile} currentUser={currentUser} />
             <CardContent>
               <Box alignItems="center" display="flex" flexDirection="column">
                 <Avatar className={classes.avatar} src={profile.image} />
