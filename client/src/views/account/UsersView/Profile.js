@@ -116,7 +116,13 @@ const getLogo = name => {
   }
 };
 
-const Profile = ({ profile, currentUser, className, ...rest }) => {
+const Profile = ({
+  profile,
+  currentUser,
+  updateProfile,
+  className,
+  ...rest
+}) => {
   const classes = useStyles();
 
   const rows = [
@@ -152,7 +158,11 @@ const Profile = ({ profile, currentUser, className, ...rest }) => {
       <Grid container className={classes.align} spacing={1} justify="center">
         <Grid item lg={5} md={10} xs={12}>
           <Card className={clsx(classes.root, className)} {...rest}>
-            <CustomizedMenu user={profile} currentUser={currentUser} />
+            <CustomizedMenu
+              user={profile}
+              currentUser={currentUser}
+              updateProfile={updateProfile}
+            />
             <CardContent>
               <Box alignItems="center" display="flex" flexDirection="column">
                 <Avatar className={classes.avatar} src={profile.image} />

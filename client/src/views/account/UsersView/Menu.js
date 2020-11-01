@@ -43,7 +43,7 @@ const StyledMenuItem = withStyles(theme => ({
   }
 }))(MenuItem);
 
-const CustomizedMenu = ({ user, currentUser }) => {
+const CustomizedMenu = ({ user, currentUser, updateProfile }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [profile, setProfile] = React.useState(user);
   const handleClick = event => {
@@ -53,20 +53,20 @@ const CustomizedMenu = ({ user, currentUser }) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const updatedProfile = () => {
-    axios
-      .get('/api/v1/user/other?id=' + profile._id, {
-        withCredentials: true
-      })
-      .then(response => {
-        // console.log(response.data.data.user);
-        setProfile(response.data.data.user);
-      })
-      .catch(err => {
-        console.log(err);
-        this.setState({ isLoading: false });
-      });
-  };
+  //   const updatedProfile = () => {
+  //     axios
+  //       .get('/api/v1/user/other?id=' + profile._id, {
+  //         withCredentials: true
+  //       })
+  //       .then(response => {
+  //         // console.log(response.data.data.user);
+  //         setProfile(response.data.data.user);
+  //       })
+  //       .catch(err => {
+  //         console.log(err);
+  //         this.setState({ isLoading: false });
+  //       });
+  //   };
 
   //Unpubishing a user //
   const unpublishUser = email => {
@@ -82,7 +82,8 @@ const CustomizedMenu = ({ user, currentUser }) => {
       .then(response => {
         console.log(response);
         alert('Sucessfully unpublished');
-        updatedProfile();
+
+        updateProfile();
       })
       .catch(err => console.log(err));
   };
@@ -100,7 +101,7 @@ const CustomizedMenu = ({ user, currentUser }) => {
       .then(response => {
         console.log(response);
         alert('Sucessfully published');
-        updatedProfile();
+        updateProfile();
       })
       .catch(err => console.log(err));
   };
@@ -117,7 +118,7 @@ const CustomizedMenu = ({ user, currentUser }) => {
       .then(response => {
         console.log(response);
         alert('Sucessfully verified');
-        updatedProfile();
+        updateProfile();
       })
       .catch(err => console.log(err));
   };
@@ -134,7 +135,7 @@ const CustomizedMenu = ({ user, currentUser }) => {
       .then(response => {
         console.log(response);
         alert('Sucessfully unverified');
-        updatedProfile();
+        updateProfile();
       })
       .catch(err => console.log(err));
   };
@@ -150,7 +151,7 @@ const CustomizedMenu = ({ user, currentUser }) => {
             alert('This user is already reported by you');
           else {
             alert('Sucessfully reported');
-            updatedProfile();
+            updateProfile();
           }
           console.log(response);
         })
@@ -167,7 +168,7 @@ const CustomizedMenu = ({ user, currentUser }) => {
       })
       .then(response => {
         alert('Sucessfully cleared reports');
-        updatedProfile();
+        updateProfile();
         console.log(response);
       })
       .catch(err => console.log(err));

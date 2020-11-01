@@ -19,8 +19,7 @@ class Account extends Component {
     user: [],
     isLoading: true
   };
-
-  componentDidMount = () => {
+  getProfile = () => {
     let url = window.location.search;
     // let params = queryString.parse(url);
     // console.log(url);
@@ -38,6 +37,9 @@ class Account extends Component {
         this.setState({ isLoading: false });
       });
   };
+  componentDidMount = () => {
+    this.getProfile();
+  };
 
   render() {
     const { classes } = this.props;
@@ -52,6 +54,7 @@ class Account extends Component {
                   <Profile
                     profile={this.state.user}
                     currentUser={this.props.user}
+                    updateProfile={this.getProfile}
                   />
                 </Grid>
               </Grid>
