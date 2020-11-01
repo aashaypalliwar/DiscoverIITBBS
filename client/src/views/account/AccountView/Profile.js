@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import moment from 'moment';
+import { useNavigate } from 'react-router-dom';
 import {
   Avatar,
   Box,
@@ -114,7 +115,7 @@ const getLogo = name => {
 
 const Profile = ({ profile, className, ...rest }) => {
   const classes = useStyles();
-
+  let navigate = useNavigate();
   const rows = [
     createData('Branch', profile.branch),
     createData('Admission Year', profile.admissionYear || 'Update'),
@@ -144,7 +145,9 @@ const Profile = ({ profile, className, ...rest }) => {
           variant="outlined"
           color="primary"
           className={classes.button}
-          href="/update"
+          onClick={() => {
+            navigate('/update');
+          }}
         >
           EDIT PROFILE
         </Button>

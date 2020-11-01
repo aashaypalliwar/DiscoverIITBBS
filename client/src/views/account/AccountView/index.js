@@ -16,7 +16,8 @@ const useStyles = theme => ({
 class Account extends Component {
   state = {
     user: [],
-    isLoading: true
+    isLoading: true,
+    isRestricted: false
   };
   updateProfile = values => {
     this.setState({ isLoading: true });
@@ -36,20 +37,25 @@ class Account extends Component {
   };
   componentDidMount = () => {
     this.setState({ isLoading: true });
-
-    axios
-      .get('/api/v1/user/profile', {
-        withCredentials: true
-      })
-      .then(response => {
-        // console.log(response.data.data.user);
-        this.setState({ user: response.data.data.user, isLoading: false });
-        console.log(this.state.user);
-      })
-      .catch(err => {
-        console.log(err);
-        this.setState({ isLoading: false });
-      });
+    let currentUser = this.props.user;
+    if (typeof currentUser == 'string') currentUser = JSON.parse(currentUser);
+    if (currentUser.role === 'visitor') {
+      this.setState({ isRestricted: true, isLoading: false });
+    } else {
+      axios
+        .get('/api/v1/user/profile', {
+          withCredentials: true
+        })
+        .then(response => {
+          // console.log(response.data.data.user);
+          this.setState({ user: response.data.data.user, isLoading: false });
+          console.log(this.state.user);
+        })
+        .catch(err => {
+          console.log(err);
+          this.setState({ isLoading: false });
+        });
+    }
   };
 
   render() {
@@ -58,15 +64,27 @@ class Account extends Component {
     return (
       <div>
         {!this.state.isLoading ? (
-          <Page className={classes.root} title="Account">
-            <Container maxWidth="lg">
-              <Grid align="center">
-                <Grid item lg={12} md={10} xs={12}>
-                  <Profile profile={this.state.user} />
+          !this.state.isRestricted ? (
+            <Page className={classes.root} title="Account">
+              <Container maxWidth="lg">
+                <Grid align="center">
+                  <Grid item lg={12} md={10} xs={12}>
+                    <Profile profile={this.state.user} />
+                  </Grid>
                 </Grid>
-              </Grid>
-            </Container>
-          </Page>
+              </Container>
+            </Page>
+          ) : (
+            <Page className={classes.root} title="Account">
+              <Container maxWidth="lg">
+                <Grid align="center">
+                  <Grid item lg={12} md={10} xs={12}>
+                    This page cannot be accessed by visitors
+                  </Grid>
+                </Grid>
+              </Container>
+            </Page>
+          )
         ) : null}
       </div>
     );

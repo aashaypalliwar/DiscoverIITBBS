@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Link as RouterLink, useLocation, Redirect } from 'react-router-dom';
+import { Link as RouterLink, useLocation, useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {useRoutes, useRedirect} from 'hookrouter';
 
@@ -99,6 +99,7 @@ const useStyles = makeStyles(() => ({
 
 const logOut = cookies => {
   // this.setState({ isLoggedIn: false });
+
   axios
     .post('/api/v1/auth/logout', {
       withCredentials: true
@@ -118,6 +119,7 @@ const logOut = cookies => {
 const NavBar = ({ user, cookies, onMobileClose, openMobile }) => {
   const classes = useStyles();
   const location = useLocation();
+
   // user = JSON.parse(user);
   if (typeof user === 'string') {
     user = JSON.parse(user);
@@ -149,11 +151,15 @@ const NavBar = ({ user, cookies, onMobileClose, openMobile }) => {
       <Box p={2}>
         <List>
           {items.map(item => {
-            if (item.title === 'Admin') {
-              console.log(user.role);
-              if (user.role !== 'admin' && user.role !== 'superAdmin')
-                return null;
-            }
+            if (item.title === 'Profile' && user.role === 'visitor')
+              return null;
+            if (
+              item.title === 'Admin' &&
+              user.role !== 'admin' &&
+              user.role !== 'superAdmin'
+            )
+              return null;
+
             return (
               <NavItem
                 href={item.href}

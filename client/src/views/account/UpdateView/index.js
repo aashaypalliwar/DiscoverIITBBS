@@ -4,8 +4,6 @@ import Page from 'src/components/Page';
 import ProfileDetails from './ProfileDetails';
 import axios from 'axios';
 
-import { Redirect } from 'react-router-dom';
-
 const useStyles = theme => ({
   root: {
     backgroundColor: theme.palette.background.dark,
