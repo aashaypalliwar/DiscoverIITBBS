@@ -39,10 +39,12 @@ const CustomChip = props => {
   let toggle = () => {
     if (variant === 'outlined') {
       setVariant('default');
-      props.addToSelected(props.tag._id);
+      console.log('selecting ...' + props.tag);
+      props.addToSelected(props.tag);
     } else {
       setVariant('outlined');
-      props.removeFromSelected(props.tag._id);
+      console.log('removing ...' + props.tag);
+      props.removeFromSelected(props.tag);
     }
   };
 
