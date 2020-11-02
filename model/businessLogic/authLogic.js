@@ -108,14 +108,14 @@ const restrictTo = (...roles) => {
   };
 };
 
-const createUser = catchAsync(async (name, email, picture, res) => {
-  const newUser = await User.create({
-    name: name,
-    email: email,
-    image: picture,
-  });
-  createSendToken(newUser, 200, res);
-});
+// const createUser = catchAsync(async (name, email, picture, res) => {
+//   const newUser = await User.create({
+//     name: name,
+//     email: email,
+//     image: picture,
+//   });
+//   createSendToken(newUser, 200, res);
+// });
 
 const googleLogin = catchAsync(async (req, res, next) => {
   const { tokenId } = req.body;
@@ -155,9 +155,14 @@ const googleLogin = catchAsync(async (req, res, next) => {
                     await User.updateOne({ email }, { image: picture });
                     createSendToken(user, 200, res);
                   } else {
-                    if (config.SIGNUP_TOGGLE == 'true')
-                      createUser(name, email, picture, res);
-                    else {
+                    if (config.SIGNUP_TOGGLE == 'true') {
+                      const newUser = await User.create({
+                        name: name,
+                        email: email,
+                        image: picture,
+                      });
+                      createSendToken(newUser, 200, res);
+                    } else {
                       console.log('false');
                       visitor = {
                         _id: email,
