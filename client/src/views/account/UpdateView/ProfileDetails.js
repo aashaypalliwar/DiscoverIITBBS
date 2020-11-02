@@ -86,8 +86,7 @@ const graduationYears = [
   {
     value: 2024,
     label: 2024
-  }
-  ,
+  },
   {
     value: 2025,
     label: 'N/A'
@@ -95,6 +94,10 @@ const graduationYears = [
 ];
 
 const branches = [
+  {
+    value: 'Not Specified',
+    label: 'Not Specified'
+  },
   {
     value: 'CSE',
     label: 'CSE'
@@ -589,7 +592,7 @@ const ProfileDetails = ({ profile, className, ...rest }) => {
                       values.tags.map((tag, index) => {
                         return (
                           <Chip
-                            size='small'
+                            size="small"
                             label={tag.name}
                             onDelete={() => {
                               handleDelete(tag._id);

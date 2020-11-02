@@ -7,6 +7,8 @@ import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import TagGroup from './TagGroup';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import FilterListIcon from '@material-ui/icons/FilterList';
+import AutorenewIcon from '@material-ui/icons/Autorenew';
 import { useNavigate } from 'react-router-dom';
 import {
   Avatar,
@@ -232,9 +234,12 @@ const Results = ({ className, customers, tags, ...rest }) => {
                           scope="row"
                           className={classes.cellB}
                         >
-                          Filter students by skills, PoR or other tags
-                        </TableCell>
+                          Filter students by skills, activities and participation. &nbsp; &nbsp;
+                          {/* <FilterListIcon color='primary' size='large' cursor='pointer' variant='filled' onClick={displayFilterPane} />
+                          <AutorenewIcon cursor='pointer' size='large' variant='filled' onClick={resetSearch} /> */}
 
+                        </TableCell>
+                        
                         <TableCell align="right" className={classes.cell}>
                           <Button
                             variant="contained"
@@ -244,8 +249,10 @@ const Results = ({ className, customers, tags, ...rest }) => {
                           >
                             Filter
                           </Button>
+{/* 
                         </TableCell>
-                        <TableCell align="right" className={classes.cell}>
+                        <TableCell align="right" className={classes.cell}> */}
+                          &nbsp;&nbsp;
                           <Button
                             variant="contained"
                             color="primary"
@@ -295,8 +302,9 @@ const Results = ({ className, customers, tags, ...rest }) => {
                           >
                             Search
                           </Button>
-                        </TableCell>
-                        <TableCell align="left" className={classes.cell}>
+                        {/* </TableCell>
+                        <TableCell align="left" className={classes.cell}> */}
+                        &nbsp; &nbsp;
                           <Button
                             variant="contained"
                             color="primary"

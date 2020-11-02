@@ -66,7 +66,6 @@ const userSchema = new mongoose.Schema(
     branch: {
       type: String,
       default: 'Not Specified',
-      // enum:[]
     },
     links: [
       {

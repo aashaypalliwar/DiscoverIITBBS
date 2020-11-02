@@ -28,6 +28,8 @@ import {
   TablePagination,
   TableRow,
   TableContainer,
+  Tab,
+  Tabs,
   Typography,
   makeStyles,
   TextField,
@@ -130,6 +132,15 @@ const Results = ({ className, ...rest }) => {
         console.log(err);
       });
   };
+
+  const [value, setValue] = React.useState(2);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+    if (newValue === 0) getAllUnpublishedUsers();
+    else getAllReportedUsers();
+  };
+
   const getOtherProfile = id => {
     console.log('clicked');
     let url = '/user?id=' + id;
@@ -138,11 +149,9 @@ const Results = ({ className, ...rest }) => {
   // const users = {customers};
   return (
     <div>
-      <Box mt={3}>
-        <Card>
-          <CardContent style={{ padding: 20 }}>
-            <Grid container spacing={3}>
-              <TableContainer>
+      <Box mt={3} className="box">
+        <Card align="center" className="card">
+          {/* <TableContainer>
                 <Table className={classes.table} aria-label="simple table">
                   <TableBody>
                     <TableRow>
@@ -167,9 +176,21 @@ const Results = ({ className, ...rest }) => {
                     </TableRow>
                   </TableBody>
                 </Table>
-              </TableContainer>
-            </Grid>
-          </CardContent>
+              </TableContainer> */}
+          <Paper square className="paper">
+            <Tabs
+              className="tabs"
+              value={value}
+              indicatorColor="primary"
+              textColor="primary"
+              onChange={handleChange}
+              aria-label="disabled tabs example"
+              centered="true"
+            >
+              <Tab label="UNPUBLISHED USERS" />
+              <Tab label="REPORTED USERS" />
+            </Tabs>
+          </Paper>
         </Card>
       </Box>
       <br></br>
