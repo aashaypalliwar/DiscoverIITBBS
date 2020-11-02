@@ -74,7 +74,7 @@ const logOut = cookies => {
     .then(response => {
       cookies.cookies.remove('isLoggedIn', { path: '/' });
       cookies.cookies.remove('userData', { path: '/' });
-      window.location.reload();
+      window.location.href = '/';
     })
     .catch(err => {
       console.log(err);

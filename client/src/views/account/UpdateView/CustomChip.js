@@ -14,6 +14,7 @@ const CustomChip = props => {
   };
 
   return (
+    <>
     <Chip
       label={props.tag.name}
       className={props.classes.chip}
@@ -22,7 +23,8 @@ const CustomChip = props => {
       onClick={toggle}
       variant={variant}
       color="primary"
-    />
+    />&nbsp;
+    </>
   );
 };
 

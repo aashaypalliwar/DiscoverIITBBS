@@ -44,6 +44,9 @@ import axios from 'axios';
 
 import validUrl from 'valid-url';
 
+import { useNavigate } from 'react-router-dom';
+
+
 const admissionYears = [
   {
     value: 2016,
@@ -393,6 +396,8 @@ const ProfileDetails = ({ profile, className, ...rest }) => {
     getAllTags();
   }, []);
 
+  let navigate = useNavigate();
+
   if (!filterVisibility) {
     return (
       <form
@@ -614,11 +619,22 @@ const ProfileDetails = ({ profile, className, ...rest }) => {
             >
               Update
             </Button>
+            &nbsp;
+            <Button
+              color="primary"
+              variant="contained"
+              onClick={() => navigate('/profile')}
+            >
+              Cancel
+            </Button>
           </Box>
         </Card>
       </form>
     );
   }
+
+  
+
   return (
     <Box mt={3}>
       <Card>
