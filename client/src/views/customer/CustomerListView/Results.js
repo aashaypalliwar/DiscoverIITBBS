@@ -146,14 +146,17 @@ const Results = ({ className, customers, tags, ...rest }) => {
       })
       .catch(err => console.log(err));
   };
-  const searchUser = async event => {
+  const searchUser = event => {
     if (event.target.value === '') {
       resetSearch();
     } else {
-      await setSearch(event.target.value);
-      filterResults();
+      setSearch(event.target.value);
     }
   };
+
+  useEffect(() => {
+    filterResults();
+  }, [search]);
 
   const filterResults = () => {
     let filterUsers = customers.filter(user => {
