@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Box, Container, withStyles } from '@material-ui/core';
 import Page from 'src/components/Page';
 import Results from './Results';
-import data from './data';
 import axios from 'axios';
 const useStyles = theme => ({
   root: {

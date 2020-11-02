@@ -141,7 +141,6 @@ const Results = ({ className, customers, tags, ...rest }) => {
         withCredentials: true
       })
       .then(response => {
-        console.log(response.data.data.users);
         if (response.data.data.users.length) setUsers(response.data.data.users);
         else setUsers([]);
         setFilterVisibility(false);
@@ -212,12 +211,10 @@ const Results = ({ className, customers, tags, ...rest }) => {
   };
 
   const getOtherProfile = id => {
-    console.log('clicked');
     let url = '/user?id=' + id;
     navigate(url);
   };
 
-  // const users = {customers};
   return (
     <div>
       {!filterVisibility ? (
@@ -234,12 +231,12 @@ const Results = ({ className, customers, tags, ...rest }) => {
                           scope="row"
                           className={classes.cellB}
                         >
-                          Filter students by skills, activities and participation. &nbsp; &nbsp;
+                          Filter students by skills, activities and
+                          participation. &nbsp; &nbsp;
                           {/* <FilterListIcon color='primary' size='large' cursor='pointer' variant='filled' onClick={displayFilterPane} />
                           <AutorenewIcon cursor='pointer' size='large' variant='filled' onClick={resetSearch} /> */}
-
                         </TableCell>
-                        
+
                         <TableCell align="right" className={classes.cell}>
                           <Button
                             variant="contained"
@@ -249,9 +246,6 @@ const Results = ({ className, customers, tags, ...rest }) => {
                           >
                             Filter
                           </Button>
-{/* 
-                        </TableCell>
-                        <TableCell align="right" className={classes.cell}> */}
                           &nbsp;&nbsp;
                           <Button
                             variant="contained"
@@ -302,9 +296,7 @@ const Results = ({ className, customers, tags, ...rest }) => {
                           >
                             Search
                           </Button>
-                        {/* </TableCell>
-                        <TableCell align="left" className={classes.cell}> */}
-                        &nbsp; &nbsp;
+                          &nbsp; &nbsp;
                           <Button
                             variant="contained"
                             color="primary"

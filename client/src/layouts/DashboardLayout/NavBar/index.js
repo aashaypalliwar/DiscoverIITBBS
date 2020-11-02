@@ -30,11 +30,6 @@ import { GoogleLogout } from 'react-google-login';
 import axios from 'axios';
 
 const items = [
-  // {
-  //   href: '/app/dashboard',
-  //   icon: BarChartIcon,
-  //   title: 'Dashboard'
-  // },
   {
     href: '/profile',
     icon: UserIcon,
@@ -50,22 +45,6 @@ const items = [
     icon: UserPlusIcon,
     title: 'Admin'
   }
-
-  // {
-  //   href: '/login',
-  //   icon: LockIcon,
-  //   title: 'Login'
-  // },
-  // {
-  //   href: '/register',
-  //   icon: UserPlusIcon,
-  //   title: 'Register'
-  // },
-  // {
-  //   href: '/404',
-  //   icon: AlertCircleIcon,
-  //   title: 'Error'
-  // }
 ];
 
 const useStyles = makeStyles(() => ({
@@ -88,14 +67,11 @@ const useStyles = makeStyles(() => ({
 }));
 
 const logOut = cookies => {
-  // this.setState({ isLoggedIn: false });
-
   axios
     .post('/api/v1/auth/logout', {
       withCredentials: true
     })
     .then(response => {
-      console.log(response);
       cookies.cookies.remove('isLoggedIn', { path: '/' });
       cookies.cookies.remove('userData', { path: '/' });
       window.location.reload();
@@ -103,14 +79,12 @@ const logOut = cookies => {
     .catch(err => {
       console.log(err);
     });
-  // this.props.callFunc();
 };
 
 const NavBar = ({ user, cookies, onMobileClose, openMobile }) => {
   const classes = useStyles();
   const location = useLocation();
 
-  // user = JSON.parse(user);
   if (typeof user === 'string') {
     user = JSON.parse(user);
   }

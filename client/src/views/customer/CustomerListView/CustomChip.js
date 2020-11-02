@@ -1,38 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import clsx from 'clsx';
-import PropTypes from 'prop-types';
-import axios from 'axios';
-import moment from 'moment';
-import PerfectScrollbar from 'react-perfect-scrollbar';
-import {
-  Avatar,
-  Box,
-  Card,
-  Checkbox,
-  CardContent,
-  Chip,
-  Divider,
-  Table,
-  FormControl,
-  Select,
-  Button,
-  Input,
-  InputLabel,
-  Grid,
-  Paper,
-  MenuItem,
-  TableBody,
-  TableCell,
-  TableHead,
-  TablePagination,
-  TableRow,
-  TableContainer,
-  Typography,
-  makeStyles,
-  TextField,
-  InputAdornment,
-  SvgIcon
-} from '@material-ui/core';
+import React, { useState } from 'react';
+import { Chip } from '@material-ui/core';
 
 const CustomChip = props => {
   const [variant, setVariant] = useState('outlined');

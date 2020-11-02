@@ -1,7 +1,6 @@
 const User = require('../model/dbModel/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
-const APIFeatures = require('../utils/apiFeatures');
 const Tag = require('../model/dbModel/tagModel');
 const { sendEmail } = require('../utils/sendEmail');
 
@@ -115,7 +114,7 @@ exports.unverify = catchAsync(async (req, res, next) => {
   const updatedDocument = await User.find({
     email: { $in: emails_to_unverify },
   });
-  // console.log(updatedUsers);
+
   unverify_failed_user_emails = [];
   unverify_success_user_emails = [];
 

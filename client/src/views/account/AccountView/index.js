@@ -22,7 +22,6 @@ class Account extends Component {
   updateProfile = values => {
     this.setState({ isLoading: true });
     const data = { ...values };
-    console.log(data);
     axios
       .patch('/api/v1/user/profile', data, {
         withCredentials: true
@@ -47,9 +46,7 @@ class Account extends Component {
           withCredentials: true
         })
         .then(response => {
-          // console.log(response.data.data.user);
           this.setState({ user: response.data.data.user, isLoading: false });
-          console.log(this.state.user);
         })
         .catch(err => {
           console.log(err);
@@ -60,7 +57,6 @@ class Account extends Component {
 
   render() {
     const { classes } = this.props;
-    // console.log(this.state.user);
     return (
       <div>
         {!this.state.isLoading ? (

@@ -186,8 +186,8 @@ const isProperLink = link => {
 const verifyLinks = links => {
   let culprit = null;
   for (let link of links) {
-    if (!validUrl.isHttpsUri(link.url) || !isProperLink(link)) {
-      console.log(!validUrl.isHttpsUri(link.url), !isProperLink(link));
+    if (!link.url) return link;
+    if (!isProperLink(link) || !validUrl.isHttpsUri(link.url)) {
       culprit = link;
       break;
     }
@@ -196,19 +196,14 @@ const verifyLinks = links => {
 };
 
 const updateProfile = values => {
-  // this.setState({ isLoading: true });
   const data = { ...values };
   let culprit = verifyLinks(data.links);
-  console.log(culprit);
   if (culprit === null) {
-    console.log(data);
     axios
       .patch('/api/v1/user/profile', data, {
         withCredentials: true
       })
       .then(response => {
-        console.log(response);
-        // this.setState({ user: response.data.data.user, isLoading: false });
         window.location.href = '/profile';
       })
       .catch(err => {
@@ -266,7 +261,6 @@ const ProfileDetails = ({ profile, className, ...rest }) => {
     for (let group in tagMap) {
       tagMapArray.push({ name: group, tags: tagMap[group] });
     }
-    console.log(tagMapArray);
     setSortedTags(tagMapArray);
     setFilterVisibility(true);
   };
@@ -279,7 +273,6 @@ const ProfileDetails = ({ profile, className, ...rest }) => {
   const addToSelected = tagID => {
     let newSelection = clone(selectedTags);
     newSelection.push(tagID);
-    console.log(newSelection);
     setSelectedTags(newSelection);
   };
 
@@ -287,13 +280,10 @@ const ProfileDetails = ({ profile, className, ...rest }) => {
     let newSelection = clone(selectedTags);
     let index = newSelection.indexOf(tagID);
     newSelection.splice(index, 1);
-    console.log(newSelection);
     setSelectedTags(newSelection);
   };
 
   const addSelectedTags = () => {
-    console.log(selectedTags);
-
     let rest = restTags;
     rest = rest.filter(tag => {
       return !selectedTags.map(el => el._id).includes(tag._id);
@@ -318,7 +308,6 @@ const ProfileDetails = ({ profile, className, ...rest }) => {
         let rest = response.data.data.docs.filter(tag => {
           return !values.tags.map(el => el._id).includes(tag._id);
         });
-        console.log(rest);
         setRestTags(rest);
       })
       .catch(err => {
@@ -327,25 +316,20 @@ const ProfileDetails = ({ profile, className, ...rest }) => {
   };
 
   const toggleLinkEdit = name => {
-    console.log(name);
     setLinkEdit({ ...linkEdit, [name]: true });
-    console.log(linkEdit.LinkedIn);
   };
 
   const handleChange = event => {
     if (event.target.id.startsWith('link')) {
       let newLinks = values.links;
       newLinks[parseInt(event.target.id.charAt(4))] = {
-        // _id: values.links[parseInt(event.target.id.charAt(4))]._id,
         name: event.target.name,
         url: event.target.value
       };
-      console.log(newLinks);
       setValues({
         ...values,
         links: newLinks
       });
-      console.log(values.links);
     } else {
       setValues({
         ...values,
@@ -367,14 +351,12 @@ const ProfileDetails = ({ profile, className, ...rest }) => {
         newLinks = [{ _id: null, name: name, url: null }];
       }
 
-      console.log(newLinks);
       setValues({
         ...values,
         links: newLinks
       });
       setIsExpanded({ ...isExpanded, [name]: true });
       setLinkEdit({ ...linkEdit, [name]: true });
-      console.log(values.links);
     }
   };
 
@@ -384,12 +366,10 @@ const ProfileDetails = ({ profile, className, ...rest }) => {
       newLinks = newLinks.filter(link => {
         return link.name != name;
       });
-      console.log(newLinks);
       setValues({
         ...values,
         links: newLinks
       });
-      console.log(values.links);
     }
   };
 
@@ -520,7 +500,6 @@ const ProfileDetails = ({ profile, className, ...rest }) => {
             <br />
             {values.links
               ? values.links.map((link, index) => {
-                  console.log(linkEdit[link.name]);
                   return (
                     <Accordion defaultExpanded={isExpanded[link.name]}>
                       <AccordionSummary

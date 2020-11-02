@@ -84,12 +84,7 @@ const userSchema = new mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
-// userSchema.pre(/^find/,function(next){
-//   this.populate({
-//     path : 'tags',
-//     select:'name'
-//   })
-// })
+
 userSchema.index({ name: 'text', email: 'text' });
 
 const User = mongoose.model('User', userSchema);

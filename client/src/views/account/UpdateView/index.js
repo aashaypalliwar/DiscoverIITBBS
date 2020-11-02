@@ -22,16 +22,13 @@ class Account extends Component {
 
   componentDidMount = () => {
     this.setState({ isLoading: true });
-    console.log('component did mount');
 
     axios
       .get('/api/v1/user/profile', {
         withCredentials: true
       })
       .then(response => {
-        // console.log(response.data.data.user);
         this.setState({ user: response.data.data.user, isLoading: false });
-        console.log(this.state.user);
       })
       .catch(err => {
         console.log(err);
@@ -41,7 +38,6 @@ class Account extends Component {
 
   render() {
     const { classes } = this.props;
-    // console.log(this.state.user);
     return (
       <div>
         {!this.state.isLoading ? (

@@ -2,43 +2,25 @@ import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { useNavigate } from 'react-router-dom';
 import {
   Avatar,
   Box,
   Card,
-  Checkbox,
-  CardContent,
-  Chip,
-  Divider,
   Table,
-  FormControl,
-  Select,
-  Button,
-  Input,
-  InputLabel,
-  Grid,
   Paper,
-  MenuItem,
   TableBody,
   TableCell,
   TableHead,
   TablePagination,
   TableRow,
-  TableContainer,
   Tab,
   Tabs,
   Typography,
-  makeStyles,
-  TextField,
-  InputAdornment,
-  SvgIcon
+  makeStyles
 } from '@material-ui/core';
 import getInitials from 'src/utils/getInitials';
-import { Search as SearchIcon } from 'react-feather';
-import { filter } from 'lodash';
 const useStyles = makeStyles(() => ({
   root: {
     display: 'flex',
@@ -90,27 +72,12 @@ const Results = ({ className, ...rest }) => {
     setPage(newPage);
   };
 
-  // const searchUser = async event => {
-  //   await setSearch(event.target.value);
-  //   filterResults();
-  // };
-
-  // const filterResults = () => {
-  //   let filterUsers = customers.filter(user => {
-  //     return (
-  //       user.name.toLowerCase().indexOf(search.toLowerCase()) !== -1 ||
-  //       user.email.toLowerCase().indexOf(search.toLowerCase()) !== -1
-  //     );
-  //   });
-  //   setUsers(filterUsers);
-  // };
   const getAllUnpublishedUsers = () => {
     axios
       .get('/api/v1/admin/unpublished', {
         withCredentials: true
       })
       .then(response => {
-        console.log(response.data.data.docs);
         setunpublishedUsers(response.data.data.docs);
         setCurrentPage('unpublished');
       })
@@ -124,7 +91,6 @@ const Results = ({ className, ...rest }) => {
         withCredentials: true
       })
       .then(response => {
-        console.log(response.data.data.docs);
         setreportedUsers(response.data.data.docs);
         setCurrentPage('reported');
       })
@@ -142,41 +108,14 @@ const Results = ({ className, ...rest }) => {
   };
 
   const getOtherProfile = id => {
-    console.log('clicked');
     let url = '/user?id=' + id;
     navigate(url);
   };
-  // const users = {customers};
+
   return (
     <div>
       <Box mt={3} className="box">
         <Card align="center" className="card">
-          {/* <TableContainer>
-                <Table className={classes.table} aria-label="simple table">
-                  <TableBody>
-                    <TableRow>
-                      <TableCell className={classes.cell}>
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={() => getAllUnpublishedUsers()}
-                        >
-                          Unpublished users
-                        </Button>
-                      </TableCell>
-                      <TableCell className={classes.cell}>
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={() => getAllReportedUsers()}
-                        >
-                          Reported Users
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-              </TableContainer> */}
           <Paper square className="paper">
             <Tabs
               className="tabs"
@@ -277,7 +216,6 @@ const Results = ({ className, ...rest }) => {
                           <TableCell>{customer.reportCount}</TableCell>
                           <TableCell>
                             {customer.reporters.map((reporter, index) => {
-                              console.log(reporter);
                               return <p>{reporter.name}</p>;
                             })}
                           </TableCell>

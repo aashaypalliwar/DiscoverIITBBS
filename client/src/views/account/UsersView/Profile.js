@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import moment from 'moment';
 import {
   Avatar,
   Box,
@@ -124,6 +123,7 @@ const Profile = ({
   ...rest
 }) => {
   const classes = useStyles();
+  if (typeof currentUser == 'string') currentUser = JSON.parse(currentUser);
 
   const rows = [
     createData('Branch', profile.branch),
@@ -142,7 +142,6 @@ const Profile = ({
   for (let group in tagMap) {
     tagMapArray.push({ name: group, tags: tagMap[group] });
   }
-  console.log(tagMapArray);
   let verifyIcon;
   if (profile.verifyStatus) {
     verifyIcon = (
@@ -155,20 +154,16 @@ const Profile = ({
   }
 
   let getPublishStatus = () => {
-    if(currentUser.role == 'admin' || currentUser.role == 'superAdmin'){
-      if(profile.publishStatus){
-        return (
-        <>This profile is published</>
-      )}
-      else{return (
-        <>This profile is unpublished</>
-      )
+    if (currentUser.role == 'admin' || currentUser.role == 'superAdmin') {
+      if (profile.publishStatus) {
+        return <>This profile is published</>;
+      } else {
+        return <>This profile is unpublished</>;
       }
-    }
-    else{
+    } else {
       return null;
     }
-  }
+  };
 
   return (
     <div>
@@ -191,7 +186,6 @@ const Profile = ({
                   color="textSecondary"
                   variant="body1"
                 >
-                  {/* <span style={{ fontWeight: 'bold' }}>Email : </span>{' '} */}
                   {profile.email}
                 </Typography>
                 <Typography
@@ -226,19 +220,19 @@ const Profile = ({
                         component="th"
                         scope="row"
                         className={classes.cellB}
-                        colspan={2}
+                        colSpan={2}
                         align="center"
                       >
-                        {profile.publishStatus && (currentUser.role == 'admin' || currentUser.role == 'superAdmin')  ? (
+                        {profile.publishStatus &&
+                        (currentUser.role == 'admin' ||
+                          currentUser.role == 'superAdmin') ? (
                           <>This profile is published</>
                         ) : null}
-                        {!profile.publishStatus && (currentUser.role == 'admin' || currentUser.role == 'superAdmin')  ? (
+                        {!profile.publishStatus &&
+                        (currentUser.role == 'admin' ||
+                          currentUser.role == 'superAdmin') ? (
                           <>This profile is unpublished</>
                         ) : null}
-                        
-
-
-                       
                       </TableCell>
                     </TableRow>
                   </TableBody>
@@ -251,12 +245,7 @@ const Profile = ({
         <Grid item lg={7} md={10} xs={12} className={classes.align}>
           <Card className={clsx(classes.root, className)} {...rest}>
             <CardContent align="center">
-              <Typography
-                // className={classes.text}
-                color="textPrimary"
-                gutterBottom
-                variant="h3"
-              >
+              <Typography color="textPrimary" gutterBottom variant="h3">
                 Contact info
               </Typography>
               <Grid container justify="center">
@@ -301,7 +290,7 @@ const Profile = ({
                                 {group.tags.map((tag, index) => {
                                   return (
                                     <Chip
-                                      size='small'
+                                      size="small"
                                       key={tag.group}
                                       className={classes.chip}
                                       variant="outlined"

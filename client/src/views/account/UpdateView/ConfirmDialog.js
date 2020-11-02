@@ -2,8 +2,6 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 
@@ -37,9 +35,6 @@ const AlertDialog = ({ status }) => {
         <DialogTitle id="alert-dialog-title" style={{ fontSize: 50 }}>
           CONFIRM DELETION
         </DialogTitle>
-        {/* <DialogContent>
-          <DialogContentText id="alert-dialog-description"></DialogContentText>
-        </DialogContent> */}
         <DialogActions style={{ paddingLeft: 20, paddingRight: 20 }}>
           <Button
             onClick={() => {

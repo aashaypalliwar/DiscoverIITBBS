@@ -30,9 +30,6 @@ app.use(cookieParser());
 app.use(express.json({ limit: '10kb' }));
 app.use(mongoSanitize());
 
-//TODO: Implement Rate limiters
-
-
 app.use(middleware.requestLogger);
 
 app.use(express.static(path.join(__dirname, 'client/build')));
@@ -46,16 +43,16 @@ app.get('/:clientEndpoint', (req, res, next) => {
 });
 
 //Search Endpoints
-app.use('/api/v1/search', searchRouter); 
+app.use('/api/v1/search', searchRouter);
 
 //User Endpoints
-app.use('/api/v1/user', userRouter); 
+app.use('/api/v1/user', userRouter);
 
-//Authentication Endpoint 
-app.use('/api/v1/auth',authRouter);
+//Authentication Endpoint
+app.use('/api/v1/auth', authRouter);
 
 //Admin Endpoints
-app.use("/api/v1/admin", adminRouter); 
+app.use('/api/v1/admin', adminRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

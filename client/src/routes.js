@@ -1,18 +1,14 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import DashboardLayout from 'src/layouts/DashboardLayout';
-import MainLayout from 'src/layouts/MainLayout';
 import AccountView from 'src/views/account/AccountView';
 import UsersView from 'src/views/account/UsersView';
 import CustomerListView from 'src/views/customer/CustomerListView';
-import LoginView from 'src/views/auth/LoginView';
-import RegisterView from 'src/views/auth/RegisterView';
 import AdminListView from 'src/views/Admin/AdminListView';
 
 import UpdateView from 'src/views/account/UpdateView';
 
 const setUserAsProps = (user, cookies) => {
-  // var user = el;
   return [
     {
       path: '/',
@@ -23,24 +19,11 @@ const setUserAsProps = (user, cookies) => {
         { path: 'discover', element: <CustomerListView /> },
         { path: 'admin', element: <AdminListView user={user} /> },
         { path: 'user', element: <UsersView user={user} /> },
-        // { path: 'products', element: <ProductListView /> },
         { path: '/', element: <Navigate to="/discover" /> },
         { path: '*', element: <Navigate to="/discover" /> }
       ]
     }
   ];
 };
-// {
-//   path: '/',
-//   element: <MainLayout />,
-//   children: [
-//     { path: 'login', element: <LoginView /> },
-//     { path: 'register', element: <RegisterView /> },
-//     { path: '404', element: <NotFoundView /> },
-//     { path: '/', element:  <Navigate to="/app/dashboard" /> },
-//     { path: '*', element: <Navigate to="/404" /> }
-//   ]
-// }
-// ];
 
 export default setUserAsProps;

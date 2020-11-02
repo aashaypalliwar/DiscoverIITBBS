@@ -3,7 +3,6 @@ const Tag = require('./../model/dbModel/tagModel');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 const { sendEmail } = require('../utils/sendEmail');
-const APIFeatures = require('./../utils/apiFeatures');
 
 exports.aboutMe = catchAsync(async (req, res, next) => {
   if (!req.user) {
@@ -26,8 +25,6 @@ exports.getProfile = catchAsync(async (req, res, next) => {
     })
     .lean();
 
-  console.log(user);
-
   if (!user) {
     return next(new AppError('This user is not present', 400));
   }
@@ -45,11 +42,10 @@ exports.updateProfile = catchAsync(async (req, res, next) => {
       new AppError('Sorry you are not allowed to change name and email', 401)
     );
   }
-  
-  if(!req.user.autoVerify){
+
+  if (!req.user.autoVerify) {
     req.body.verifyStatus = false;
-  }
-  else{
+  } else {
     req.body.verifyStatus = true;
   }
 

@@ -60,9 +60,7 @@ const verifyJwtToken = catchAsync(async (req, res, next) => {
   } else if (req.cookies.jwt) {
     token = req.cookies.jwt;
   }
-  // console.log(req.cookies.jwt);
   if (!token) {
-    console.log('reached');
     return next(
       new AppError('You are not logged in! Please log in to get access.', 401)
     );
@@ -163,7 +161,6 @@ const googleLogin = catchAsync(async (req, res, next) => {
                       });
                       createSendToken(newUser, 200, res);
                     } else {
-                      console.log('false');
                       visitor = {
                         _id: email,
                         name: name,
@@ -198,7 +195,6 @@ const logout = (req, res, next) => {
 };
 
 const loginStatus = (req, res, next) => {
-  console.log('logged in');
   res.status(200).json({
     status: 'success',
     message: 'logged in',

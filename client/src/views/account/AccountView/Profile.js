@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
 import {
   Avatar,
@@ -118,7 +117,6 @@ const getLogo = name => {
 const Profile = ({ profile, className, ...rest }) => {
   const classes = useStyles();
   let navigate = useNavigate();
-  console.log(profile.links);
   const rows = [
     createData('Branch', profile.branch),
     createData('Admission Year', profile.admissionYear || 'Update'),
@@ -137,14 +135,13 @@ const Profile = ({ profile, className, ...rest }) => {
     for (let group in tagMap) {
       tagMapArray.push({ name: group, tags: tagMap[group] });
     }
-    console.log(tagMapArray);
   }
   let verifyIcon;
   if (profile.verifyStatus) {
     verifyIcon = (
       <Tooltip title="Verified">
         <IconButton aria-label="verified">
-          <CheckCircleIcon color='primary'/>
+          <CheckCircleIcon color="primary" />
         </IconButton>
       </Tooltip>
     );
@@ -212,7 +209,7 @@ const Profile = ({ profile, className, ...rest }) => {
                         component="th"
                         scope="row"
                         className={classes.cellB}
-                        colspan={2}
+                        colSpan={2}
                         align="center"
                       >
                         {profile.publishStatus ? (
