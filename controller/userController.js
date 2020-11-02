@@ -45,6 +45,13 @@ exports.updateProfile = catchAsync(async (req, res, next) => {
       new AppError('Sorry you are not allowed to change name and email', 401)
     );
   }
+  
+  if(!req.user.autoVerify){
+    req.body.verifyStatus = false;
+  }
+  else{
+    req.body.verifyStatus = true;
+  }
 
   const updateUser = await User.findByIdAndUpdate(req.user._id, req.body, {
     new: true,
