@@ -42,6 +42,8 @@ import TagGroup from './TagGroup';
 
 import axios from 'axios';
 
+import validUrl from 'valid-url';
+
 const admissionYears = [
   {
     value: 2016,
@@ -148,22 +150,53 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
+const isProperLink = link => {
+  if (
+    link.url.includes(`//${link.name.toLowerCase()}.com`) ||
+    link.url.includes(`www.${link.name.toLowerCase()}.com`)
+  ) {
+    if (link.url.endsWith('.com') || link.url.endsWith('.com/')) {
+      return false;
+    }
+    return true;
+  }
+  return false;
+};
+
+const verifyLinks = links => {
+  let culprit = null;
+  for (let link of links) {
+    if (!validUrl.isHttpsUri(link.url) || !isProperLink(link)) {
+      console.log(!validUrl.isHttpsUri(link.url), !isProperLink(link));
+      culprit = link;
+      break;
+    }
+  }
+  return culprit;
+};
+
 const updateProfile = values => {
   // this.setState({ isLoading: true });
   const data = { ...values };
-  console.log(data);
-  axios
-    .patch('/api/v1/user/profile', data, {
-      withCredentials: true
-    })
-    .then(response => {
-      console.log(response);
-      // this.setState({ user: response.data.data.user, isLoading: false });
-      window.location.href = '/profile';
-    })
-    .catch(err => {
-      console.log(err);
-    });
+  let culprit = verifyLinks(data.links);
+  console.log(culprit);
+  if (culprit === null) {
+    console.log(data);
+    axios
+      .patch('/api/v1/user/profile', data, {
+        withCredentials: true
+      })
+      .then(response => {
+        console.log(response);
+        // this.setState({ user: response.data.data.user, isLoading: false });
+        window.location.href = '/profile';
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  } else {
+    alert(`Invalid ${culprit.name} link`);
+  }
 };
 
 const ProfileDetails = ({ profile, className, ...rest }) => {
@@ -533,7 +566,7 @@ const ProfileDetails = ({ profile, className, ...rest }) => {
                     Your Tags :
                   </TableCell>
                   <TableCell style={{ border: 0 }} align="center">
-                    {values.tags.length != 0 ? (
+                    {values.tags && values.tags.length != 0 ? (
                       values.tags.map((tag, index) => {
                         return (
                           <Chip

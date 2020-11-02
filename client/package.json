@@ -56,6 +56,7 @@
     "react-router-dom": "^6.0.0-beta.0",
     "react-scripts": "^3.4.1",
     "uuid": "^8.3.0",
+    "valid-url": "^1.0.9",
     "yup": "^0.29.3"
   },
   "devDependencies": {
