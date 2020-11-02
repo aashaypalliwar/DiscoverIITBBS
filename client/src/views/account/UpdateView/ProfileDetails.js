@@ -87,32 +87,49 @@ const graduationYears = [
     value: 2024,
     label: 2024
   }
+  ,
+  {
+    value: 2025,
+    label: 'N/A'
+  }
 ];
 
 const branches = [
   {
-    value: 'Computer Science',
-    label: 'Computer Science'
+    value: 'CSE',
+    label: 'CSE'
   },
   {
-    value: 'Electronics and Communication',
-    label: 'Electronics and Communication'
+    value: 'ECE',
+    label: 'ECE'
   },
   {
-    value: 'Electrical',
-    label: 'Electrical'
+    value: 'EE',
+    label: 'EE'
   },
   {
-    value: 'Mechanical',
-    label: 'Mechanical'
+    value: 'ME',
+    label: 'ME'
   },
   {
-    value: 'Civil',
-    label: 'Civil'
+    value: 'CE',
+    label: 'CE'
   },
   {
-    value: 'Metallurgy',
-    label: 'Metallurgy'
+    value: 'MM',
+    label: 'MM'
+  },
+  {
+    value: 'SBS',
+    label: 'SBS'
+  },
+  {
+    value: 'SEOCS',
+    label: 'SEOCS'
+  },
+  {
+    value: 'SHSS&M',
+    label: 'SHSS&M'
   }
 ];
 
@@ -565,13 +582,14 @@ const ProfileDetails = ({ profile, className, ...rest }) => {
               <TableBody>
                 <TableRow>
                   <TableCell style={{ border: 0, fontSize: 18 }} align="center">
-                    Your Tags :
+                    Current Tags:
                   </TableCell>
-                  <TableCell style={{ border: 0 }} align="center">
+                  <TableCell style={{ border: 0 }} align="left">
                     {values.tags && values.tags.length != 0 ? (
                       values.tags.map((tag, index) => {
                         return (
                           <Chip
+                            size='small'
                             label={tag.name}
                             onDelete={() => {
                               handleDelete(tag._id);

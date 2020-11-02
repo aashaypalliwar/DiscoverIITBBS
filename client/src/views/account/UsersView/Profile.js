@@ -128,7 +128,7 @@ const Profile = ({
   const rows = [
     createData('Branch', profile.branch),
     createData('Admission Year', profile.admissionYear || 'Update'),
-    createData('Graduation year', profile.graduationYear || 'Update')
+    createData('Graduation Year', profile.graduationYear || 'Update')
   ];
 
   let tagMap = {};
@@ -153,6 +153,23 @@ const Profile = ({
       </Tooltip>
     );
   }
+
+  let getPublishStatus = () => {
+    if(currentUser.role == 'admin' || currentUser.role == 'superAdmin'){
+      if(profile.publishStatus){
+        return (
+        <>This profile is published</>
+      )}
+      else{return (
+        <>This profile is unpublished</>
+      )
+      }
+    }
+    else{
+      return null;
+    }
+  }
+
   return (
     <div>
       <Grid container className={classes.align} spacing={1} justify="center">
@@ -212,11 +229,16 @@ const Profile = ({
                         colspan={2}
                         align="center"
                       >
-                        {profile.publishStatus ? (
+                        {profile.publishStatus && (currentUser.role == 'admin' || currentUser.role == 'superAdmin')  ? (
                           <>This profile is published</>
-                        ) : (
+                        ) : null}
+                        {!profile.publishStatus && (currentUser.role == 'admin' || currentUser.role == 'superAdmin')  ? (
                           <>This profile is unpublished</>
-                        )}
+                        ) : null}
+                        
+
+
+                       
                       </TableCell>
                     </TableRow>
                   </TableBody>
@@ -279,6 +301,7 @@ const Profile = ({
                                 {group.tags.map((tag, index) => {
                                   return (
                                     <Chip
+                                      size='small'
                                       key={tag.group}
                                       className={classes.chip}
                                       variant="outlined"

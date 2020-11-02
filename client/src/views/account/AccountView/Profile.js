@@ -144,7 +144,7 @@ const Profile = ({ profile, className, ...rest }) => {
     verifyIcon = (
       <Tooltip title="Verified">
         <IconButton aria-label="verified">
-          <CheckCircleIcon />
+          <CheckCircleIcon color='primary'/>
         </IconButton>
       </Tooltip>
     );

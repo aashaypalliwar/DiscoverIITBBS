@@ -9,8 +9,6 @@ import LoginView from 'src/views/auth/LoginView';
 import RegisterView from 'src/views/auth/RegisterView';
 import AdminListView from 'src/views/Admin/AdminListView';
 
-import SettingsView from 'src/views/settings/SettingsView';
-
 import UpdateView from 'src/views/account/UpdateView';
 
 const setUserAsProps = (user, cookies) => {
@@ -26,7 +24,6 @@ const setUserAsProps = (user, cookies) => {
         { path: 'admin', element: <AdminListView user={user} /> },
         { path: 'user', element: <UsersView user={user} /> },
         // { path: 'products', element: <ProductListView /> },
-        { path: 'settings', element: <SettingsView /> },
         { path: '/', element: <Navigate to="/discover" /> },
         { path: '*', element: <Navigate to="/discover" /> }
       ]
