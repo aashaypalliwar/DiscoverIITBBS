@@ -418,6 +418,8 @@ const ProfileDetails = ({ profile, className, ...rest }) => {
                   required
                   value={values.bio}
                   variant="outlined"
+                  inputProps={{ maxLength: 120 }}
+                  multiline
                 />
               </Grid>
               {/* <Grid
