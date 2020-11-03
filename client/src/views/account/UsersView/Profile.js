@@ -126,6 +126,13 @@ const Profile = ({
   const classes = useStyles();
   if (typeof currentUser === 'string') currentUser = JSON.parse(currentUser);
 
+  let style;
+  if (currentUser.role === 'visitor' || currentUser.email === profile.email) {
+    style = null;
+  } else {
+    style = { transform: `translateX(16px)` };
+  }
+
   const rows = [
     createData('Branch', profile.branch),
     createData('Admission Year', profile.admissionYear || 'Update'),
@@ -144,6 +151,7 @@ const Profile = ({
     tagMapArray.push({ name: group, tags: tagMap[group] });
   }
   let verifyIcon;
+  let nullIcon;
   if (profile.verifyStatus) {
     verifyIcon = (
       <Tooltip title="Verified">
@@ -151,6 +159,11 @@ const Profile = ({
           <CheckCircleIcon color="primary" />
         </IconButton>
       </Tooltip>
+    );
+    nullIcon = (
+      <IconButton aria-label="verified" disabled>
+        <CheckCircleIcon color="primary" style={{ visibility: 'hidden' }} />
+      </IconButton>
     );
   }
 
@@ -165,9 +178,15 @@ const Profile = ({
               updateProfile={updateProfile}
             />
             <CardContent>
-              <Box alignItems="center" display="flex" flexDirection="column">
+              <Box
+                alignItems="center"
+                display="flex"
+                flexDirection="column"
+                style={style}
+              >
                 <Avatar className={classes.avatar} src={profile.image} />
                 <Typography color="textPrimary" gutterBottom variant="h3">
+                  {nullIcon}
                   {profile.name} {verifyIcon}
                 </Typography>
                 <Typography
@@ -275,7 +294,6 @@ const Profile = ({
                             return 1;
                           })
                           .map((group, index) => {
-                            console.log(group);
                             return [
                               <TableRow className={classes.cellBA}>
                                 &nbsp;&nbsp;&nbsp;&nbsp;{group.name}

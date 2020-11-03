@@ -19,9 +19,10 @@ class Account extends Component {
     isLoading: true
   };
   getProfile = () => {
-    let url = window.location.search;
+    let url = window.location.pathname.split('/');
+    let userId = url[2];
     axios
-      .get('/api/v1/user/other' + url, {
+      .get('/api/v1/user/other/?id=' + userId, {
         withCredentials: true
       })
       .then(response => {
@@ -33,6 +34,7 @@ class Account extends Component {
       });
   };
   componentDidMount = () => {
+    console.log(this.props.history);
     this.getProfile();
   };
 

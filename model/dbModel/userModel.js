@@ -67,6 +67,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: 'Not Specified',
     },
+    program: {
+      type: String,
+      default: 'Not Specified',
+    },
     links: [
       {
         url: {

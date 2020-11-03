@@ -108,7 +108,7 @@ const Results = ({ className, ...rest }) => {
   };
 
   const getOtherProfile = id => {
-    let url = '/user?id=' + id;
+    let url = '/user/' + id;
     navigate(url);
   };
 

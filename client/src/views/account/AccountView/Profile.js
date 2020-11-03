@@ -139,6 +139,7 @@ const Profile = ({ profile, className, ...rest }) => {
     }
   }
   let verifyIcon;
+  let nullIcon;
   if (profile.verifyStatus) {
     verifyIcon = (
       <Tooltip title="Verified">
@@ -146,6 +147,11 @@ const Profile = ({ profile, className, ...rest }) => {
           <CheckCircleIcon color="primary" />
         </IconButton>
       </Tooltip>
+    );
+    nullIcon = (
+      <IconButton aria-label="verified" disabled>
+        <CheckCircleIcon color="primary" style={{ visibility: 'hidden' }} />
+      </IconButton>
     );
   }
   return (
@@ -169,6 +175,7 @@ const Profile = ({ profile, className, ...rest }) => {
               <Box alignItems="center" display="flex" flexDirection="column">
                 <Avatar className={classes.avatar} src={profile.image} />
                 <Typography color="textPrimary" gutterBottom variant="h3">
+                  {nullIcon}
                   {profile.name} {verifyIcon}
                 </Typography>
                 <Typography
@@ -285,6 +292,7 @@ const Profile = ({ profile, className, ...rest }) => {
                                   {group.tags.map((tag, index) => {
                                     return (
                                       <Chip
+                                        size="small"
                                         key={tag.group}
                                         className={classes.chip}
                                         variant="outlined"

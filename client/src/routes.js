@@ -18,7 +18,7 @@ const setUserAsProps = (user, cookies) => {
         { path: 'update', element: <UpdateView user={user} /> },
         { path: 'discover', element: <CustomerListView /> },
         { path: 'admin', element: <AdminListView user={user} /> },
-        { path: 'user', element: <UsersView user={user} /> },
+        { path: 'user/:id', element: <UsersView user={user} /> },
         { path: '/', element: <Navigate to="/discover" /> },
         { path: '*', element: <Navigate to="/discover" /> }
       ]
