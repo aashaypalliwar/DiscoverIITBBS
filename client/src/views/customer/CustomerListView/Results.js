@@ -326,7 +326,11 @@ const Results = ({ className, customers, tags, ...rest }) => {
                           style={{ cursor: 'pointer' }}
                         >
                           <TableCell>
-                            <Box alignItems="center" display="flex">
+                            <Box
+                              alignItems="center"
+                              display="flex"
+                              style={{ textTransform: 'capitalize' }}
+                            >
                               <Avatar
                                 className={classes.avatar}
                                 src={customer.image}
@@ -334,7 +338,7 @@ const Results = ({ className, customers, tags, ...rest }) => {
                                 {getInitials(customer.name)}
                               </Avatar>
                               <Typography color="textPrimary" variant="body1">
-                                {customer.name}
+                                {customer.name.toLowerCase()}
                               </Typography>
                             </Box>
                           </TableCell>

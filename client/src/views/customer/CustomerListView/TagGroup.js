@@ -12,18 +12,23 @@ const TagGroup = props => {
       </TableRow>
       <TableRow>
         <TableCell align="left" className={props.classes.cell}>
-          {props.tags.map((tag, index) => {
-            return (
-              <li key={index} style={{ display: 'inline' }}>
-                <CustomChip
-                  tag={tag}
-                  classes={props.classes}
-                  addToSelected={props.addToSelected}
-                  removeFromSelected={props.removeFromSelected}
-                />
-              </li>
-            );
-          })}
+          {props.tags
+            .sort((a, b) => {
+              if (a.name < b.name) return -1;
+              return 1;
+            })
+            .map((tag, index) => {
+              return (
+                <li key={index} style={{ display: 'inline' }}>
+                  <CustomChip
+                    tag={tag}
+                    classes={props.classes}
+                    addToSelected={props.addToSelected}
+                    removeFromSelected={props.removeFromSelected}
+                  />
+                </li>
+              );
+            })}
         </TableCell>
       </TableRow>
     </>

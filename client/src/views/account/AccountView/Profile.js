@@ -98,6 +98,9 @@ const useStyles = makeStyles(() => ({
     cursor: 'default'
   }
 }));
+// const modify = name =>{
+//    let nameLower =
+// }
 
 const getLogo = name => {
   switch (name) {
@@ -139,20 +142,14 @@ const Profile = ({ profile, className, ...rest }) => {
     }
   }
   let verifyIcon;
-  let nullIcon;
   if (profile.verifyStatus) {
-    verifyIcon = (
+    verifyIcon = [
       <Tooltip title="Verified">
         <IconButton aria-label="verified">
           <CheckCircleIcon color="primary" />
         </IconButton>
       </Tooltip>
-    );
-    nullIcon = (
-      <IconButton aria-label="verified" disabled>
-        <CheckCircleIcon color="primary" style={{ visibility: 'hidden' }} />
-      </IconButton>
-    );
+    ];
   }
   return (
     <div>
@@ -174,9 +171,14 @@ const Profile = ({ profile, className, ...rest }) => {
             <CardContent>
               <Box alignItems="center" display="flex" flexDirection="column">
                 <Avatar className={classes.avatar} src={profile.image} />
-                <Typography color="textPrimary" gutterBottom variant="h3">
-                  {nullIcon}
-                  {profile.name} {verifyIcon}
+                <Typography
+                  color="textPrimary"
+                  gutterBottom
+                  variant="h3"
+                  style={{ textTransform: 'capitalize' }}
+                >
+                  {profile.name.toLowerCase()} <br />
+                  {verifyIcon}
                 </Typography>
                 <Typography
                   className={classes.text}
@@ -191,7 +193,17 @@ const Profile = ({ profile, className, ...rest }) => {
                   color="textSecondary"
                   variant="body1"
                 >
-                  <b>Bio :</b> {profile.bio}
+                  {profile.bio
+                    ? [
+                        <>
+                          <b>Bio :</b> {profile.bio}
+                        </>
+                      ]
+                    : [
+                        <>
+                          <b>Bio :</b> Update Bio
+                        </>
+                      ]}
                 </Typography>
               </Box>
             </CardContent>

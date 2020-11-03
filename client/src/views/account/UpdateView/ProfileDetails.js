@@ -440,7 +440,7 @@ const ProfileDetails = ({ profile, className, ...rest }) => {
         if (after[grName] !== 'Not Specified') {
           if (!rq) {
             rq = tagGroups[grName].filter(tag => {
-              if (tag.name === after[grName]) return true;
+              if (tag.name == after[grName]) return true;
               return false;
             });
           }
