@@ -1,22 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import CustomChip from './CustomChip';
 import { TableCell, TableRow } from '@material-ui/core';
 
 const TagGroup = props => {
-  const [isLoading, setLoading] = useState(false);
-  const [errorStatus, setError] = useState({
-    isError: false,
-    errorMessage: ''
-  });
-  const [showDelete, setShowDelete] = useState(false);
-  const handleCloseDelete = () => setShowDelete(false);
-
-  let triggerDeleteModal = () => {
-    setShowDelete(true);
-  };
-
-  let doNothing = () => {};
-
   return (
     <>
       <TableRow>
@@ -39,10 +25,6 @@ const TagGroup = props => {
             );
           })}
         </TableCell>
-        {/* <TableCell
-                    align="right"
-                    className={props.classes.cell}
-                ></TableCell> */}
       </TableRow>
     </>
   );

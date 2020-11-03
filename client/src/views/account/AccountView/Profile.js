@@ -240,7 +240,7 @@ const Profile = ({ profile, className, ...rest }) => {
                 Contact info
               </Typography>
               <Grid container justify="center">
-                {profile.links != undefined && profile.links.length !== 0 ? (
+                {profile.links !== undefined && profile.links.length !== 0 ? (
                   profile.links.map((link, index) => {
                     return (
                       <Link href={link.url} target="_blank">
@@ -270,31 +270,36 @@ const Profile = ({ profile, className, ...rest }) => {
                     <TableBody>
                       {profile.tags !== undefined &&
                       profile.tags.length !== 0 ? (
-                        tagMapArray.map((group, index) => {
-                          return [
-                            <TableRow className={classes.cellBA}>
-                              &nbsp;&nbsp;&nbsp;&nbsp;{group.name}
-                            </TableRow>,
-                            <TableRow className={classes.cell}>
-                              <TableCell style={{ borderBottom: 0 }}>
-                                {group.tags.map((tag, index) => {
-                                  return (
-                                    <Chip
-                                      key={tag.group}
-                                      className={classes.chip}
-                                      variant="outlined"
-                                      color="primary"
-                                      onClick={() => {
-                                        return null;
-                                      }}
-                                      label={tag.name}
-                                    />
-                                  );
-                                })}
-                              </TableCell>
-                            </TableRow>
-                          ];
-                        })
+                        tagMapArray
+                          .sort((a, b) => {
+                            if (a.name < b.name) return -1;
+                            return 1;
+                          })
+                          .map((group, index) => {
+                            return [
+                              <TableRow className={classes.cellBA}>
+                                &nbsp;&nbsp;&nbsp;&nbsp;{group.name}
+                              </TableRow>,
+                              <TableRow className={classes.cell}>
+                                <TableCell style={{ borderBottom: 0 }}>
+                                  {group.tags.map((tag, index) => {
+                                    return (
+                                      <Chip
+                                        key={tag.group}
+                                        className={classes.chip}
+                                        variant="outlined"
+                                        color="primary"
+                                        onClick={() => {
+                                          return null;
+                                        }}
+                                        label={tag.name}
+                                      />
+                                    );
+                                  })}
+                                </TableCell>
+                              </TableRow>
+                            ];
+                          })
                       ) : (
                         <TableRow>
                           <TableCell align="center" style={{ border: 0 }}>

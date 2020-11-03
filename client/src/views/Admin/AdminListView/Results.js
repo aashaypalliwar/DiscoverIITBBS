@@ -60,6 +60,7 @@ const Results = ({ className, ...rest }) => {
   const [page, setPage] = useState(0);
   const [unpublishedUsers, setunpublishedUsers] = useState([]);
   const [reportedUsers, setreportedUsers] = useState([]);
+  const [search, setSearch] = useState('');
   const [currentPage, setCurrentPage] = useState('');
 
   let navigate = useNavigate();

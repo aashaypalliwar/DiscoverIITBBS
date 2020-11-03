@@ -61,6 +61,7 @@ function SimpleDialog(props) {
           if (data) {
             posLink = data.filter(el => {
               if (el.name === link) return true;
+              return false;
             });
           }
           if (posLink.length === 0) {
@@ -78,6 +79,7 @@ function SimpleDialog(props) {
               </ListItem>
             );
           }
+          return null;
         })}
       </List>
     </Dialog>

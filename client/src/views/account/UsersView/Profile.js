@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import {
   Avatar,
   Box,
-  Button,
   Card,
   CardContent,
   Chip,
@@ -112,6 +111,8 @@ const getLogo = name => {
       return 'https://img.icons8.com/fluent/48/000000/facebook-new.png';
     case 'Twitter':
       return 'https://img.icons8.com/fluent/48/000000/twitter.png';
+    default:
+      return ' ';
   }
 };
 
@@ -123,7 +124,7 @@ const Profile = ({
   ...rest
 }) => {
   const classes = useStyles();
-  if (typeof currentUser == 'string') currentUser = JSON.parse(currentUser);
+  if (typeof currentUser === 'string') currentUser = JSON.parse(currentUser);
 
   const rows = [
     createData('Branch', profile.branch),
@@ -152,18 +153,6 @@ const Profile = ({
       </Tooltip>
     );
   }
-
-  let getPublishStatus = () => {
-    if (currentUser.role == 'admin' || currentUser.role == 'superAdmin') {
-      if (profile.publishStatus) {
-        return <>This profile is published</>;
-      } else {
-        return <>This profile is unpublished</>;
-      }
-    } else {
-      return null;
-    }
-  };
 
   return (
     <div>
@@ -224,13 +213,13 @@ const Profile = ({
                         align="center"
                       >
                         {profile.publishStatus &&
-                        (currentUser.role == 'admin' ||
-                          currentUser.role == 'superAdmin') ? (
+                        (currentUser.role === 'admin' ||
+                          currentUser.role === 'superAdmin') ? (
                           <>This profile is published</>
                         ) : null}
                         {!profile.publishStatus &&
-                        (currentUser.role == 'admin' ||
-                          currentUser.role == 'superAdmin') ? (
+                        (currentUser.role === 'admin' ||
+                          currentUser.role === 'superAdmin') ? (
                           <>This profile is unpublished</>
                         ) : null}
                       </TableCell>
@@ -249,7 +238,7 @@ const Profile = ({
                 Contact info
               </Typography>
               <Grid container justify="center">
-                {profile.links != undefined && profile.links.length !== 0 ? (
+                {profile.links !== undefined && profile.links.length !== 0 ? (
                   profile.links.map((link, index) => {
                     return (
                       <Link href={link.url} target="_blank">
@@ -278,34 +267,40 @@ const Profile = ({
                 <TableContainer>
                   <Table className={classes.table} aria-label="simple table">
                     <TableBody>
-                      {profile.tags != undefined &&
+                      {profile.tags !== undefined &&
                       profile.tags.length !== 0 ? (
-                        tagMapArray.map((group, index) => {
-                          return [
-                            <TableRow className={classes.cellBA}>
-                              &nbsp;&nbsp;&nbsp;&nbsp;{group.name}
-                            </TableRow>,
-                            <TableRow className={classes.cell}>
-                              <TableCell style={{ borderBottom: 0 }}>
-                                {group.tags.map((tag, index) => {
-                                  return (
-                                    <Chip
-                                      size="small"
-                                      key={tag.group}
-                                      className={classes.chip}
-                                      variant="outlined"
-                                      color="primary"
-                                      onClick={() => {
-                                        return null;
-                                      }}
-                                      label={tag.name}
-                                    />
-                                  );
-                                })}
-                              </TableCell>
-                            </TableRow>
-                          ];
-                        })
+                        tagMapArray
+                          .sort((a, b) => {
+                            if (a.name < b.name) return -1;
+                            return 1;
+                          })
+                          .map((group, index) => {
+                            console.log(group);
+                            return [
+                              <TableRow className={classes.cellBA}>
+                                &nbsp;&nbsp;&nbsp;&nbsp;{group.name}
+                              </TableRow>,
+                              <TableRow className={classes.cell}>
+                                <TableCell style={{ borderBottom: 0 }}>
+                                  {group.tags.map((tag, index) => {
+                                    return (
+                                      <Chip
+                                        size="small"
+                                        key={tag.name}
+                                        className={classes.chip}
+                                        variant="outlined"
+                                        color="primary"
+                                        onClick={() => {
+                                          return null;
+                                        }}
+                                        label={tag.name}
+                                      />
+                                    );
+                                  })}
+                                </TableCell>
+                              </TableRow>
+                            ];
+                          })
                       ) : (
                         <TableRow>
                           <TableCell align="center" style={{ border: 0 }}>

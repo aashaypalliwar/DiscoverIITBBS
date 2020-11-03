@@ -3,30 +3,19 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { clone } from 'ramda';
-import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import TagGroup from './TagGroup';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import FilterListIcon from '@material-ui/icons/FilterList';
-import AutorenewIcon from '@material-ui/icons/Autorenew';
 import { useNavigate } from 'react-router-dom';
 import {
   Avatar,
   Box,
   Card,
-  Checkbox,
   CardContent,
-  Chip,
-  Divider,
   Table,
-  FormControl,
-  Select,
   Button,
   Input,
-  InputLabel,
   Grid,
-  Paper,
-  MenuItem,
   TableBody,
   TableCell,
   TableHead,
@@ -35,13 +24,12 @@ import {
   TableContainer,
   Typography,
   makeStyles,
-  TextField,
   InputAdornment,
   SvgIcon
 } from '@material-ui/core';
 import getInitials from 'src/utils/getInitials';
 import { Search as SearchIcon } from 'react-feather';
-import { filter, findIndex } from 'lodash';
+
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
@@ -56,14 +44,6 @@ const useStyles = makeStyles(theme => ({
   },
   avatar: {
     marginRight: theme.spacing(2)
-  },
-
-  chips: {
-    display: 'flex',
-    flexWrap: 'wrap'
-  },
-  chip: {
-    margin: 2
   },
   align: {
     marginTop: 'auto',
@@ -87,16 +67,7 @@ const useStyles = makeStyles(theme => ({
     paddingBottom: 8
   }
 }));
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250
-    }
-  }
-};
+
 const Results = ({ className, customers, tags, ...rest }) => {
   const classes = useStyles();
   const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
@@ -104,7 +75,6 @@ const Results = ({ className, customers, tags, ...rest }) => {
   const [page, setPage] = useState(0);
   const [users, setUsers] = useState(customers);
   const [selectedTags, setSelectedTags] = useState([]);
-  const [presentTags, setPresentTags] = useState(tags);
   const [search, setSearch] = useState('');
   const [filterVisibility, setFilterVisibility] = useState(false);
   const [sortedTags, setSortedTags] = useState([]);
@@ -116,15 +86,6 @@ const Results = ({ className, customers, tags, ...rest }) => {
 
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
-  };
-
-  const selectChip = tagSelected => {
-    setPresentTags(tags => tags.filter(tag => tag.name !== tagSelected.name));
-    setSelectedTags(tags => [...tags, tagSelected]);
-  };
-  const deleteChip = tagSelected => {
-    setSelectedTags(tags => tags.filter(tag => tag.name !== tagSelected.name));
-    setPresentTags(tags => [...tags, tagSelected]);
   };
 
   const resetSearch = () => {

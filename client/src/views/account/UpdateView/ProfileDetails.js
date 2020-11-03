@@ -365,7 +365,7 @@ const ProfileDetails = ({ profile, className, ...rest }) => {
     if (status === 'delete') {
       let newLinks = values.links;
       newLinks = newLinks.filter(link => {
-        return link.name != name;
+        return link.name !== name;
       });
       setValues({
         ...values,
@@ -554,7 +554,7 @@ const ProfileDetails = ({ profile, className, ...rest }) => {
                     Current Tags:
                   </TableCell>
                   <TableCell style={{ border: 0 }} align="left">
-                    {values.tags && values.tags.length != 0 ? (
+                    {values.tags && values.tags.length !== 0 ? (
                       values.tags.map((tag, index) => {
                         return (
                           <Chip
