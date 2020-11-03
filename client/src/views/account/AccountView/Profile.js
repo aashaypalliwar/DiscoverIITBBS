@@ -111,6 +111,8 @@ const getLogo = name => {
       return 'https://img.icons8.com/fluent/48/000000/facebook-new.png';
     case 'Twitter':
       return 'https://img.icons8.com/fluent/48/000000/twitter.png';
+    default:
+      return ' ';
   }
 };
 

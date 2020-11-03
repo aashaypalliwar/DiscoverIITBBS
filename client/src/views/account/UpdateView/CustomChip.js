@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Chip } from '@material-ui/core';
 
 const CustomChip = props => {
@@ -15,15 +15,16 @@ const CustomChip = props => {
 
   return (
     <>
-    <Chip
-      label={props.tag.name}
-      className={props.classes.chip}
-      size="small"
-      clickable
-      onClick={toggle}
-      variant={variant}
-      color="primary"
-    />&nbsp;
+      <Chip
+        label={props.tag.name}
+        className={props.classes.chip}
+        size="small"
+        clickable
+        onClick={toggle}
+        variant={variant}
+        color="primary"
+      />
+      &nbsp;
     </>
   );
 };

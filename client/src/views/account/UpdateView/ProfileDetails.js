@@ -17,7 +17,6 @@ import {
   Grid,
   IconButton,
   Link,
-  Paper,
   Table,
   TableBody,
   TableRow,
@@ -45,7 +44,6 @@ import axios from 'axios';
 import validUrl from 'valid-url';
 
 import { useNavigate } from 'react-router-dom';
-
 
 const admissionYears = [
   {
@@ -151,6 +149,8 @@ const getLogo = name => {
       return 'https://img.icons8.com/fluent/48/000000/facebook-new.png';
     case 'Twitter':
       return 'https://img.icons8.com/fluent/48/000000/twitter.png';
+    default:
+      return ' ';
   }
 };
 
@@ -159,7 +159,6 @@ const useStyles = makeStyles(() => ({
   link: {
     padding: 10,
     marginBottom: 5,
-    // display: 'flex',
     alignItems: 'center',
     fontFamily: 'Roboto',
     color: 'blue'
@@ -219,7 +218,6 @@ const updateProfile = values => {
 
 const ProfileDetails = ({ profile, className, ...rest }) => {
   const classes = useStyles();
-  const [allTags, setAllTags] = useState(null);
   const [restTags, setRestTags] = useState(null);
 
   const [values, setValues] = useState({
@@ -427,22 +425,6 @@ const ProfileDetails = ({ profile, className, ...rest }) => {
                   multiline
                 />
               </Grid>
-              {/* <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Last name"
-                name="lastName"
-                onChange={handleChange}
-                required
-                value={values.lastName}
-                variant="outlined"
-              />
-            </Grid> */}
-
               <Grid item md={6} xs={12}>
                 <TextField
                   fullWidth
@@ -632,8 +614,6 @@ const ProfileDetails = ({ profile, className, ...rest }) => {
       </form>
     );
   }
-
-  
 
   return (
     <Box mt={3}>

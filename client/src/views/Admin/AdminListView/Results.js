@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import axios from 'axios';
@@ -60,7 +60,6 @@ const Results = ({ className, ...rest }) => {
   const [page, setPage] = useState(0);
   const [unpublishedUsers, setunpublishedUsers] = useState([]);
   const [reportedUsers, setreportedUsers] = useState([]);
-  const [search, setSearch] = useState('');
   const [currentPage, setCurrentPage] = useState('');
 
   let navigate = useNavigate();
