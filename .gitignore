@@ -28,7 +28,6 @@ config.env
 .editorconfig
 
 LICENSE.md
-README.md
 CHANGELOG.md
 client/debug.log
 
